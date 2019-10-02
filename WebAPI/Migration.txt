@@ -1,0 +1,2 @@
+Add-Migration InitialMigration -Project Hexado.Db
+Update-Database
