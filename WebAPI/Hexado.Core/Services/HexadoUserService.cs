@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Functional.Maybe;
 using Hexado.Core.Auth;
 using Hexado.Db.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -8,20 +9,20 @@ namespace Hexado.Core.Services
     public interface IHexadoUserService
     {
         Task<IdentityResult> CreateAsync(HexadoUser user, string password);
-        Task<JwtTokenResult> Login(string email, string password);
+        Task<Maybe<Token>> Login(string email, string password);
     }
 
     public class HexadoUserService : IHexadoUserService
     {
         private readonly UserManager<HexadoUser> _userManager;
-        private readonly IJwtTokenFactory _jwtTokenFactory;
+        private readonly ITokenFactory _tokenFactory;
 
         public HexadoUserService(
             UserManager<HexadoUser> userManager,
-            IJwtTokenFactory jwtTokenFactory)
+            ITokenFactory tokenFactory)
         {
             _userManager = userManager;
-            _jwtTokenFactory = jwtTokenFactory;
+            _tokenFactory = tokenFactory;
         }
 
         public async Task<IdentityResult> CreateAsync(HexadoUser user, string password)
@@ -29,13 +30,23 @@ namespace Hexado.Core.Services
             return await _userManager.CreateAsync(user, password);
         }
 
-        public async Task<JwtTokenResult> Login(string email, string password)
+        public async Task<Maybe<Token>> Login(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email) ?? await _userManager.FindByNameAsync(email);
             if (!(user != null && await _userManager.CheckPasswordAsync(user, password)))
-                return JwtTokenResult.Invalid();
+                return Maybe<Token>.Nothing;
 
-            return _jwtTokenFactory.GenerateToken(user);
+            var accessToken = _tokenFactory.GenerateAccessToken(user);
+            var refreshToken = _tokenFactory.GenerateRefreshToken(user.Id);
+            if (!accessToken.HasValue || !refreshToken.HasValue)
+                return Maybe<Token>.Nothing;
+
+            //TODO: Save refresh token in DB
+
+            return new Token(
+                accessToken.Value,
+                refreshToken.Value
+                ).ToMaybe();
         }
     }
 }

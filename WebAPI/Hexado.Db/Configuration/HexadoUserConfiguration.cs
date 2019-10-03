@@ -9,7 +9,15 @@ namespace Hexado.Db.Configuration
         public void Configure(EntityTypeBuilder<HexadoUser> builder)
         {
             builder.HasIndex(u => u.Email)
-                .IsUnique()
+                .IsUnique();
+        }
+    }
+
+    public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
+    {
+        public void Configure(EntityTypeBuilder<RefreshToken> builder)
+        {
+            //builder.
         }
     }
 }

@@ -6,13 +6,13 @@ using Microsoft.Extensions.Logging;
 namespace Hexado.Web.Controllers
 {
     [ApiController]
-    public abstract class ApiControllerBase : ControllerBase
+    public abstract class ApiBaseController : ControllerBase
     {
-        private readonly ILogger<ApiControllerBase> _logger;
+        private readonly ILogger<ApiBaseController> _logger;
 
-        protected ApiControllerBase(ILoggerFactory loggerFactory)
+        protected ApiBaseController(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<ApiControllerBase>();
+            _logger = loggerFactory.CreateLogger<ApiBaseController>();
         }
 
         protected IActionResult CreatedJson(object obj)

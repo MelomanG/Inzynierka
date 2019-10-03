@@ -12,11 +12,7 @@ namespace Hexado.Db
 
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            //builder.ApplyConfiguration(new HexadoUserConfiguration());
-        }
-
         public DbSet<HexadoUser> HexadoUsers { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace Hexado.Web.Controllers
 {
     [Route("api/[controller]")]
-    public class AccountController : ApiControllerBase
+    public class AccountController : ApiBaseController
     {
         private readonly IHexadoUserService _hexadoUserService;
         private readonly ILogger<AccountController> _logger;
@@ -38,8 +38,8 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during user registration!" +
-                                     $"{model.Email}");
+                _logger.LogError(ex, "Error during user registration! " +
+                                     $"User: {model.Email}");
                 return InternalServerErrorJson(ex);
             }
         }
@@ -51,13 +51,13 @@ namespace Hexado.Web.Controllers
             {
                 var result = await _hexadoUserService.Login(model.Email, model.Password);
 
-                return result.IsValid
-                    ? OkJson(new { result.Token })
+                return result.HasValue
+                    ? OkJson(result.Value)
                     : Unauthorized();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during user login!" +
+                _logger.LogError(ex, "Error during user login! " +
                                      $"User: {model.Email}");
                 return InternalServerErrorJson(ex);
             }

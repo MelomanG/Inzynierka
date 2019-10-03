@@ -9,7 +9,7 @@ namespace Hexado.Web.Modules
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<HexadoUserService>().As<IHexadoUserService>().SingleInstance();
-            builder.RegisterType<JwtTokenFactory>().As<IJwtTokenFactory>().SingleInstance();
+            builder.RegisterType<TokenFactory>().As<ITokenFactory>().SingleInstance();
         }
     }
 }
