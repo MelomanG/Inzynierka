@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using Hexado.Core.Auth;
 using Hexado.Db;
 using Hexado.Db.Entities;
 using Hexado.Web.Options;
@@ -57,8 +58,6 @@ namespace Hexado.Web.Extensions
             var jwtOptions = services.BuildServiceProvider()
                 .GetRequiredService<IOptions<JwtOptions>>().Value;
 
-            var key = Encoding.UTF8.GetBytes(jwtOptions.Secret);
-
             services
                 .AddAuthentication(x =>
                 {
@@ -73,7 +72,7 @@ namespace Hexado.Web.Extensions
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        IssuerSigningKey = HexadoTokenKey.Get(jwtOptions.Secret),
                         ValidateIssuer = false,
                         ValidateAudience = false,
                         ClockSkew = TimeSpan.Zero

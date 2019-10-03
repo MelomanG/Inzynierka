@@ -1,4 +1,4 @@
-﻿namespace Hexado.Web.Options
+﻿namespace Hexado.Core.Auth
 {
     public class JwtOptions
     {

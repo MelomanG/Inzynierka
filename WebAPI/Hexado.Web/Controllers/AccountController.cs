@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Hexado.Core.Services;
 using Hexado.Web.Extensions.Models;
@@ -33,14 +32,34 @@ namespace Hexado.Web.Controllers
                     model.ToHexadoUser(),
                     model.Password);
 
-                return result.Succeeded 
-                    ? Created(new { model.Username }) 
+                return result.Succeeded
+                    ? CreatedJson(new { model.Username })
                     : BadRequest(result.Errors);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "ErrorMessage during user registration!");
-                return BadRequest();
+                _logger.LogError(ex, "Error during user registration!" +
+                                     $"{model.Email}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginUserModel model)
+        {
+            try
+            {
+                var result = await _hexadoUserService.Login(model.Email, model.Password);
+
+                return result.IsValid
+                    ? OkJson(new { result.Token })
+                    : Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during user login!" +
+                                     $"User: {model.Email}");
+                return InternalServerErrorJson(ex);
             }
         }
     }
