@@ -9,6 +9,7 @@ namespace Hexado.Db.Entities
         public DateTime ExpirationDate { get; private set; }
 
         public string UserId { get; private set; }
+        public HexadoUser HexadoUser { get; private set; }
         public bool IsActive => ExpirationDate >= DateTime.Now;
 
         public RefreshToken(string userId, string token, DateTime expirationDate)

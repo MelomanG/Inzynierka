@@ -1,2 +1,6 @@
+#====== Code First =========
 Add-Migration InitialMigration -Project Hexado.Db
 Update-Database
+
+#====== DB First =========
+Scaffold-DbContext "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=HexadoDb;Data Source=EPPLKRAW0280" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models

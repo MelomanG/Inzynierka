@@ -6,10 +6,14 @@ namespace Hexado.Db.Entities
 {
     public class HexadoUser : IdentityUser
     {
-        public ICollection<RefreshToken> RefreshTokens { get; set; }
-
         public string FullName { get; set; }
 
+        public HexadoUser()
+        {
+            RefreshTokens = new HashSet<RefreshToken>();
+        }
+
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
 
         public void AddRefreshToken(RefreshToken refreshToken)
         {
