@@ -43,24 +43,5 @@ namespace Hexado.Web.Controllers
                 return InternalServerErrorJson(ex);
             }
         }
-
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginUserModel model)
-        {
-            try
-            {
-                var result = await _hexadoUserService.Login(model.Email, model.Password);
-
-                return result.HasValue
-                    ? OkJson(result.Value)
-                    : Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error during user login! " +
-                                     $"User: {model.Email}");
-                return InternalServerErrorJson(ex);
-            }
-        }
     }
 }

@@ -27,11 +27,9 @@ namespace Hexado.Db.Entities
                 RefreshTokens.Remove(token);
         }
 
-        public bool IsValidRefreshToken(string refreshToken)
-        {
-            return RefreshTokens.Any(token => 
+        public bool IsValidRefreshToken(string refreshToken) => 
+            RefreshTokens.Any(token => 
                 token.Token == refreshToken &&
                 token.IsActive);
-        }
     }
 }

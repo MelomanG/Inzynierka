@@ -3,7 +3,6 @@ using Hexado.Web.Extensions;
 using Hexado.Web.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -35,7 +34,8 @@ namespace Hexado.Web
             // ====== 
 
             // ====== Hexado specific ======
-            services.AddHexadoOptions(Configuration)
+            services
+                .AddHexadoOptions(Configuration)
                 .AddHexadoDbContext()
                 .AddHexadoIdentity()
                 .AddHexadoAuthentication();
@@ -44,6 +44,7 @@ namespace Hexado.Web
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new HexadoCoreModule());
+            builder.RegisterModule(new HexadoDbModule());
         }
 
 

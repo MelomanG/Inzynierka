@@ -10,12 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Hexado.Core.Auth
 {
-    public interface ITokenFactory
-    {
-        Maybe<AccessToken> GenerateAccessToken(HexadoUser user);
-        Maybe<RefreshToken> GenerateRefreshToken(string userId, int size = 32);
-    }
-
     public class TokenFactory : ITokenFactory
     {
         private readonly JwtOptions _options;
@@ -29,7 +23,7 @@ namespace Hexado.Core.Auth
             _logger = loggerFactory.CreateLogger<TokenFactory>();
         }
 
-        public Maybe<AccessToken> GenerateAccessToken(HexadoUser user)
+        public Maybe<AccessToken> GenerateAccessToken(string email)
         {
             try
             {
@@ -37,7 +31,7 @@ namespace Hexado.Core.Auth
                 {
                     Subject = new ClaimsIdentity(new[]
                         {
-                            new Claim(ClaimTypes.Email, user.Email)
+                            new Claim(ClaimTypes.Email, email)
                         }),
                     Expires = DateTime.UtcNow.Add(_options.AccessTokenValidFor),
                     SigningCredentials = new SigningCredentials(HexadoTokenKey.Get(_options.Secret), SecurityAlgorithms.HmacSha256Signature)
@@ -46,8 +40,6 @@ namespace Hexado.Core.Auth
                 var securityToken = tokenHandler.CreateToken(tokenDescriptor);
 
                 var token = tokenHandler.WriteToken(securityToken);
-                //if(string.IsNullOrWhiteSpace(token))
-                //    return Maybe<AccessToken>.Nothing;
 
                 return new AccessToken(
                         token,
@@ -56,8 +48,8 @@ namespace Hexado.Core.Auth
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unable to generate token for user: " +
-                                     $"{user.Email}");
+                _logger.LogError(ex, "Unable to generate token for" +
+                                     $"User: {email}");
                 return Maybe<AccessToken>.Nothing;
             }
         }
