@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Hexado.Db;
+using Hexado.Db.Repositories;
 
 namespace Hexado.Web.Modules
 {
@@ -10,6 +10,11 @@ namespace Hexado.Web.Modules
             builder
                 .RegisterGeneric(typeof(Repository<>))
                 .As(typeof(IRepository<>))
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<HexadoUserRepository>()
+                .As<IHexadoUserRepository>()
                 .InstancePerLifetimeScope();
         }
     }

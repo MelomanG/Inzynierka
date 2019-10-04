@@ -12,7 +12,7 @@ namespace Hexado.Web.Controllers
     {
         private readonly ILogger<ApiBaseController> _logger;
 
-        protected string UserEmail =>  HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.ToString();
+        protected string UserEmail =>  HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
         protected ApiBaseController(ILoggerFactory loggerFactory)
         {

@@ -5,7 +5,6 @@ namespace Hexado.Core.Auth
 {
     public interface ITokenFactory
     {
-        Maybe<AccessToken> GenerateAccessToken(string email);
-        Maybe<RefreshToken> GenerateRefreshToken(string userId, int size = 32);
+        Maybe<Token> GenerateToken(HexadoUser user);
     }
 }

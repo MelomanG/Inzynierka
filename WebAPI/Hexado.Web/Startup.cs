@@ -53,7 +53,7 @@ namespace Hexado.Web
         {
             app.UseCors(CorsPolicy);
             app.UseRouting();
-            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

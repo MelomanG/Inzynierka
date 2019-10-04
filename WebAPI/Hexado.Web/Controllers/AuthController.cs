@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hexado.Core.Services;
+using Hexado.Web.ActionFilters;
+using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
+using Hexado.Web.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -10,15 +13,15 @@ namespace Hexado.Web.Controllers
     [Route("api/[controller]")]
     public class AuthController : ApiBaseController
     {
-        private readonly IHexadoUserService _hexadoUserService;
+        private readonly IAuthService _authService;
         private readonly ILogger<AuthController> _logger;
 
         public AuthController(
-            IHexadoUserService hexadoUserService,
+            IAuthService authService,
             ILoggerFactory loggerFactory)
             : base(loggerFactory)
         {
-            _hexadoUserService = hexadoUserService;
+            _authService = authService;
             _logger = loggerFactory.CreateLogger<AuthController>();
         }
 
@@ -27,10 +30,10 @@ namespace Hexado.Web.Controllers
         {
             try
             {
-                var result = await _hexadoUserService.LoginAsync(model.Email, model.Password);
+                var result = await _authService.LoginAsync(model.Email, model.Password);
 
                 return result.HasValue
-                    ? OkJson(result.Value)
+                    ? OkJson(result.Value.ToTokenResponse())
                     : Unauthorized();
             }
             catch (Exception ex)
@@ -42,20 +45,20 @@ namespace Hexado.Web.Controllers
         }
 
         [HttpPost("Refresh")]
-        public async Task<IActionResult> Refresh(RefreshTokenRequest request)
+        [ServiceFilter(typeof(AuthorizationHeaderValidation))]
+        public async Task<IActionResult> Refresh(RefreshTokenRequest request, [FromHeader] string authorization)
         {
             try
             {
-                var result = await _hexadoUserService.RefreshTokenAsync(UserEmail, request.RefreshToken);
+                var result = await _authService.RefreshTokenAsync(authorization, request.RefreshToken);
 
                 return result.HasValue
-                    ? OkJson(result.Value)
+                    ? OkJson(result.Value.ToTokenResponse())
                     : Unauthorized();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while refreshing token! " +
-                                     $"User: {UserEmail ?? "unknown"}");
+                _logger.LogError(ex, "Error while refreshing token!");
                 return InternalServerErrorJson(ex);
             }
         }

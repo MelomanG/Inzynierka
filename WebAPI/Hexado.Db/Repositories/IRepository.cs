@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Hexado.Db
+namespace Hexado.Db.Repositories
 {
     public interface IRepository<T>
     {

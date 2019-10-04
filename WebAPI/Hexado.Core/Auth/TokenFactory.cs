@@ -23,7 +23,23 @@ namespace Hexado.Core.Auth
             _logger = loggerFactory.CreateLogger<TokenFactory>();
         }
 
-        public Maybe<AccessToken> GenerateAccessToken(string email)
+        public Maybe<Token> GenerateToken(HexadoUser user)
+        {
+            var accessToken = GenerateAccessToken(user.Email);
+            if(!accessToken.HasValue)
+                return Maybe<Token>.Nothing;
+
+            var refreshToken = GenerateRefreshToken(user.Id);
+            if (!refreshToken.HasValue)
+                return Maybe<Token>.Nothing;
+
+            return new Token(
+                accessToken.Value,
+                refreshToken.Value
+            ).ToMaybe();
+        }
+
+        private Maybe<AccessToken> GenerateAccessToken(string email)
         {
             try
             {
@@ -34,7 +50,7 @@ namespace Hexado.Core.Auth
                             new Claim(ClaimTypes.Email, email)
                         }),
                     Expires = DateTime.UtcNow.Add(_options.AccessTokenValidFor),
-                    SigningCredentials = new SigningCredentials(HexadoTokenKey.Get(_options.Secret), SecurityAlgorithms.HmacSha256Signature)
+                    SigningCredentials = new SigningCredentials(HexadoTokenSpecific.GetKey(_options.Secret), HexadoTokenSpecific.GetAlgorithm)
                 };
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var securityToken = tokenHandler.CreateToken(tokenDescriptor);
@@ -54,7 +70,7 @@ namespace Hexado.Core.Auth
             }
         }
 
-        public Maybe<RefreshToken> GenerateRefreshToken(string userId, int size = 32)
+        private Maybe<RefreshToken> GenerateRefreshToken(string userId, int size = 32)
         {
             var randomNumber = new byte[size];
             using var rng = RandomNumberGenerator.Create();

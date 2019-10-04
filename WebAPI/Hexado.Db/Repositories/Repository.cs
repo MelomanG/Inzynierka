@@ -1,21 +1,21 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hexado.Db
+namespace Hexado.Db.Repositories
 {
     public class Repository<T> : IRepository<T>
     {
-        private readonly HexadoDbContext _hexadoDbContext;
+        protected readonly HexadoDbContext HexadoDbContext;
 
         public Repository(HexadoDbContext hexadoDbContext)
         {
-            _hexadoDbContext = hexadoDbContext;
+            HexadoDbContext = hexadoDbContext;
         }
 
         public Task UpdateAsync(T entity)
         {
-            _hexadoDbContext.Entry(entity).State = EntityState.Modified;
-            return _hexadoDbContext.SaveChangesAsync();
+            HexadoDbContext.Entry(entity).State = EntityState.Modified;
+            return HexadoDbContext.SaveChangesAsync();
         }
     }
 }

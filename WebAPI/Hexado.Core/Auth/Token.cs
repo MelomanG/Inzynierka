@@ -4,16 +4,16 @@ namespace Hexado.Core.Auth
 {
     public class Token
     {
-        public AccessToken AccessToken { get; private set; }
+        public AccessToken AccessToken { get; }
 
-        public string RefreshToken { get; private set; }
+        public RefreshToken RefreshToken { get; }
 
         public Token(
             AccessToken accessToken,
             RefreshToken refreshToken)
         {
             AccessToken = accessToken;
-            RefreshToken = refreshToken.Token;
+            RefreshToken = refreshToken;
         }
     }
 }

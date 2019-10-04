@@ -1,4 +1,4 @@
-﻿namespace Hexado.Web.Models
+﻿namespace Hexado.Web.Models.Requests
 {
     public class RefreshTokenRequest
     {

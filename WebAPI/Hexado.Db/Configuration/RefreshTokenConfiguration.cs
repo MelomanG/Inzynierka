@@ -8,9 +8,11 @@ namespace Hexado.Db.Configuration
     {
         public void Configure(EntityTypeBuilder<RefreshToken> builder)
         {
-            builder.HasOne(token => token.HexadoUser)
+            builder
+                .HasOne(token => token.HexadoUser)
                 .WithMany(user => user.RefreshTokens)
-                .HasForeignKey(token => token.UserId);
+                .HasForeignKey(token => token.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
