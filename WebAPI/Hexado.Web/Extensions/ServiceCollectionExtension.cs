@@ -1,5 +1,7 @@
-﻿using Hexado.Core.Auth;
+﻿using System.Security.Claims;
+using Hexado.Core.Auth;
 using Hexado.Db;
+using Hexado.Db.Constants;
 using Hexado.Db.Entities;
 using Hexado.Web.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -69,6 +71,17 @@ namespace Hexado.Web.Extensions
                     options.SaveToken = true;
                     options.TokenValidationParameters = HexadoTokenSpecific.GetValidationParameters(jwtOptions.Secret);
                 });
+
+            return services;
+        }
+
+        public static IServiceCollection AddHexadoAuthorization(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(HexadoPolicy.AdministratorOnly, policy =>
+                    policy.RequireClaim(ClaimTypes.Role, HexadoRole.Admin));
+            });
 
             return services;
         }

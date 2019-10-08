@@ -1,10 +1,11 @@
-﻿using Functional.Maybe;
-using Hexado.Db.Entities;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
+using Functional.Maybe;
 
 namespace Hexado.Core.Auth
 {
     public interface ITokenFactory
     {
-        Maybe<Token> GenerateToken(HexadoUser user);
+        Maybe<Token> GenerateToken(string userId, IEnumerable<Claim> claims);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Hexado.Web.Constants
+﻿namespace Hexado.Db.Constants
 {
     public static class HexadoRole
     {

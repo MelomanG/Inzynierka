@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Hexado.Core.Services;
 using Hexado.Core.Services.Specific;
+using Hexado.Db.Constants;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -24,6 +25,7 @@ namespace Hexado.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
         public async Task<IActionResult> Create(BoardGameModel model)
         {
             try
@@ -79,6 +81,7 @@ namespace Hexado.Web.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
         public async Task<IActionResult> Update(string id, BoardGameModel model)
         {
             try
@@ -98,6 +101,7 @@ namespace Hexado.Web.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
         public async Task<IActionResult> Delete(string id)
         {
             try

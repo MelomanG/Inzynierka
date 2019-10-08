@@ -42,7 +42,8 @@ namespace Hexado.Core.Services.Specific
             if (!(user != null && await _userManager.CheckPasswordAsync(user, password)))
                 return Maybe<Token>.Nothing;
 
-            var token = _tokenFactory.GenerateToken(user);
+            var claims = await _userManager.GetClaimsAsync(user);
+            var token = _tokenFactory.GenerateToken(user.Id, claims);
 
             user.RefreshTokens.Add(token.Value.RefreshToken);
             await _hexadoUserRepository.UpdateAsync(user);
@@ -66,7 +67,7 @@ namespace Hexado.Core.Services.Specific
             if (!user.HasValue || !user.Value.IsValidRefreshToken(refreshToken))
                 return Maybe<Token>.Nothing;
 
-            var token = _tokenFactory.GenerateToken(user.Value);
+            var token = _tokenFactory.GenerateToken(user.Value.Id, claims.Value);
             if (!token.HasValue)
                 return Maybe<Token>.Nothing;
 

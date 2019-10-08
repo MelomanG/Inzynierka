@@ -38,7 +38,8 @@ namespace Hexado.Web
                 .AddHexadoOptions(Configuration)
                 .AddHexadoDbContext()
                 .AddHexadoIdentity()
-                .AddHexadoAuthentication();
+                .AddHexadoAuthentication()
+                .AddHexadoAuthorization();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -54,6 +55,7 @@ namespace Hexado.Web
             app.UseCors(CorsPolicy);
             app.UseRouting();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

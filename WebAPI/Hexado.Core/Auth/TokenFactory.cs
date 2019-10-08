@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -23,13 +24,13 @@ namespace Hexado.Core.Auth
             _logger = loggerFactory.CreateLogger<TokenFactory>();
         }
 
-        public Maybe<Token> GenerateToken(HexadoUser user)
+        public Maybe<Token> GenerateToken(string userId, IEnumerable<Claim> claims)
         {
-            var accessToken = GenerateAccessToken(user.Email);
+            var accessToken = GenerateAccessToken(claims);
             if(!accessToken.HasValue)
                 return Maybe<Token>.Nothing;
 
-            var refreshToken = GenerateRefreshToken(user.Id);
+            var refreshToken = GenerateRefreshToken(userId);
             if (!refreshToken.HasValue)
                 return Maybe<Token>.Nothing;
 
@@ -39,16 +40,14 @@ namespace Hexado.Core.Auth
             ).ToMaybe();
         }
 
-        private Maybe<AccessToken> GenerateAccessToken(string email)
+        private Maybe<AccessToken> GenerateAccessToken(IEnumerable<Claim> claims)
         {
             try
             {
+                var claimIdentity = new ClaimsIdentity(claims);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Subject = new ClaimsIdentity(new[]
-                        {
-                            new Claim(ClaimTypes.Email, email)
-                        }),
+                    Subject = claimIdentity,
                     Expires = DateTime.UtcNow.Add(_options.AccessTokenValidFor),
                     SigningCredentials = new SigningCredentials(HexadoTokenSpecific.GetKey(_options.Secret), HexadoTokenSpecific.GetAlgorithm)
                 };
@@ -64,8 +63,7 @@ namespace Hexado.Core.Auth
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unable to generate token for" +
-                                     $"User: {email}");
+                _logger.LogError(ex, "Unable to generate token!");
                 return Maybe<AccessToken>.Nothing;
             }
         }

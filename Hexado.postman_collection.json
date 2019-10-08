@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"Username\": \"Hubson1\",\n\t\"Email\": \"hubson1@hubsy.pl\",\n\t\"Password\": \"Qwerty123\",\n\t\"ConfirmationPassword\": \"Qwerty123\"\n}",
+							"raw": "{\n\t\"Username\": \"Hubson\",\n\t\"Email\": \"hubson@hubsy.pl\",\n\t\"Password\": \"Qwerty123\",\n\t\"ConfirmationPassword\": \"Qwerty123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -172,6 +172,16 @@
 				{
 					"name": "Create Board Game",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -208,6 +218,16 @@
 				{
 					"name": "Get All Board Games",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
@@ -235,6 +255,16 @@
 				{
 					"name": "Get Board Game by Id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
@@ -269,6 +299,16 @@
 				{
 					"name": "Update Game Board by Id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [
 							{
@@ -312,6 +352,16 @@
 				{
 					"name": "Delete Board Game by Id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [
 							{
