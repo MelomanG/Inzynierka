@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hexado.Core.Services;
+using Hexado.Core.Services.Specific;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,6 @@ namespace Hexado.Web.Controllers
         public AccountController(
             IHexadoUserService hexadoUserService,
             ILoggerFactory loggerFactory)
-            : base(loggerFactory)
         {
             _hexadoUserService = hexadoUserService;
             _logger = loggerFactory.CreateLogger<AccountController>();

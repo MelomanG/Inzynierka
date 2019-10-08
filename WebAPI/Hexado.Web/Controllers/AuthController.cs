@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hexado.Core.Services;
+using Hexado.Core.Services.Specific;
 using Hexado.Web.ActionFilters;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
@@ -19,7 +20,6 @@ namespace Hexado.Web.Controllers
         public AuthController(
             IAuthService authService,
             ILoggerFactory loggerFactory)
-            : base(loggerFactory)
         {
             _authService = authService;
             _logger = loggerFactory.CreateLogger<AuthController>();

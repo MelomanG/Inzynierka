@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Hexado.Db.Entities;
-using Microsoft.EntityFrameworkCore;
 using Functional.Maybe;
+using Hexado.Db.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-namespace Hexado.Db.Repositories
+namespace Hexado.Db.Repositories.Specific
 {
     public class HexadoUserRepository : Repository<HexadoUser>, IHexadoUserRepository
     {
@@ -20,6 +20,7 @@ namespace Hexado.Db.Repositories
         {
             _userManager = userManager;
         }
+
         public async Task<IdentityResult> CreateAsync(HexadoUser user, string password)
         {
             return await _userManager.CreateAsync(user, password);

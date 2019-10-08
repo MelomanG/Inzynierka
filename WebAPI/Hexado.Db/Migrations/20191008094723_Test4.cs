@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hexado.Db.Migrations
 {
-    public partial class Init : Migration
+    public partial class Test4 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,25 @@ namespace Hexado.Db.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BoardGames",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Modified = table.Column<DateTime>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    MinPlayers = table.Column<int>(nullable: false),
+                    MaxPlayers = table.Column<int>(nullable: false),
+                    FromAge = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BoardGames", x => x.Id);
+                    table.UniqueConstraint("AK_BoardGames_Name", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,8 +177,7 @@ namespace Hexado.Db.Migrations
                 name: "RefreshTokens",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Modified = table.Column<DateTime>(nullable: false),
                     Token = table.Column<string>(nullable: true),
@@ -174,7 +192,7 @@ namespace Hexado.Db.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -238,6 +256,9 @@ namespace Hexado.Db.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "BoardGames");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");

@@ -45,6 +45,7 @@ namespace Hexado.Web.Extensions
                     options.User.RequireUniqueEmail = true;
                 })
                 .AddDefaultIdentity<HexadoUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<HexadoDbContext>();
 
             return services;

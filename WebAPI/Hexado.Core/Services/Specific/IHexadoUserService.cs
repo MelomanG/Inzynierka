@@ -2,7 +2,7 @@
 using Hexado.Db.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Hexado.Core.Services
+namespace Hexado.Core.Services.Specific
 {
     public interface IHexadoUserService
     {

@@ -2,7 +2,7 @@
 using Functional.Maybe;
 using Hexado.Core.Auth;
 
-namespace Hexado.Core.Services
+namespace Hexado.Core.Services.Specific
 {
     public interface IAuthService
     {

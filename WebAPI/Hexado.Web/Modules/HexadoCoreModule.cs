@@ -2,7 +2,9 @@
 using Autofac;
 using Hexado.Core.Auth;
 using Hexado.Core.Services;
+using Hexado.Core.Services.Specific;
 using Hexado.Web.ActionFilters;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Hexado.Web.Modules
 {
@@ -10,26 +12,40 @@ namespace Hexado.Web.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder
-                .RegisterType<HexadoUserService>()
-                .As<IHexadoUserService>()
-                .SingleInstance();
-            builder
-                .RegisterType<AuthService>()
-                .As<IAuthService>()
-                .SingleInstance();
+            InstancePerLifetimeScope(builder);
+            SingleInstance(builder);
+        }
+
+        private static void SingleInstance(ContainerBuilder builder)
+        {
             builder
                 .RegisterType<TokenFactory>()
                 .As<ITokenFactory>()
                 .SingleInstance();
             builder
                 .RegisterType<JwtSecurityTokenHandler>()
-                .AsSelf()
-                .InstancePerLifetimeScope();
+                .As<ISecurityTokenValidator>()
+                .SingleInstance();
             builder
                 .RegisterType<AccessTokenValidator>()
                 .As<IAccessTokenValidator>()
                 .SingleInstance();
+        }
+
+        private static void InstancePerLifetimeScope(ContainerBuilder builder)
+        {
+            builder
+                .RegisterType<AuthService>()
+                .As<IAuthService>()
+                .InstancePerLifetimeScope();
+            builder
+                .RegisterType<HexadoUserService>()
+                .As<IHexadoUserService>()
+                .InstancePerLifetimeScope();
+            builder
+                .RegisterType<BoardGameService>()
+                .As<IBoardGameService>()
+                .InstancePerLifetimeScope();
             builder
                 .RegisterType<AuthorizationHeaderValidation>()
                 .AsSelf()

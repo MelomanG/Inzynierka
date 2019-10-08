@@ -3,16 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexado.Web", "Hexado.Web\Hexado.Web.csproj", "{D2500596-7E9C-40FE-A42E-518FF730889B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hexado.Web", "Hexado.Web\Hexado.Web.csproj", "{D2500596-7E9C-40FE-A42E-518FF730889B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexado.Db", "Hexado.Db\Hexado.Db.csproj", "{7BDD2657-5B1A-48D7-99BE-01F32F245773}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hexado.Db", "Hexado.Db\Hexado.Db.csproj", "{7BDD2657-5B1A-48D7-99BE-01F32F245773}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexado.Core", "Hexado.Core\Hexado.Core.csproj", "{E1D4431F-FB32-4CDB-895C-C651F9FA41FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hexado.Core", "Hexado.Core\Hexado.Core.csproj", "{E1D4431F-FB32-4CDB-895C-C651F9FA41FD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{482D052F-E903-4AC2-95A6-22E78178A4AE}"
 	ProjectSection(SolutionItems) = preProject
 		Migration.txt = Migration.txt
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BF8B1194-426F-4021-8DEB-74EA34BB195D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexado.Core.Tests", "Hexado.Core.Tests\Hexado.Core.Tests.csproj", "{6C4A42B9-DD8A-4F72-AF9E-8D0A17F5061D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +36,16 @@ Global
 		{E1D4431F-FB32-4CDB-895C-C651F9FA41FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1D4431F-FB32-4CDB-895C-C651F9FA41FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1D4431F-FB32-4CDB-895C-C651F9FA41FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C4A42B9-DD8A-4F72-AF9E-8D0A17F5061D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C4A42B9-DD8A-4F72-AF9E-8D0A17F5061D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C4A42B9-DD8A-4F72-AF9E-8D0A17F5061D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C4A42B9-DD8A-4F72-AF9E-8D0A17F5061D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6C4A42B9-DD8A-4F72-AF9E-8D0A17F5061D} = {BF8B1194-426F-4021-8DEB-74EA34BB195D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09180EE9-8EFC-48F1-BAD7-319FA3D04C64}

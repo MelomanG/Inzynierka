@@ -5,7 +5,7 @@ using Functional.Maybe;
 using Hexado.Db.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace Hexado.Db.Repositories
+namespace Hexado.Db.Repositories.Specific
 {
     public interface IHexadoUserRepository: IRepository<HexadoUser>
     {

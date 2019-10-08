@@ -1,4 +1,5 @@
-﻿using Hexado.Web.Constants;
+﻿using Hexado.Core.Constants;
+using Hexado.Web.Constants;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -8,11 +9,11 @@ namespace Hexado.Web.ActionFilters
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if(!context.HttpContext.Request.Headers.TryGetValue(ConstantKeyWord.AuthorizationHeader, out var value))
+            if(!context.HttpContext.Request.Headers.TryGetValue(HeaderKey.Authorization, out var value))
                 context.Result = new UnauthorizedResult();
 
             var accessToken = value.ToString();
-            if (string.IsNullOrWhiteSpace(accessToken) || !accessToken.Contains(ConstantKeyWord.BearerWithSpace))
+            if (string.IsNullOrWhiteSpace(accessToken) || !accessToken.Contains(ConstantKey.BearerWithSpace))
                 context.Result = new UnauthorizedResult();
         }
     }

@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Hexado.Db.Entities;
-using Hexado.Db.Repositories;
+using Hexado.Db.Repositories.Specific;
 using Microsoft.AspNetCore.Identity;
 
-namespace Hexado.Core.Services
+namespace Hexado.Core.Services.Specific
 {
     public class HexadoUserService : IHexadoUserService
     {

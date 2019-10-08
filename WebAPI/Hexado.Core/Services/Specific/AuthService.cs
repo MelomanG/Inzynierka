@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Core.Auth;
 using Hexado.Db.Entities;
-using Hexado.Db.Repositories;
+using Hexado.Db.Repositories.Specific;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace Hexado.Core.Services
+namespace Hexado.Core.Services.Specific
 {
+    //==================================================================================
+    //TODO: Authentication need to be refactored. Currently it's hard to test this class
+    //==================================================================================
     public class AuthService : IAuthService
     {
         private readonly IHexadoUserRepository _hexadoUserRepository;

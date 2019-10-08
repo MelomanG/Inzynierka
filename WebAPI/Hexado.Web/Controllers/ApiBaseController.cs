@@ -3,21 +3,13 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Hexado.Web.Controllers
 {
     [ApiController]
     public abstract class ApiBaseController : ControllerBase
     {
-        private readonly ILogger<ApiBaseController> _logger;
-
         protected string UserEmail =>  HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
-        protected ApiBaseController(ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger<ApiBaseController>();
-        }
 
         protected static IActionResult CreatedJson(object obj)
         {
