@@ -43,12 +43,13 @@ namespace Hexado.Web.Controllers
             }
         }
 
+        //https://www.codingame.com/playgrounds/5368/building-pager-component-for-asp-net-core
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetPaged(int page = 1, int pageSize = 20)
         {
             try
             {
-                var result = await _boardGameService.GetAllAsync();
+                var result = await _boardGameService.GetPagedResults(page, pageSize);
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -56,7 +57,7 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while retrieving all board games!");
+                _logger.LogError(ex, "Error while retrieving board games!");
                 return InternalServerErrorJson(ex);
             }
         }
@@ -94,7 +95,7 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while retrieving board game! " +
+                _logger.LogError(ex, "Error while updating board game! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }

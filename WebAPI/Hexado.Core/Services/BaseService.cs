@@ -30,6 +30,10 @@ namespace Hexado.Core.Services
             return _repository.GetAllAsync();
         }
 
+        public Task<Maybe<IEnumerable<T>>> GetPagedResults()
+        {
+        }
+
         public async Task<Maybe<T>> UpdateAsync(T entity)
         {
             var existingEntity = await _repository.GetAsync(entity.Id);
