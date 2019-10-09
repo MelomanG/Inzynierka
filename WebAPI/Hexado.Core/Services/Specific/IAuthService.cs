@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Core.Auth;
+using Hexado.Core.Models;
 
 namespace Hexado.Core.Services.Specific
 {

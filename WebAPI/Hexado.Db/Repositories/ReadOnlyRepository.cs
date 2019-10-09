@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Db.Entities;
+using Hexado.Speczilla;
+using Hexado.Speczilla.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hexado.Db.Repositories
@@ -31,14 +35,12 @@ namespace Hexado.Db.Repositories
             return (await HexadoDbContext.Set<T>().AsNoTracking().ToListAsync()).AsEnumerable().ToMaybe();
         }
 
-        public async Task<Maybe<IEnumerable<T>>> GetManyAsync(int skip, int take)
+        public async Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification)
         {
-            return (await HexadoDbContext.Set<T>().Skip(skip).Take(take).AsNoTracking().ToListAsync()).AsEnumerable().ToMaybe();
-        }
-
-        public Task<int> CountAsync()
-        {
-            return HexadoDbContext.Set<T>().CountAsync();
+            return (await HexadoDbContext.Set<T>()
+                .AsNoTracking()
+                .AsPaginationResultAsync(specification))
+                .ToMaybe();
         }
     }
 }

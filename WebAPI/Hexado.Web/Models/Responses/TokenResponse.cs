@@ -1,4 +1,5 @@
 ﻿using Hexado.Core.Auth;
+using Hexado.Core.Models;
 
 namespace Hexado.Web.Models.Responses
 {

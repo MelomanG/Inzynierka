@@ -1,5 +1,5 @@
-﻿using Hexado.Db.Entities;
-using Hexado.Db.Repositories;
+﻿
+using Hexado.Db.Entities;
 using Hexado.Db.Repositories.Specific;
 
 namespace Hexado.Core.Services.Specific

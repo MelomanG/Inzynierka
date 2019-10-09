@@ -1,6 +1,6 @@
 ﻿using Hexado.Db.Entities;
 
-namespace Hexado.Core.Auth
+namespace Hexado.Core.Models
 {
     public class Token
     {

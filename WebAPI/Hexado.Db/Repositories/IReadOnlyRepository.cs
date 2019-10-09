@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Db.Entities;
+using Hexado.Speczilla;
 
 namespace Hexado.Db.Repositories
 {
@@ -9,7 +10,6 @@ namespace Hexado.Db.Repositories
     {
         Task<Maybe<T>> GetAsync(string id);
         Task<Maybe<IEnumerable<T>>> GetAllAsync();
-        Task<Maybe<IEnumerable<T>>> GetManyAsync(int skip, int take);
-        Task<int> CountAsync();
+        Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Autofac;
 using Hexado.Core.Auth;
-using Hexado.Core.Services;
 using Hexado.Core.Services.Specific;
 using Hexado.Web.ActionFilters;
 using Microsoft.IdentityModel.Tokens;

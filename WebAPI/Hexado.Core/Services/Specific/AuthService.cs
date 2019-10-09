@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Core.Auth;
+using Hexado.Core.Models;
 using Hexado.Db.Entities;
 using Hexado.Db.Repositories.Specific;
 using Microsoft.AspNetCore.Identity;

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Db.Entities;
 using Hexado.Db.Repositories;
+using Hexado.Speczilla;
 
 namespace Hexado.Core.Services
 {
@@ -30,8 +31,9 @@ namespace Hexado.Core.Services
             return _repository.GetAllAsync();
         }
 
-        public Task<Maybe<IEnumerable<T>>> GetPagedResults()
+        public Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification)
         {
+            return _repository.GetPaginationResultAsync(specification);
         }
 
         public async Task<Maybe<T>> UpdateAsync(T entity)

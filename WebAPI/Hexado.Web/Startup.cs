@@ -46,6 +46,7 @@ namespace Hexado.Web
         {
             builder.RegisterModule(new HexadoCoreModule());
             builder.RegisterModule(new HexadoDbModule());
+            builder.RegisterModule(new HexadoSpeczillaModule());
         }
 
 

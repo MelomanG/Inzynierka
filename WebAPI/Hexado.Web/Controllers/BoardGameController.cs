@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Hexado.Core.Services.Specific;
 using Hexado.Db.Constants;
+using Hexado.Db.Entities;
+using Hexado.Speczilla;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -14,13 +16,16 @@ namespace Hexado.Web.Controllers
     public class BoardGameController : ApiBaseController
     {
         private readonly IBoardGameService _boardGameService;
+        private readonly ISpecificationFactory<BoardGame> _specificationFactory;
         private readonly ILogger<BoardGameController> _logger;
 
         public BoardGameController(
             IBoardGameService boardGameService,
+            ISpecificationFactory<BoardGame> specificationFactory,
             ILoggerFactory loggerFactory)
         {
             _boardGameService = boardGameService;
+            _specificationFactory = specificationFactory;
             _logger = loggerFactory.CreateLogger<BoardGameController>();
         }
 
@@ -43,13 +48,13 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        //https://www.codingame.com/playgrounds/5368/building-pager-component-for-asp-net-core
         [HttpGet]
-        public async Task<IActionResult> GetPaged(int page = 1, int pageSize = 20)
+        public async Task<IActionResult> Get()
         {
             try
             {
-                var result = await _boardGameService.GetPagedResults(page, pageSize);
+                var specification = _specificationFactory.CreateSpecification(HttpContext.Request.Query);
+                var result = await _boardGameService.GetPaginationResultAsync(specification);
 
                 return result.HasValue
                     ? OkJson(result.Value)

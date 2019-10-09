@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Functional.Maybe;
+using Hexado.Core.Models;
 using Hexado.Db.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

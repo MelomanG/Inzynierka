@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Hexado.Core.Services;
 using Hexado.Core.Services.Specific;
 using Hexado.Web.ActionFilters;
 using Hexado.Web.Extensions.Models;
