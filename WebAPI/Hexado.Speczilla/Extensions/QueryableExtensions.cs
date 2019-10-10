@@ -14,9 +14,9 @@ namespace Hexado.Speczilla.Extensions
                     (s, w) => s.Where(w));
 
             if (specification.OrderBy != null)
-                specQuery = specQuery.OrderBy(specification.OrderBy);
-            else if (specification.OrderByDescending != null)
-                specQuery = specQuery.OrderByDescending(specification.OrderByDescending);
+                specQuery = specification.IsOrderDescending
+                    ? specQuery.OrderByDescending(specification.OrderBy)
+                    : specQuery.OrderBy(specification.OrderBy);
 
             var totalCount = specQuery.Count();
 
@@ -28,8 +28,8 @@ namespace Hexado.Speczilla.Extensions
                 .Skip(skip)
                 .Take(specification.PageSize);
 
-            var pageCount = (int)Math.Ceiling((double)totalCount / specification.PageSize);
             var listAsync = await specQuery.ToListAsync();
+            var pageCount = (int)Math.Ceiling((double)totalCount / specification.PageSize);
 
             return new PaginationResult<T>
             {

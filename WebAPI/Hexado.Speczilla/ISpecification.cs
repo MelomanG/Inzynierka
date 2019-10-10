@@ -8,19 +8,18 @@ namespace Hexado.Speczilla
     {
         List<Expression<Func<T, bool>>> Wheres { get; }
         Expression<Func<T, object>> OrderBy { get; }
-        Expression<Func<T, object>> OrderByDescending { get; }
-
+        bool IsOrderDescending { get; }
         int Page { get; }
         int PageSize { get; }
     }
 
     public class Specification<T> : ISpecification<T>
     {
-        public List<Expression<Func<T, bool>>> Wheres { get; private set;  } = new List<Expression<Func<T, bool>>>();
+        public List<Expression<Func<T, bool>>> Wheres { get; } = new List<Expression<Func<T, bool>>>();
         public Expression<Func<T, object>> OrderBy { get; private set; }
-        public Expression<Func<T, object>> OrderByDescending { get; private set; }
         public int Page { get; private set; } = 1;
         public int PageSize { get; private set; } = 20;
+        public bool IsOrderDescending { get; private set; }
 
         public Specification<T> SetPage(int page)
         {
@@ -34,15 +33,10 @@ namespace Hexado.Speczilla
             return this;
         }
 
-        public Specification<T> SetOrderBy(Expression<Func<T, object>> orderBy)
+        public Specification<T> SetOrderBy(Expression<Func<T, object>> orderBy, bool isDescending = false)
         {
             OrderBy = orderBy;
-            return this;
-        }
-
-        public Specification<T> SetOrderByDescending(Expression<Func<T, object>> orderByDescending)
-        {
-            OrderByDescending = orderByDescending;
+            IsOrderDescending = isDescending;
             return this;
         }
 
