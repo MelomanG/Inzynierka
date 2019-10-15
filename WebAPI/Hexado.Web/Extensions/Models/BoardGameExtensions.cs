@@ -8,17 +8,10 @@ namespace Hexado.Web.Extensions.Models
     {
         public static BoardGame ToEntity(this BoardGameModel model)
         {
-            return new BoardGame
-            {
-                Name = model.Name,
-                Description = model.Description,
-                MinPlayers = model.MinPlayers ?? throw new ArgumentNullException($"{nameof(BoardGameModel)}.{nameof(BoardGameModel.MinPlayers)}"),
-                MaxPlayers = model.MaxPlayers ?? throw new ArgumentNullException($"{nameof(BoardGameModel)}.{nameof(BoardGameModel.MaxPlayers)}"),
-                FromAge = model.FromAge ?? throw new ArgumentNullException($"{nameof(BoardGameModel)}.{nameof(BoardGameModel.FromAge)}"),
-            };
+            return model.ToEntity(default);
         }
 
-        public static BoardGame ToEntity(this BoardGameModel model, string id)
+        public static BoardGame ToEntity(this BoardGameModel model, string? id)
         {
             return new BoardGame
             {
@@ -28,6 +21,7 @@ namespace Hexado.Web.Extensions.Models
                 MinPlayers = model.MinPlayers ?? throw new ArgumentNullException($"{nameof(BoardGameModel)}.{nameof(BoardGameModel.MinPlayers)}"),
                 MaxPlayers = model.MaxPlayers ?? throw new ArgumentNullException($"{nameof(BoardGameModel)}.{nameof(BoardGameModel.MaxPlayers)}"),
                 FromAge = model.FromAge ?? throw new ArgumentNullException($"{nameof(BoardGameModel)}.{nameof(BoardGameModel.FromAge)}"),
+                CategoryId = model.CategoryId
             };
         }
     }

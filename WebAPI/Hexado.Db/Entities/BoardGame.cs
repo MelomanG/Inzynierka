@@ -7,5 +7,8 @@
         public int MinPlayers { get; set; }
         public int MaxPlayers { get; set; }
         public int FromAge { get; set; }
+
+        public string CategoryId { get; set; }
+        public BoardGameCategory Category { get; set; }
     }
 }

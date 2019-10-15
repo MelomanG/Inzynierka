@@ -11,6 +11,12 @@ namespace Hexado.Db.Configuration
             builder
                 .HasIndex(bg => bg.Name)
                 .IsUnique();
+
+            builder
+                .HasOne(bg => bg.Category)
+                .WithMany(category => category.BoardGames)
+                .HasForeignKey(bg => bg.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

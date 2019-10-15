@@ -11,12 +11,7 @@ namespace Hexado.Db.Entities
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
-        public HexadoUser()
-        {
-            RefreshTokens = new HashSet<RefreshToken>();
-        }
-
-        public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new HashSet<RefreshToken>();
 
 
         public void RemoveRefreshToken(string refreshToken)
@@ -30,7 +25,7 @@ namespace Hexado.Db.Entities
         public bool IsValidRefreshToken(string refreshToken)
         {
             //TODO: needs refactor
-            var token =  RefreshTokens.SingleOrDefault(t => t.Token == refreshToken);
+            var token = RefreshTokens.SingleOrDefault(t => t.Token == refreshToken);
 
             if (token == null)
                 return false;
@@ -38,7 +33,6 @@ namespace Hexado.Db.Entities
             if (token.IsActive) return true;
             RefreshTokens.Remove(token);
             return false;
-
         }
     }
 }

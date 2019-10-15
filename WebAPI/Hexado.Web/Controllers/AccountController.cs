@@ -12,7 +12,7 @@ namespace Hexado.Web.Controllers
     public class AccountController : ApiBaseController
     {
         private readonly IHexadoUserService _hexadoUserService;
-        private readonly ILogger<AccountController> _logger;
+        private readonly ILogger _logger;
 
         public AccountController(
             IHexadoUserService hexadoUserService,

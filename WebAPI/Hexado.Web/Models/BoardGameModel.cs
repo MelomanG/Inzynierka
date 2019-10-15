@@ -2,6 +2,7 @@
 
 namespace Hexado.Web.Models
 {
+#nullable disable
     public class BoardGameModel
     {
         [Required]
@@ -21,5 +22,9 @@ namespace Hexado.Web.Models
         [Required]
         [Range(0,102)]
         public int? FromAge { get; set; }
+
+        [Required]
+        public string CategoryId { get; set; }
     }
+#nullable restore
 }

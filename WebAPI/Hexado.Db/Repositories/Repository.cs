@@ -12,14 +12,14 @@ namespace Hexado.Db.Repositories
         {
         }
 
-        public async Task<Maybe<T>> CreateAsync(T entity)
+        public virtual async Task<Maybe<T>> CreateAsync(T entity)
         {
             await HexadoDbContext.Set<T>().AddAsync(entity);
             await HexadoDbContext.SaveChangesAsync();
             return entity.ToMaybe();
         }
 
-        public async Task<Maybe<T>> UpdateAsync(T entity)
+        public virtual async Task<Maybe<T>> UpdateAsync(T entity)
         {
             HexadoDbContext.Entry(entity).State = EntityState.Modified;
             await HexadoDbContext.SaveChangesAsync();
@@ -29,7 +29,7 @@ namespace Hexado.Db.Repositories
             return entity.ToMaybe();
         }
 
-        public async Task<Maybe<T>> DeleteAsync(string id)
+        public virtual async Task<Maybe<T>> DeleteAsync(string id)
         {
             var entityToDelete = await GetAsync(id);
             if (!entityToDelete.HasValue)

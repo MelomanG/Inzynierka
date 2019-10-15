@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Hexado.Core.Queries;
 using Hexado.Core.Services.Specific;
-using Hexado.Core.Speczillas;
 using Hexado.Db.Constants;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
@@ -13,29 +11,26 @@ using Microsoft.Extensions.Logging;
 namespace Hexado.Web.Controllers
 {
     [Route("api/[controller]")]
-    public class BoardGameController : ApiBaseController
+    public class BoardGameCategoryController : ApiBaseController
     {
-        private readonly IBoardGameService _boardGameService;
-        private readonly IBoardGameSpeczilla _boardGameSpeczilla;
+        private readonly IBoardGameCategoryService _boardGameCategoryService;
         private readonly ILogger _logger;
 
-        public BoardGameController(
-            IBoardGameService boardGameService,
-            IBoardGameSpeczilla boardGameSpeczilla,
+        public BoardGameCategoryController(
+            IBoardGameCategoryService boardGameCategoryService,
             ILoggerFactory loggerFactory)
         {
-            _boardGameService = boardGameService;
-            _boardGameSpeczilla = boardGameSpeczilla;
-            _logger = loggerFactory.CreateLogger<BoardGameController>();
+            _boardGameCategoryService = boardGameCategoryService;
+            _logger = loggerFactory.CreateLogger<BoardGameCategoryController>();
         }
 
         [HttpPost]
         [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
-        public async Task<IActionResult> Create(BoardGameModel model)
+        public async Task<IActionResult> Create(BoardGameCategoryModel model)
         {
             try
             {
-                var result = await _boardGameService.CreateAsync(model.ToEntity());
+                var result = await _boardGameCategoryService.CreateAsync(model.ToEntity());
 
                 return result.HasValue 
                     ? CreatedJson(result.Value)
@@ -43,18 +38,17 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while creating new board game!");
+                _logger.LogError(ex, "Error while creating new board game category!");
                 return InternalServerErrorJson(ex);
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] BoardGameQuery query)
+        public async Task<IActionResult> Get()
         {
             try
             {
-                var specification = _boardGameSpeczilla.GetSpecification(query);
-                var result = await _boardGameService.GetPaginationResultAsync(specification);
+                var result = await _boardGameCategoryService.GetAllAsync();
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -62,37 +56,18 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while retrieving board games!");
-                return InternalServerErrorJson(ex);
-            }
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
-        {
-            try
-            {
-                var result = await _boardGameService.GetByIdAsync(id);
-
-                return result.HasValue
-                    ? OkJson(result.Value)
-                    : NotFound();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while retrieving board game! " +
-                                     $"Id: {id}");
+                _logger.LogError(ex, "Error while retrieving board game categories!");
                 return InternalServerErrorJson(ex);
             }
         }
 
         [HttpPut("{id}")]
         [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
-        public async Task<IActionResult> Update(string id, BoardGameModel model)
+        public async Task<IActionResult> Update(string id, BoardGameCategoryModel model)
         {
             try
             {
-                var result = await _boardGameService.UpdateAsync(model.ToEntity(id));
+                var result = await _boardGameCategoryService.UpdateAsync(model.ToEntity(id));
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -100,7 +75,7 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while updating board game! " +
+                _logger.LogError(ex, "Error while updating board game category! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }
@@ -112,7 +87,7 @@ namespace Hexado.Web.Controllers
         {
             try
             {
-                var result = await _boardGameService.DeleteByIdAsync(id);
+                var result = await _boardGameCategoryService.DeleteByIdAsync(id);
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -120,7 +95,7 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while deleting board game! " +
+                _logger.LogError(ex, "Error while deleting board game category! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }

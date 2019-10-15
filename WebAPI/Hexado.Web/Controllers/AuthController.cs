@@ -14,7 +14,7 @@ namespace Hexado.Web.Controllers
     public class AuthController : ApiBaseController
     {
         private readonly IAuthService _authService;
-        private readonly ILogger<AuthController> _logger;
+        private readonly ILogger _logger;
 
         public AuthController(
             IAuthService authService,

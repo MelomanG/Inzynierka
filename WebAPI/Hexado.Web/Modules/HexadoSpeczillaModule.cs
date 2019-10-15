@@ -12,10 +12,7 @@ namespace Hexado.Web.Modules
 
         private static void InstancePerLifetimeScope(ContainerBuilder builder)
         {
-            builder
-                .RegisterGeneric(typeof(SpecificationFactory<>))
-                .As(typeof(ISpecificationFactory<>))
-                .InstancePerLifetimeScope();
+            ////////////////////////////////////////////
         }
     }
 }

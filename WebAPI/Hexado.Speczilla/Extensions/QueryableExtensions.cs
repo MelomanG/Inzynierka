@@ -7,19 +7,30 @@ namespace Hexado.Speczilla.Extensions
 {
     public static class QueryableExtensions
     {
-        public static async Task<PaginationResult<T>> AsPaginationResultAsync<T>(this IQueryable<T> query, ISpecification<T> specification)
+        public static IQueryable<T> ApplySpecification<T>(this IQueryable<T> query,
+            ISpecification<T> specification) where T : class
         {
-            var specQuery = specification.Wheres
-                .Aggregate(query,
-                    (s, w) => s.Where(w));
+            var specQuery = specification.Where != null
+                ? query.Where(specification.Where)
+                : query;
+
+            specQuery = specification.Includes.Aggregate(specQuery,
+                (current, include) => current.Include(include));
+
 
             if (specification.OrderBy != null)
                 specQuery = specification.IsOrderDescending
                     ? specQuery.OrderByDescending(specification.OrderBy)
                     : specQuery.OrderBy(specification.OrderBy);
 
-            var totalCount = specQuery.Count();
+            return specQuery;
+        }
 
+        public static async Task<PaginationResult<T>> AsPaginationResultAsync<T>(this IQueryable<T> query, ISpecification<T> specification) where T: class
+        {
+            var specQuery = query.ApplySpecification(specification);
+
+            var totalCount = specQuery.Count();
             var skip = specification.Page <= 0
                                     ? 0
                                     : (specification.Page - 1) * specification.PageSize;

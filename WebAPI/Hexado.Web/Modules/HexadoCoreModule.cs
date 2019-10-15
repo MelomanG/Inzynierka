@@ -2,6 +2,7 @@
 using Autofac;
 using Hexado.Core.Auth;
 using Hexado.Core.Services.Specific;
+using Hexado.Core.Speczillas;
 using Hexado.Web.ActionFilters;
 using Microsoft.IdentityModel.Tokens;
 
@@ -29,6 +30,10 @@ namespace Hexado.Web.Modules
                 .RegisterType<AccessTokenValidator>()
                 .As<IAccessTokenValidator>()
                 .SingleInstance();
+            builder
+                .RegisterType<BoardGameSpeczilla>()
+                .As<IBoardGameSpeczilla>()
+                .SingleInstance();
         }
 
         private static void InstancePerLifetimeScope(ContainerBuilder builder)
@@ -44,6 +49,10 @@ namespace Hexado.Web.Modules
             builder
                 .RegisterType<BoardGameService>()
                 .As<IBoardGameService>()
+                .InstancePerLifetimeScope();
+            builder
+                .RegisterType<BoardGameCategoryService>()
+                .As<IBoardGameCategoryService>()
                 .InstancePerLifetimeScope();
             builder
                 .RegisterType<AuthorizationHeaderValidation>()

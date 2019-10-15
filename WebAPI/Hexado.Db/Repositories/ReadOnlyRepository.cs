@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Db.Entities;
@@ -20,7 +18,7 @@ namespace Hexado.Db.Repositories
             HexadoDbContext = hexadoDbContext;
         }
 
-        public async Task<Maybe<T>> GetAsync(string id)
+        public virtual async Task<Maybe<T>> GetAsync(string id)
         {
             var entity = (await HexadoDbContext.Set<T>().FindAsync(id)).ToMaybe();
             if (!entity.HasValue)
@@ -30,12 +28,12 @@ namespace Hexado.Db.Repositories
             return entity;
         }
 
-        public async Task<Maybe<IEnumerable<T>>> GetAllAsync()
+        public virtual async Task<Maybe<IEnumerable<T>>> GetAllAsync()
         {
             return (await HexadoDbContext.Set<T>().AsNoTracking().ToListAsync()).AsEnumerable().ToMaybe();
         }
 
-        public async Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification)
+        public virtual async Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification)
         {
             return (await HexadoDbContext.Set<T>()
                 .AsNoTracking()

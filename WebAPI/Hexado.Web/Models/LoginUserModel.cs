@@ -2,6 +2,7 @@
 
 namespace Hexado.Web.Models
 {
+#nullable disable
     public class LoginUserModel
     {
         [Required]
@@ -11,4 +12,5 @@ namespace Hexado.Web.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }
+#nullable restore
 }

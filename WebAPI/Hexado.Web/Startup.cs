@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace Hexado.Web
 {
@@ -30,7 +31,8 @@ namespace Hexado.Web
                             .AllowAnyOrigin()
                             .AllowAnyMethod()
                             .AllowAnyHeader()))
-                .AddControllers();
+                .AddControllers()
+                .AddNewtonsoftJson(options=> options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             // ====== 
 
             // ====== Hexado specific ======

@@ -2,6 +2,7 @@
 
 namespace Hexado.Web.Models
 {
+#nullable disable
     public class RegisterUserModel
     {
         [Required]
@@ -20,4 +21,5 @@ namespace Hexado.Web.Models
         [Compare("Password")]
         public string ConfirmationPassword { get; set; }
     }
+#nullable restore
 }

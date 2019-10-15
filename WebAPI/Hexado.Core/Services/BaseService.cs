@@ -9,45 +9,46 @@ namespace Hexado.Core.Services
 {
     public abstract class BaseService<T> : IBaseService<T> where T: class, IBaseEntity
     {
-        private readonly IRepository<T> _repository;
+        protected readonly IRepository<T> Repository;
 
-        protected BaseService(IRepository<T> repository)
+        protected BaseService(
+            IRepository<T> repository)
         {
-            _repository = repository;
+            Repository = repository;
         }
 
-        public Task<Maybe<T>> CreateAsync(T entity)
+        public virtual Task<Maybe<T>> CreateAsync(T entity)
         {
-            return _repository.CreateAsync(entity);
+            return Repository.CreateAsync(entity);
         }
 
-        public Task<Maybe<T>> GetByIdAsync(string id)
+        public virtual Task<Maybe<T>> GetByIdAsync(string id)
         {
-            return _repository.GetAsync(id);
+            return Repository.GetAsync(id);
         }
 
-        public Task<Maybe<IEnumerable<T>>> GetAllAsync()
+        public virtual Task<Maybe<IEnumerable<T>>> GetAllAsync()
         {
-            return _repository.GetAllAsync();
+            return Repository.GetAllAsync();
         }
 
-        public Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification)
+        public virtual Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification)
         {
-            return _repository.GetPaginationResultAsync(specification);
+            return Repository.GetPaginationResultAsync(specification);
         }
 
-        public async Task<Maybe<T>> UpdateAsync(T entity)
+        public virtual async Task<Maybe<T>> UpdateAsync(T entity)
         {
-            var existingEntity = await _repository.GetAsync(entity.Id);
+            var existingEntity = await Repository.GetAsync(entity.Id);
             if (!existingEntity.HasValue)
                 return Maybe<T>.Nothing;
 
-            return await _repository.UpdateAsync(entity);
+            return await Repository.UpdateAsync(entity);
         }
 
-        public Task<Maybe<T>> DeleteByIdAsync(string id)
+        public virtual Task<Maybe<T>> DeleteByIdAsync(string id)
         {
-            return _repository.DeleteAsync(id);
+            return Repository.DeleteAsync(id);
         }
     }
 }
