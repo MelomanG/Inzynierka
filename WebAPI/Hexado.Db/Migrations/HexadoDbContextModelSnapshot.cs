@@ -81,7 +81,7 @@ namespace Hexado.Db.Migrations
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
-                    b.ToTable("BoardGamesCategories");
+                    b.ToTable("Rates");
                 });
 
             modelBuilder.Entity("Hexado.Db.Entities.RefreshToken", b =>

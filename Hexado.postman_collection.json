@@ -193,7 +193,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"Name\": \"Test board game 5\",\n\t\"Description\": \"Some fancy description :D\",\n\t\"MinPlayers\": 2,\n\t\"MaxPlayers\": 5,\n\t\"FromAge\": 8\n}",
+							"raw": "{\n\t\"Name\": \"Test board game 8\",\n\t\"Description\": \"Some fancy description :D\",\n\t\"MinPlayers\": 2,\n\t\"MaxPlayers\": 3,\n\t\"FromAge\": 15,\n\t\"CategoryId\": \"b22fd544-24f4-4028-b223-d6eec6badc1a\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -238,7 +238,7 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8080/api/BoardGame",
+							"raw": "http://localhost:8080/api/BoardGame?",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -247,6 +247,43 @@
 							"path": [
 								"api",
 								"BoardGame"
+							],
+							"query": [
+								{
+									"key": "max_players",
+									"value": "6",
+									"disabled": true
+								},
+								{
+									"key": "min_players",
+									"value": "4",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "name desc",
+									"disabled": true
+								},
+								{
+									"key": "min_age",
+									"value": "8",
+									"disabled": true
+								},
+								{
+									"key": "max_age",
+									"value": "8",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "7330668a-ae70-44a5-8313-e7481cf5fcc7",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "b22fd544-24f4-4028-b223-d6eec6badc1a",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -320,7 +357,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"Name\": \"Test board game 1321\",\n\t\"Description\": \"Some fancy description :D\",\n\t\"MinPlayers\": 2,\n\t\"MaxPlayers\": 5,\n\t\"FromAge\": 9\n}",
+							"raw": "{\n\t\"Name\": \"est board game 8\",\n\t\"Description\": \"Some fancy description32132131312321 :D\",\n\t\"MinPlayers\": 2,\n\t\"MaxPlayers\": 5,\n\t\"FromAge\": 9\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -342,7 +379,7 @@
 							"variable": [
 								{
 									"key": "Id",
-									"value": "12957b99-044b-4e56-8ca3-89bad7ad5e29"
+									"value": "af50a82c-81b3-4518-a452-c1d0331c5aee"
 								}
 							]
 						}
@@ -381,6 +418,246 @@
 							"path": [
 								"api",
 								"BoardGame",
+								":Id"
+							],
+							"variable": [
+								{
+									"key": "Id",
+									"value": "12957b99-044b-4e56-8ca3-89bad7ad5e29"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rate Board Game",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Rate\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/BoardGame/:Id/rate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"BoardGame",
+								":Id",
+								"rate"
+							],
+							"variable": [
+								{
+									"key": "Id",
+									"value": "93ebb120-9df7-43cf-88bc-91715512ca56"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "BoardGameCategoryController",
+			"item": [
+				{
+					"name": "Create Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Name\": \"Rodzinne\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/BoardGameCategory",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"BoardGameCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/BoardGameCategory",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"BoardGameCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"Description\": \"Some fancy description 21311231:D\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/BoardGameCategory/:Id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"BoardGameCategory",
+								":Id"
+							],
+							"variable": [
+								{
+									"key": "Id",
+									"value": "af50a82c-81b3-4518-a452-c1d0331c5aee"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/BoardGameCategory/:Id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"BoardGameCategory",
 								":Id"
 							],
 							"variable": [

@@ -1,4 +1,6 @@
-﻿namespace Hexado.Db.Entities
+﻿using System.Collections.Generic;
+
+namespace Hexado.Db.Entities
 {
     public class BoardGame : BaseEntity
     {
@@ -10,5 +12,7 @@
 
         public string CategoryId { get; set; }
         public BoardGameCategory Category { get; set; }
+
+        public ICollection<Rate> Rates { get; set; } = new HashSet<Rate>();
     }
 }

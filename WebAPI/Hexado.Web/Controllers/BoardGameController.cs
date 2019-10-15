@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hexado.Core.Queries;
+using Hexado.Core.Services;
 using Hexado.Core.Services.Specific;
 using Hexado.Core.Speczillas;
 using Hexado.Db.Constants;
@@ -21,13 +22,17 @@ namespace Hexado.Web.Controllers
 
         public BoardGameController(
             IBoardGameService boardGameService,
+            IRateService rateService,
             IBoardGameSpeczilla boardGameSpeczilla,
             ILoggerFactory loggerFactory)
         {
             _boardGameService = boardGameService;
             _boardGameSpeczilla = boardGameSpeczilla;
+            _rateService = rateService;
             _logger = loggerFactory.CreateLogger<BoardGameController>();
         }
+
+        private readonly IRateService _rateService;
 
         [HttpPost]
         [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
@@ -121,6 +126,26 @@ namespace Hexado.Web.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while deleting board game! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpPost("{id}/rate")]
+        [Authorize]
+        public async Task<IActionResult> RateBoardGame(string id, RateModel model)
+        {
+            try
+            {
+                var result = await _rateService.RateBoardGame(id, model.ToEntity(UserEmail));
+
+                return result.HasValue
+                    ? OkJson(result.Value)
+                    : NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while applying rate to board game! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }

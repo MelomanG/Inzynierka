@@ -55,6 +55,10 @@ namespace Hexado.Web.Modules
                 .As<IBoardGameCategoryService>()
                 .InstancePerLifetimeScope();
             builder
+                .RegisterType<RateService>()
+                .As<IRateService>()
+                .InstancePerLifetimeScope();
+            builder
                 .RegisterType<AuthorizationHeaderValidation>()
                 .AsSelf()
                 .InstancePerLifetimeScope();

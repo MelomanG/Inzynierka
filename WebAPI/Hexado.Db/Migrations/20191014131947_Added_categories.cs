@@ -13,7 +13,7 @@ namespace Hexado.Db.Migrations
                 nullable: true);
 
             migrationBuilder.CreateTable(
-                name: "BoardGamesCategories",
+                name: "Rates",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
@@ -33,7 +33,7 @@ namespace Hexado.Db.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_BoardGamesCategories_Name",
-                table: "BoardGamesCategories",
+                table: "Rates",
                 column: "Name",
                 unique: true,
                 filter: "[Name] IS NOT NULL");
@@ -42,7 +42,7 @@ namespace Hexado.Db.Migrations
                 name: "FK_BoardGames_BoardGamesCategories_CategoryId",
                 table: "BoardGames",
                 column: "CategoryId",
-                principalTable: "BoardGamesCategories",
+                principalTable: "Rates",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.SetNull);
         }
@@ -54,7 +54,7 @@ namespace Hexado.Db.Migrations
                 table: "BoardGames");
 
             migrationBuilder.DropTable(
-                name: "BoardGamesCategories");
+                name: "Rates");
 
             migrationBuilder.DropIndex(
                 name: "IX_BoardGames_CategoryId",

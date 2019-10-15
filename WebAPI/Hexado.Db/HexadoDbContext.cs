@@ -23,12 +23,15 @@ namespace Hexado.Db
             builder.ApplyConfiguration(new RefreshTokenConfiguration());
             builder.ApplyConfiguration(new BoardGameConfiguration());
             builder.ApplyConfiguration(new BoardGameCategoryConfiguration());
+            builder.ApplyConfiguration(new RateConfiguration());
         }
 
         public DbSet<HexadoUser> HexadoUsers { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<BoardGame> BoardGames { get; set; }
         public DbSet<BoardGameCategory> BoardGamesCategories { get; set; }
+        public DbSet<Rate> Rates { get; set; }
+
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
