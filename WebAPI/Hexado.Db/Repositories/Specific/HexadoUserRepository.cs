@@ -23,6 +23,11 @@ namespace Hexado.Db.Repositories.Specific
             _userManager = userManager;
         }
 
+        public override Task<Maybe<HexadoUser>> GetSingleOrMaybeAsync(Expression<Func<HexadoUser, bool>> predicate)
+        {
+            return base.GetSingleOrMaybeAsync(predicate, user => user.Account);
+        }
+
         public async Task<IdentityResult> CreateAsync(HexadoUser user, string password)
         {
             var result = await _userManager.CreateAsync(user, password);

@@ -8,6 +8,11 @@ namespace Hexado.Db.Configuration
     {
         public void Configure(EntityTypeBuilder<HexadoUser> builder)
         {
+            builder
+                .HasOne(user => user.Account)
+                .WithOne(account => account.HexadoUser)
+                .HasForeignKey<UserAccount>(account => account.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

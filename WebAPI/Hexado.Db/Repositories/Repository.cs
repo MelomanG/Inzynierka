@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hexado.Db.Repositories
 {
-    public abstract class Repository<T> : ReadOnlyRepository<T>, IRepository<T> where T: class, IBaseEntity
+    public class Repository<T> : ReadOnlyRepository<T>, IRepository<T> where T: class, IBaseEntity
     {
-        protected Repository(HexadoDbContext hexadoDbContext)
+        public Repository(HexadoDbContext hexadoDbContext)
             : base(hexadoDbContext)
         {
         }

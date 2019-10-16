@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Hexado.Db.Repositories;
 using Hexado.Db.Repositories.Specific;
 
 namespace Hexado.Web.Modules
@@ -20,14 +19,6 @@ namespace Hexado.Web.Modules
             builder
                 .RegisterType<BoardGameRepository>()
                 .As<IBoardGameRepository>()
-                .InstancePerLifetimeScope();
-            builder
-                .RegisterType<BoardGameCategoryRepository>()
-                .As<IBoardGameCategoryRepository>()
-                .InstancePerLifetimeScope();
-            builder
-                .RegisterType<RateRepository>()
-                .As<IRateRepository>()
                 .InstancePerLifetimeScope();
         }
     }

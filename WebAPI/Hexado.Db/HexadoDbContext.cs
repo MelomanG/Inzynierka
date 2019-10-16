@@ -21,16 +21,29 @@ namespace Hexado.Db
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new RefreshTokenConfiguration());
+            builder.ApplyConfiguration(new UserAccountConfiguration());
+            builder.ApplyConfiguration(new HexadoUserConfiguration());
+            
             builder.ApplyConfiguration(new BoardGameConfiguration());
             builder.ApplyConfiguration(new BoardGameCategoryConfiguration());
-            builder.ApplyConfiguration(new RateConfiguration());
+            builder.ApplyConfiguration(new BoardGameRateConfiguration());
+
+            builder.ApplyConfiguration(new PubConfiguration());
+            builder.ApplyConfiguration(new PubBoardGameConfiguration());
+            builder.ApplyConfiguration(new PubRateConfiguration());
         }
 
         public DbSet<HexadoUser> HexadoUsers { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+
         public DbSet<BoardGame> BoardGames { get; set; }
         public DbSet<BoardGameCategory> BoardGamesCategories { get; set; }
-        public DbSet<Rate> Rates { get; set; }
+        public DbSet<BoardGameRate> BoardGameRates { get; set; }
+
+        public DbSet<Pub> Pubs { get; set; }
+        public DbSet<PubBoardGame> PubBoardGames { get; set; }
+        public DbSet<PubRate> PubRates { get; set; }
 
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -46,15 +59,12 @@ namespace Hexado.Db
             foreach (var entry in entries)
             {
                 var baseEntity = (IBaseEntity) entry.Entity;
-
                 baseEntity.Modified = DateTime.UtcNow;
 
                 if (entry.State == EntityState.Added)
                     baseEntity.Created = baseEntity.Modified;
                 else if (entry.State == EntityState.Modified)
-                {
                     Entry(baseEntity).Property(e => e.Created).IsModified = false;
-                }
             }
         }
     }

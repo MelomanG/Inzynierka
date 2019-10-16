@@ -13,6 +13,7 @@ namespace Hexado.Db.Entities
         public string CategoryId { get; set; }
         public BoardGameCategory Category { get; set; }
 
-        public ICollection<Rate> Rates { get; set; } = new HashSet<Rate>();
+        public ICollection<BoardGameRate> BoardGameRates { get; set; } = new HashSet<BoardGameRate>();
+        public ICollection<PubBoardGame> PubBoardGames { get; set; } = new HashSet<PubBoardGame>();
     }
 }

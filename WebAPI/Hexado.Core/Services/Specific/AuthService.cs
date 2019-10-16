@@ -11,6 +11,12 @@ using Microsoft.Extensions.Options;
 
 namespace Hexado.Core.Services.Specific
 {
+    public interface IAuthService
+    {
+        Task<Maybe<Token>> LoginAsync(string loginName, string password);
+        Task<Maybe<Token>> RefreshTokenAsync(string accessToken, string refreshToken);
+    }
+
     //==================================================================================
     //TODO: Authentication need to be refactored. Currently it's hard to test this class
     //==================================================================================
@@ -38,7 +44,6 @@ namespace Hexado.Core.Services.Specific
 
         public async Task<Maybe<Token>> LoginAsync(string loginName, string password)
         {
-
             var user = await _userManager.FindByEmailAsync(loginName) ?? await _userManager.FindByNameAsync(loginName);
             if (!(user != null && await _userManager.CheckPasswordAsync(user, password)))
                 return Maybe<Token>.Nothing;
@@ -54,9 +59,9 @@ namespace Hexado.Core.Services.Specific
 
         public async Task<Maybe<Token>> RefreshTokenAsync(string accessToken, string refreshToken)
         {
-            var claims =_accessTokenValidator.Validate(accessToken,
+            var claims = _accessTokenValidator.Validate(accessToken,
                 HexadoTokenSpecific.GetValidationParameters(_options.Secret, false));
-            if(!claims.HasValue || claims.Value.All(claim => claim.Type != ClaimTypes.Email))
+            if (!claims.HasValue || claims.Value.All(claim => claim.Type != ClaimTypes.Email))
                 return Maybe<Token>.Nothing;
 
             var email = claims.Value

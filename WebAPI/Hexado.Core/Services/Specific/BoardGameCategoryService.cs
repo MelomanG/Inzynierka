@@ -1,5 +1,5 @@
 ﻿using Hexado.Db.Entities;
-using Hexado.Db.Repositories.Specific;
+using Hexado.Db.Repositories;
 
 namespace Hexado.Core.Services.Specific
 {
@@ -10,7 +10,7 @@ namespace Hexado.Core.Services.Specific
     public class BoardGameCategoryService : BaseService<BoardGameCategory>, IBoardGameCategoryService
     {
         public BoardGameCategoryService(
-            IBoardGameCategoryRepository repository)
+            IRepository<BoardGameCategory> repository)
             : base(repository)
         {
         }

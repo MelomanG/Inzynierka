@@ -22,7 +22,10 @@ namespace Hexado.Db.Repositories
 
         public virtual async Task<Maybe<T>> GetAsync(string id)
         {
-            var entity = (await HexadoDbContext.Set<T>().FindAsync(id)).ToMaybe();
+            var entity = (await HexadoDbContext.Set<T>()
+                    .FindAsync(id))
+                .ToMaybe();
+
             if (!entity.HasValue)
                 return entity;
 
@@ -30,16 +33,47 @@ namespace Hexado.Db.Repositories
             return entity;
         }
 
+        public virtual async Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate)
+        {
+            return (await HexadoDbContext.Set<T>()
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(predicate))
+                .ToMaybe();
+        }
+
+        public virtual async Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> include)
+        {
+            return (await HexadoDbContext.Set<T>()
+                    .AsNoTracking()
+                    .Include(include)
+                    .SingleOrDefaultAsync(predicate))
+                .ToMaybe();
+        }
+
         public virtual async Task<Maybe<IEnumerable<T>>> GetAllAsync()
         {
-            return (await HexadoDbContext.Set<T>().AsNoTracking().ToListAsync()).AsEnumerable().ToMaybe();
+            return (await HexadoDbContext.Set<T>()
+                    .AsNoTracking()
+                    .ToListAsync())
+                .AsEnumerable()
+                .ToMaybe();
+        }
+
+        public virtual async Task<Maybe<IEnumerable<T>>> GetAllAsync(Expression<Func<T, object>> include)
+        {
+            return (await HexadoDbContext.Set<T>()
+                    .AsNoTracking()
+                    .Include(include)
+                    .ToListAsync())
+                .AsEnumerable()
+                .ToMaybe();
         }
 
         public virtual async Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification)
         {
             return (await HexadoDbContext.Set<T>()
-                .AsNoTracking()
-                .AsPaginationResultAsync(specification))
+                    .AsNoTracking()
+                    .AsPaginationResultAsync(specification))
                 .ToMaybe();
         }
     }

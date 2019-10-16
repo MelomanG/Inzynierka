@@ -7,11 +7,14 @@ namespace Hexado.Db.Entities
 {
     public class HexadoUser : IdentityUser, IBaseEntity
     {
-        public string FullName { get; set; }
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
+        public UserAccount Account { get; set; }
+
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new HashSet<RefreshToken>();
+        public ICollection<BoardGameRate> BoardGameRates { get; set; } = new HashSet<BoardGameRate>();
+        public ICollection<PubRate> PubRates { get; set; } = new HashSet<PubRate>();
 
 
         public void RemoveRefreshToken(string refreshToken)

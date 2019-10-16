@@ -5,12 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20191008091729_SomethingWentWrond.cs" />
-    <Compile Remove="Migrations\20191008091729_SomethingWentWrond.Designer.cs" />
-    <Compile Remove="Migrations\20191008091858_Test2.cs" />
-    <Compile Remove="Migrations\20191008091858_Test2.Designer.cs" />
-    <Compile Remove="Migrations\20191008094459_Test3.cs" />
-    <Compile Remove="Migrations\20191008094459_Test3.Designer.cs" />
+    <Compile Remove="Migrations\20191016113042_Account_Added2.cs" />
+    <Compile Remove="Migrations\20191016113042_Account_Added2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

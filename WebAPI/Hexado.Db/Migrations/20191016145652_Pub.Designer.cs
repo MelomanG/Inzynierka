@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hexado.Db.Migrations
 {
     [DbContext(typeof(HexadoDbContext))]
-    [Migration("20191008121450_Implement_IBaseEntity_InHexadoUser")]
-    partial class Implement_IBaseEntity_InHexadoUser
+    [Migration("20191016145652_Pub")]
+    partial class Pub
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,6 +25,9 @@ namespace Hexado.Db.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CategoryId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Created")
@@ -50,11 +53,158 @@ namespace Hexado.Db.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("Name")
                         .IsUnique()
                         .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("BoardGames");
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.BoardGameCategory", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
+                    b.ToTable("BoardGamesCategories");
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.BoardGameRate", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BoardGameId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HexadoUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserRate")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("BoardGameId", "HexadoUserId");
+
+                    b.HasIndex("HexadoUserId");
+
+                    b.ToTable("BoardGameRates");
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.Pub", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("Pubs");
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.PubBoardGame", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BoardGameId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PubId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("PubId", "BoardGameId");
+
+                    b.HasIndex("BoardGameId");
+
+                    b.ToTable("PubBoardGames");
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.PubRate", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HexadoUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PubId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("PubId", "HexadoUserId");
+
+                    b.HasIndex("HexadoUserId");
+
+                    b.ToTable("PubRates");
                 });
 
             modelBuilder.Entity("Hexado.Db.Entities.RefreshToken", b =>
@@ -83,6 +233,30 @@ namespace Hexado.Db.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.UserAccount", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("UserAccounts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -298,13 +472,71 @@ namespace Hexado.Db.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
                     b.HasDiscriminator().HasValue("HexadoUser");
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.BoardGame", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.BoardGameCategory", "Category")
+                        .WithMany("BoardGames")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.BoardGameRate", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.BoardGame", "BoardGame")
+                        .WithMany("BoardGameRates")
+                        .HasForeignKey("BoardGameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hexado.Db.Entities.HexadoUser", "HexadoUser")
+                        .WithMany("BoardGameRates")
+                        .HasForeignKey("HexadoUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.Pub", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.UserAccount", "Account")
+                        .WithMany("OwnedPubs")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.PubBoardGame", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.BoardGame", "BoardGame")
+                        .WithMany("PubBoardGames")
+                        .HasForeignKey("BoardGameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hexado.Db.Entities.Pub", "Pub")
+                        .WithMany("PubBoardGames")
+                        .HasForeignKey("PubId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.PubRate", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.HexadoUser", "HexadoUser")
+                        .WithMany("PubRates")
+                        .HasForeignKey("HexadoUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Hexado.Db.Entities.Pub", "Pub")
+                        .WithMany("PubRates")
+                        .HasForeignKey("PubId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Hexado.Db.Entities.RefreshToken", b =>
@@ -312,6 +544,14 @@ namespace Hexado.Db.Migrations
                     b.HasOne("Hexado.Db.Entities.HexadoUser", "HexadoUser")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.UserAccount", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.HexadoUser", "HexadoUser")
+                        .WithOne("Account")
+                        .HasForeignKey("Hexado.Db.Entities.UserAccount", "UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

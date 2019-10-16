@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Hexado.Db.Constants
+﻿namespace Hexado.Db.Constants
 {
     public static class HexadoPolicy
     {

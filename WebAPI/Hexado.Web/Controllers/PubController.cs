@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hexado.Core.Queries;
+using Hexado.Core.Services;
 using Hexado.Core.Services.Specific;
 using Hexado.Core.Speczillas;
-using Hexado.Db.Constants;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -13,35 +13,39 @@ using Microsoft.Extensions.Logging;
 namespace Hexado.Web.Controllers
 {
     [Route("api/[controller]")]
-    public class BoardGameController : ApiBaseController
+    public class PubController : ApiBaseController
     {
-        private readonly IBoardGameService _boardGameService;
+        private readonly IPubService _pubService;
+        private readonly IPubSpeczilla _pubSpeczilla;
         private readonly IRateService _rateService;
-        private readonly IBoardGameSpeczilla _boardGameSpeczilla;
         private readonly IHexadoUserService _hexadoUserService;
         private readonly ILogger _logger;
 
-        public BoardGameController(
-            IBoardGameService boardGameService,
+        public PubController(
+            IPubService pubService,
+            IPubSpeczilla pubSpeczilla,
             IRateService rateService,
             IHexadoUserService hexadoUserService,
-            IBoardGameSpeczilla boardGameSpeczilla,
             ILoggerFactory loggerFactory)
         {
-            _boardGameService = boardGameService;
-            _boardGameSpeczilla = boardGameSpeczilla;
-            _hexadoUserService = hexadoUserService;
+            _pubService = pubService;
+            _pubSpeczilla = pubSpeczilla;
             _rateService = rateService;
-            _logger = loggerFactory.CreateLogger<BoardGameController>();
+            _hexadoUserService = hexadoUserService;
+            _logger = loggerFactory.CreateLogger<PubController>();
         }
 
         [HttpPost]
-        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
-        public async Task<IActionResult> Create(BoardGameModel model)
+        [Authorize]
+        public async Task<IActionResult> Create(PubModel model)
         {
             try
             {
-                var result = await _boardGameService.CreateAsync(model.ToEntity());
+                var user = await _hexadoUserService.GetSingleOrMaybeAsync(u => u.Email == UserEmail);
+                if (!user.HasValue)
+                    return Unauthorized();
+
+                var result = await _pubService.CreateAsync(model.ToEntity(user.Value.Account.Id));
 
                 return result.HasValue 
                     ? CreatedJson(result.Value)
@@ -49,18 +53,19 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while creating new board game!");
+                _logger.LogError(ex, "Error while creating new pub!");
                 return InternalServerErrorJson(ex);
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] BoardGameQuery query)
+        public async Task<IActionResult> Get([FromQuery] PubQuery query)
         {
             try
             {
-                var specification = _boardGameSpeczilla.GetSpecification(query);
-                var result = await _boardGameService.GetPaginationResultAsync(specification);
+                //TODO define query. Consider splitting Query to query params and body 
+                var specification = _pubSpeczilla.GetSpecification(query);
+                var result = await _pubService.GetPaginationResultAsync(specification);
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -68,7 +73,7 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while retrieving board games!");
+                _logger.LogError(ex, "Error while retrieving pubs!");
                 return InternalServerErrorJson(ex);
             }
         }
@@ -78,7 +83,7 @@ namespace Hexado.Web.Controllers
         {
             try
             {
-                var result = await _boardGameService.GetByIdAsync(id);
+                var result = await _pubService.GetByIdAsync(id);
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -86,19 +91,20 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while retrieving board game! " +
+                _logger.LogError(ex, "Error while retrieving pub! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }
         }
 
         [HttpPut("{id}")]
-        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
-        public async Task<IActionResult> Update(string id, BoardGameModel model)
+        [Authorize]
+        public async Task<IActionResult> Update(string id, PubModel model)
         {
             try
             {
-                var result = await _boardGameService.UpdateAsync(model.ToEntity(id));
+                //TODO Check ownership
+                var result = await _pubService.UpdateAsync(model.ToEntity(id));
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -106,19 +112,20 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while updating board game! " +
+                _logger.LogError(ex, "Error while updating pub! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
+        [Authorize]
         public async Task<IActionResult> Delete(string id)
         {
             try
             {
-                var result = await _boardGameService.DeleteByIdAsync(id);
+                //TODO Check ownership
+                var result = await _pubService.DeleteByIdAsync(id);
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -126,7 +133,7 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while deleting board game! " +
+                _logger.LogError(ex, "Error while deleting pub! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }
@@ -142,8 +149,8 @@ namespace Hexado.Web.Controllers
                 if (!user.HasValue)
                     return Unauthorized();
 
-                var result = await _rateService.RateBoardGame(
-                    model.ToBoardGameRateEntity(
+                var result = await _rateService.RatePub(
+                    model.ToPubRateEntity(
                         user.Value.Id,
                         id));
 
@@ -153,7 +160,7 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while applying rate to board game! " +
+                _logger.LogError(ex, "Error while applying rate to pub! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }
@@ -161,7 +168,7 @@ namespace Hexado.Web.Controllers
 
         [HttpPut("{id}/rate/{rateId}")]
         [Authorize]
-        public async Task<IActionResult> UpdateBoardGameRate(string id, string rateId, RateModel model)
+        public async Task<IActionResult> UpdatePubRate(string id, string rateId, RateModel model)
         {
             try
             {
@@ -169,8 +176,8 @@ namespace Hexado.Web.Controllers
                 if (!user.HasValue)
                     return Unauthorized();
 
-                var result = await _rateService.UpdateBoardGameRate(
-                    model.ToBoardGameRateEntity(
+                var result = await _rateService.UpdatePubRate(
+                    model.ToPubRateEntity(
                         user.Value.Id,
                         id,
                         rateId));
@@ -181,7 +188,7 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while updating board game rate! " +
+                _logger.LogError(ex, "Error while updating pub rate! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }
@@ -193,7 +200,7 @@ namespace Hexado.Web.Controllers
         {
             try
             {
-                var result = await _rateService.DeleteBoardGameRate(rateId);
+                var result = await _rateService.DeletePubRate(rateId);
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -201,7 +208,7 @@ namespace Hexado.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while deleting board game rate! " +
+                _logger.LogError(ex, "Error while deleting pub rate! " +
                                      $"Id: {rateId}");
                 return InternalServerErrorJson(ex);
             }
