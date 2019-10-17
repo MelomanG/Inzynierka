@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Autofac;
 using Hexado.Core.Auth;
+using Hexado.Core.Services;
 using Hexado.Core.Services.Specific;
 using Hexado.Core.Speczillas;
 using Hexado.Web.ActionFilters;
@@ -34,6 +35,10 @@ namespace Hexado.Web.Modules
                 .RegisterType<BoardGameSpeczilla>()
                 .As<IBoardGameSpeczilla>()
                 .SingleInstance();
+            builder
+                .RegisterType<PubSpeczilla>()
+                .As<IPubSpeczilla>()
+                .SingleInstance();
         }
 
         private static void InstancePerLifetimeScope(ContainerBuilder builder)
@@ -57,6 +62,10 @@ namespace Hexado.Web.Modules
             builder
                 .RegisterType<RateService>()
                 .As<IRateService>()
+                .InstancePerLifetimeScope();
+            builder
+                .RegisterType<PubService>()
+                .As<IPubService>()
                 .InstancePerLifetimeScope();
             builder
                 .RegisterType<AuthorizationHeaderValidation>()

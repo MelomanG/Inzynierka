@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hexado.Db.Migrations
 {
-    public partial class Pub : Migration
+    public partial class Reset : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -265,10 +265,10 @@ namespace Hexado.Db.Migrations
                     Id = table.Column<string>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Modified = table.Column<DateTime>(nullable: false),
-                    BoardGameId = table.Column<string>(nullable: false),
-                    HexadoUserId = table.Column<string>(nullable: false),
                     UserRate = table.Column<int>(nullable: false),
-                    Comment = table.Column<string>(nullable: true)
+                    Comment = table.Column<string>(nullable: true),
+                    BoardGameId = table.Column<string>(nullable: false),
+                    HexadoUserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -285,6 +285,31 @@ namespace Hexado.Db.Migrations
                         column: x => x.HexadoUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Modified = table.Column<DateTime>(nullable: false),
+                    Street = table.Column<string>(nullable: true),
+                    BuildingNumber = table.Column<string>(nullable: true),
+                    LocalNumber = table.Column<string>(nullable: true),
+                    PostalCode = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    PubId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Pubs_PubId",
+                        column: x => x.PubId,
+                        principalTable: "Pubs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -322,6 +347,8 @@ namespace Hexado.Db.Migrations
                     Id = table.Column<string>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Modified = table.Column<DateTime>(nullable: false),
+                    UserRate = table.Column<int>(nullable: false),
+                    Comment = table.Column<string>(nullable: true),
                     PubId = table.Column<string>(nullable: false),
                     HexadoUserId = table.Column<string>(nullable: false)
                 },
@@ -341,6 +368,20 @@ namespace Hexado.Db.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_PubId",
+                table: "Addresses",
+                column: "PubId",
+                unique: true,
+                filter: "[PubId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Addresses_Street_BuildingNumber_LocalNumber_PostalCode_City",
+                table: "Addresses",
+                columns: new[] { "Street", "BuildingNumber", "LocalNumber", "PostalCode", "City" },
+                unique: true,
+                filter: "[Street] IS NOT NULL AND [BuildingNumber] IS NOT NULL AND [LocalNumber] IS NOT NULL AND [PostalCode] IS NOT NULL AND [City] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -435,6 +476,9 @@ namespace Hexado.Db.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Addresses");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 

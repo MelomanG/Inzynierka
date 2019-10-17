@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hexado.Db.Migrations
 {
     [DbContext(typeof(HexadoDbContext))]
-    [Migration("20191016145652_Pub")]
-    partial class Pub
+    [Migration("20191017112919_Reset")]
+    partial class Reset
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,49 @@ namespace Hexado.Db.Migrations
                 .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Hexado.Db.Entities.Address", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BuildingNumber")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LocalNumber")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PubId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Street")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PubId")
+                        .IsUnique()
+                        .HasFilter("[PubId] IS NOT NULL");
+
+                    b.HasIndex("Street", "BuildingNumber", "LocalNumber", "PostalCode", "City")
+                        .IsUnique()
+                        .HasFilter("[Street] IS NOT NULL AND [BuildingNumber] IS NOT NULL AND [LocalNumber] IS NOT NULL AND [PostalCode] IS NOT NULL AND [City] IS NOT NULL");
+
+                    b.ToTable("Addresses");
+                });
 
             modelBuilder.Entity("Hexado.Db.Entities.BoardGame", b =>
                 {
@@ -184,6 +227,9 @@ namespace Hexado.Db.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
@@ -197,6 +243,9 @@ namespace Hexado.Db.Migrations
                     b.Property<string>("PubId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("UserRate")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -476,6 +525,14 @@ namespace Hexado.Db.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasDiscriminator().HasValue("HexadoUser");
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.Address", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.Pub", "Pub")
+                        .WithOne("Address")
+                        .HasForeignKey("Hexado.Db.Entities.Address", "PubId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Hexado.Db.Entities.BoardGame", b =>

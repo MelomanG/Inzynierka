@@ -53,7 +53,7 @@ namespace Hexado.Core.Services.Specific
 
         public Task<Maybe<BoardGameRate>> DeleteBoardGameRate(string rateId)
         {
-            return _boardGameRateRepository.DeleteAsync(rateId);
+            return _boardGameRateRepository.DeleteByIdAsync(rateId);
         }
 
         public async Task<Maybe<Pub>> RatePub(PubRate rate)
@@ -73,7 +73,7 @@ namespace Hexado.Core.Services.Specific
 
         public Task<Maybe<PubRate>> DeletePubRate(string rateId)
         {
-            return _pubRateRepository.DeleteAsync(rateId);
+            return _pubRateRepository.DeleteByIdAsync(rateId);
         }
     }
 }

@@ -10,11 +10,11 @@ namespace Hexado.Web.Extensions.Models
             return model.ToEntity(accountId, default);
         }
 
-        public static Pub ToEntity(this PubModel model, string accountId, string? id)
+        public static Pub ToEntity(this PubModel model, string accountId, string? pubId)
         {
             return new Pub
             {
-                Id = id,
+                Id = pubId,
                 AccountId = accountId,
                 Name = model.Name,
                 Description = model.Description

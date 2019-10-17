@@ -10,7 +10,8 @@ namespace Hexado.Web.Extensions.Models
             return new HexadoUser
             {
                 Email = model.Email,
-                UserName = model.Username
+                UserName = model.Username,
+                Account = new UserAccount()
             };
         }
     }

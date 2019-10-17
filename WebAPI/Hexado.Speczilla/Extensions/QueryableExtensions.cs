@@ -17,6 +17,8 @@ namespace Hexado.Speczilla.Extensions
             specQuery = specification.Includes.Aggregate(specQuery,
                 (current, include) => current.Include(include));
 
+            specQuery = specification.IncludeStrings.Aggregate(specQuery,
+                (current, include) => current.Include(include));
 
             if (specification.OrderBy != null)
                 specQuery = specification.IsOrderDescending

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Hexado.Core.Queries;
 using Hexado.Core.Services;
+using Hexado.Core.Services.Exceptions;
 using Hexado.Core.Services.Specific;
 using Hexado.Core.Speczillas;
 using Hexado.Web.Extensions.Models;
@@ -63,7 +64,6 @@ namespace Hexado.Web.Controllers
         {
             try
             {
-                //TODO define query. Consider splitting Query to query params and body 
                 var specification = _pubSpeczilla.GetSpecification(query);
                 var result = await _pubService.GetPaginationResultAsync(specification);
 
@@ -103,12 +103,23 @@ namespace Hexado.Web.Controllers
         {
             try
             {
-                //TODO Check ownership
-                var result = await _pubService.UpdateAsync(model.ToEntity(id));
+                var user = await _hexadoUserService.GetSingleOrMaybeAsync(u => u.Email == UserEmail);
+                if (!user.HasValue)
+                    return Unauthorized();
+
+                var result = await _pubService.UpdateAsync(
+                    model.ToEntity(
+                        user.Value.Account.Id,
+                        id));
 
                 return result.HasValue
                     ? OkJson(result.Value)
                     : NotFound();
+            }
+            catch (UserNotAllowedToUpdatePubException ex)
+            {
+                _logger.LogWarning(ex, $"User: {UserEmail} not allowed to update pubId: {id}!");
+                return ForbiddenJson();
             }
             catch (Exception ex)
             {
@@ -124,12 +135,20 @@ namespace Hexado.Web.Controllers
         {
             try
             {
-                //TODO Check ownership
-                var result = await _pubService.DeleteByIdAsync(id);
+                var user = await _hexadoUserService.GetSingleOrMaybeAsync(u => u.Email == UserEmail);
+                if (!user.HasValue)
+                    return Unauthorized();
+
+                var result = await _pubService.DeleteByIdAsync(id, user.Value.Account.Id);
 
                 return result.HasValue
                     ? OkJson(result.Value)
                     : NotFound();
+            }
+            catch (UserNotAllowedToDeletePubException ex)
+            {
+                _logger.LogWarning(ex, $"User: {UserEmail} not allowed to delete pubId: {id}!");
+                return ForbiddenJson();
             }
             catch (Exception ex)
             {

@@ -31,7 +31,7 @@ namespace Hexado.Core.Services.Specific
 
         public async Task<Maybe<HexadoUser>> GetSingleOrMaybeAsync(Expression<Func<HexadoUser, bool>> predicate)
         {
-            return await _hexadoUserRepository.GetSingleOrMaybeAsync(predicate);
+            return await _hexadoUserRepository.GetSingleOrMaybeAsync(predicate, user => user.Account);
         }
     }
 }

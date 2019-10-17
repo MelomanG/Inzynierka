@@ -25,6 +25,14 @@ namespace Hexado.Web.Controllers
                 StatusCodes.Status200OK);
         }
 
+        protected static IActionResult ForbiddenJson()
+        {
+            return ToJsonResult(
+                default,
+                StatusCodes.Status200OK);
+        }
+
+        
         protected static IActionResult InternalServerErrorJson(Exception ex)
         {
             return ToJsonResult(
@@ -32,7 +40,7 @@ namespace Hexado.Web.Controllers
                 StatusCodes.Status500InternalServerError);
         }
 
-        private static JsonResult ToJsonResult(object obj, int statusCode)
+        private static JsonResult ToJsonResult(object? obj, int statusCode)
         {
             return new JsonResult(obj)
             {

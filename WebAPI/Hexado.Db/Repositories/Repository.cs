@@ -29,7 +29,7 @@ namespace Hexado.Db.Repositories
             return entity.ToMaybe();
         }
 
-        public virtual async Task<Maybe<T>> DeleteAsync(string id)
+        public virtual async Task<Maybe<T>> DeleteByIdAsync(string id)
         {
             var entityToDelete = await GetAsync(id);
             if (!entityToDelete.HasValue)
@@ -38,6 +38,13 @@ namespace Hexado.Db.Repositories
             HexadoDbContext.Set<T>().Remove(entityToDelete.Value);
             await HexadoDbContext.SaveChangesAsync();
             return entityToDelete;
+        }
+
+        public async Task<Maybe<T>> DeleteAsync(T entity)
+        {
+            HexadoDbContext.Set<T>().Remove(entity);
+            await HexadoDbContext.SaveChangesAsync();
+            return entity.ToMaybe();
         }
     }
 }

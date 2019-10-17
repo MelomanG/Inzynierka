@@ -9,6 +9,7 @@ namespace Hexado.Speczilla
     {
         public Expression<Func<T, bool>> Where { get; private set; }
         public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
+        public List<string> IncludeStrings { get; } = new List<string>();
         public Expression<Func<T, object>> OrderBy { get; private set; }
         public int Page { get; private set; } = DefaultValues.Page;
         public int PageSize { get; private set; } = DefaultValues.PageSize;
@@ -19,9 +20,16 @@ namespace Hexado.Speczilla
             SetOrderBy(defaultOrderBy, isOrderDescending);
         }
 
-        protected void AddInclude(Expression<Func<T, object>> includeExpression)
+        public Specification<T> AddInclude(Expression<Func<T, object>> includeExpression)
         {
             Includes.Add(includeExpression);
+            return this;
+        }
+
+        public Specification<T> AddInclude(string includeString)
+        {
+            IncludeStrings.Add(includeString);
+            return this;
         }
 
         public Specification<T> SetPage(int? page)

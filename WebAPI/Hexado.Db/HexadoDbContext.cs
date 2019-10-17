@@ -31,6 +31,8 @@ namespace Hexado.Db
             builder.ApplyConfiguration(new PubConfiguration());
             builder.ApplyConfiguration(new PubBoardGameConfiguration());
             builder.ApplyConfiguration(new PubRateConfiguration());
+            
+            builder.ApplyConfiguration(new AddressConfiguration());
         }
 
         public DbSet<HexadoUser> HexadoUsers { get; set; }
@@ -45,6 +47,7 @@ namespace Hexado.Db
         public DbSet<PubBoardGame> PubBoardGames { get; set; }
         public DbSet<PubRate> PubRates { get; set; }
 
+        public DbSet<Address> Addresses { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

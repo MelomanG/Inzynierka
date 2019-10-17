@@ -23,8 +23,7 @@ namespace Hexado.Db.Entities
             if (token != null)
                 RefreshTokens.Remove(token);
         }
-
-
+        
         public bool IsValidRefreshToken(string refreshToken)
         {
             //TODO: needs refactor
