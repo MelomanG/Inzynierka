@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hexado.Core.Auth
+namespace Hexado.Core.Options
 {
     public class JwtOptions
     {

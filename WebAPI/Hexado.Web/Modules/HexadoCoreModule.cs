@@ -57,7 +57,7 @@ namespace Hexado.Web.Modules
                 .InstancePerLifetimeScope();
             builder
                 .RegisterType<BoardGameCategoryService>()
-                .As<BoardGameCategoryService>()
+                .As<IBoardGameCategoryService>()
                 .InstancePerLifetimeScope();
             builder
                 .RegisterType<RateService>()

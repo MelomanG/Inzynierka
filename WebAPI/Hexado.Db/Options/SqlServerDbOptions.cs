@@ -1,4 +1,4 @@
-﻿namespace Hexado.Web.Options
+﻿namespace Hexado.Db.Options
 {
     #nullable disable
     public class SqlServerDbOptions

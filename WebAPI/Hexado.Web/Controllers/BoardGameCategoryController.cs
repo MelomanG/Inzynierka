@@ -13,11 +13,11 @@ namespace Hexado.Web.Controllers
     [Route("api/[controller]")]
     public class BoardGameCategoryController : ApiBaseController
     {
-        private readonly BoardGameCategoryService _boardGameCategoryService;
+        private readonly IBoardGameCategoryService _boardGameCategoryService;
         private readonly ILogger _logger;
 
         public BoardGameCategoryController(
-            BoardGameCategoryService boardGameCategoryService,
+            IBoardGameCategoryService boardGameCategoryService,
             ILoggerFactory loggerFactory)
         {
             _boardGameCategoryService = boardGameCategoryService;

@@ -132,7 +132,7 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpPost("{id}/rate")]
+        [HttpPost("{id}/Rate")]
         [Authorize]
         public async Task<IActionResult> RateBoardGame(string id, RateModel model)
         {
@@ -159,7 +159,7 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpPut("{id}/rate/{rateId}")]
+        [HttpPut("{id}/Rate/{rateId}")]
         [Authorize]
         public async Task<IActionResult> UpdateBoardGameRate(string id, string rateId, RateModel model)
         {
@@ -187,7 +187,7 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpDelete("rate/{rateId}")]
+        [HttpDelete("Rate/{rateId}")]
         [Authorize]
         public async Task<IActionResult> DeleteBoardGameRate(string rateId)
         {

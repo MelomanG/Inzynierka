@@ -24,7 +24,8 @@ namespace Hexado.Web.Controllers
         private readonly IHexadoUserService _hexadoUserService;
         private readonly ILogger _logger;
 
-        public PubController(IPubService pubService,
+        public PubController(
+            IPubService pubService,
             IPubSpeczilla pubSpeczilla,
             IBoardGameService boardGameService,
             IBoardGameSpeczilla boardGameSpeczilla,
@@ -163,7 +164,7 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpPost("{id}/rate")]
+        [HttpPost("{id}/Rate")]
         [Authorize]
         public async Task<IActionResult> RatePub(string id, RateModel model)
         {
@@ -190,7 +191,7 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpPut("{id}/rate/{rateId}")]
+        [HttpPut("{id}/Rate/{rateId}")]
         [Authorize]
         public async Task<IActionResult> UpdatePubRate(string id, string rateId, RateModel model)
         {
@@ -218,7 +219,7 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpDelete("rate/{rateId}")]
+        [HttpDelete("Rate/{rateId}")]
         [Authorize]
         public async Task<IActionResult> DeletePubRate(string rateId)
         {
@@ -238,7 +239,7 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpPost("{id}/boardGame")]
+        [HttpPost("{id}/BoardGame")]
         [Authorize]
         public async Task<IActionResult> AddBoardGames(string id, [FromBody] string[] boardGameIds)
         {
@@ -270,7 +271,7 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpGet("{id}/boardGame")]
+        [HttpGet("{id}/BoardGame")]
         public async Task<IActionResult> GetPubBoardGames(string id, [FromQuery] BoardGameQuery query)
         {
             try
@@ -290,7 +291,7 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpDelete("{id}/boardGame")]
+        [HttpDelete("{id}/BoardGame")]
         [Authorize]
         public async Task<IActionResult> DeleteBoardGames(string id, [FromBody] string[] boardGameIds)
         {

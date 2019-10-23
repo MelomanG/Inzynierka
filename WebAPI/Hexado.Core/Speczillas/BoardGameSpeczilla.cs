@@ -22,6 +22,7 @@ namespace Hexado.Core.Speczillas
             
             return specification;
         }
+
         public IBoardGameSpecification GetSpecification(BoardGameQuery query)
         {
             return GetBaseSpecification(query);

@@ -1,9 +1,10 @@
 ﻿using System.Security.Claims;
 using Hexado.Core.Auth;
+using Hexado.Core.Options;
 using Hexado.Db;
 using Hexado.Db.Constants;
 using Hexado.Db.Entities;
-using Hexado.Web.Options;
+using Hexado.Db.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
