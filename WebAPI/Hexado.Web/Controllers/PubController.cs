@@ -18,19 +18,24 @@ namespace Hexado.Web.Controllers
     {
         private readonly IPubService _pubService;
         private readonly IPubSpeczilla _pubSpeczilla;
+        private readonly IBoardGameService _boardGameService;
+        private readonly IBoardGameSpeczilla _boardGameSpeczilla;
         private readonly IRateService _rateService;
         private readonly IHexadoUserService _hexadoUserService;
         private readonly ILogger _logger;
 
-        public PubController(
-            IPubService pubService,
+        public PubController(IPubService pubService,
             IPubSpeczilla pubSpeczilla,
+            IBoardGameService boardGameService,
+            IBoardGameSpeczilla boardGameSpeczilla,
             IRateService rateService,
             IHexadoUserService hexadoUserService,
             ILoggerFactory loggerFactory)
         {
             _pubService = pubService;
             _pubSpeczilla = pubSpeczilla;
+            _boardGameService = boardGameService;
+            _boardGameSpeczilla = boardGameSpeczilla;
             _rateService = rateService;
             _hexadoUserService = hexadoUserService;
             _logger = loggerFactory.CreateLogger<PubController>();
@@ -160,7 +165,7 @@ namespace Hexado.Web.Controllers
 
         [HttpPost("{id}/rate")]
         [Authorize]
-        public async Task<IActionResult> RateBoardGame(string id, RateModel model)
+        public async Task<IActionResult> RatePub(string id, RateModel model)
         {
             try
             {
@@ -215,7 +220,7 @@ namespace Hexado.Web.Controllers
 
         [HttpDelete("rate/{rateId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteBoardGameRate(string rateId)
+        public async Task<IActionResult> DeletePubRate(string rateId)
         {
             try
             {
@@ -229,6 +234,90 @@ namespace Hexado.Web.Controllers
             {
                 _logger.LogError(ex, "Error while deleting pub rate! " +
                                      $"Id: {rateId}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpPost("{id}/boardGame")]
+        [Authorize]
+        public async Task<IActionResult> AddBoardGames(string id, [FromBody] string[] boardGameIds)
+        {
+            try
+            {
+                var user = await _hexadoUserService.GetSingleOrMaybeAsync(u => u.Email == UserEmail);
+                if (!user.HasValue)
+                    return Unauthorized();
+
+                var result = await _pubService.AddBoardGames(
+                    id,
+                    user.Value.Account.Id,
+                    boardGameIds);
+
+                return result.HasValue
+                    ? OkJson(result.Value)
+                    : BadRequest();
+            }
+            catch (UserNotAllowedToUpdatePubException ex)
+            {
+                _logger.LogWarning(ex, $"User: {UserEmail} not allowed to add board games to pubId: {id}!");
+                return ForbiddenJson();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while adding board games to pub! " +
+                                     $"PubId: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpGet("{id}/boardGame")]
+        public async Task<IActionResult> GetPubBoardGames(string id, [FromQuery] BoardGameQuery query)
+        {
+            try
+            {
+                var specification = _boardGameSpeczilla.GetSpecification(query, id);
+                var result = await _boardGameService.GetPaginationResultAsync(specification);
+
+                return result.HasValue
+                    ? OkJson(result.Value)
+                    : BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while getting board games from pub! " +
+                                     $"PubId: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpDelete("{id}/boardGame")]
+        [Authorize]
+        public async Task<IActionResult> DeleteBoardGames(string id, [FromBody] string[] boardGameIds)
+        {
+            try
+            {
+                var user = await _hexadoUserService.GetSingleOrMaybeAsync(u => u.Email == UserEmail);
+                if (!user.HasValue)
+                    return Unauthorized();
+
+                var result = await _pubService.DeleteBoardGames(
+                    id,
+                    user.Value.Account.Id,
+                    boardGameIds);
+
+                return result.HasValue
+                    ? OkJson(result.Value)
+                    : NotFound();
+            }
+            catch (UserNotAllowedToUpdatePubException ex)
+            {
+                _logger.LogWarning(ex, $"User: {UserEmail} not allowed to delete games in pubId: {id}!");
+                return ForbiddenJson();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while deleting board games from pub! " +
+                                     $"PubId: {id}");
                 return InternalServerErrorJson(ex);
             }
         }

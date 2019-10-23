@@ -10,11 +10,24 @@ namespace Hexado.Core.Speczillas
     public interface IBoardGameSpeczilla
     {
         IBoardGameSpecification GetSpecification(BoardGameQuery query);
+        IBoardGameSpecification GetSpecification(BoardGameQuery query, string pubId);
     }
 
     public class BoardGameSpeczilla : IBoardGameSpeczilla
     {
+        public IBoardGameSpecification GetSpecification(BoardGameQuery query, string pubId)
+        {
+            var specification = GetBaseSpecification(query);
+            specification.AndAlso(game => game.PubBoardGames.Any(boardGame => boardGame.PubId == pubId));
+            
+            return specification;
+        }
         public IBoardGameSpecification GetSpecification(BoardGameQuery query)
+        {
+            return GetBaseSpecification(query);
+        }
+
+        private static BoardGameSpecification GetBaseSpecification(BoardGameQuery query)
         {
             var specification = new BoardGameSpecification();
 

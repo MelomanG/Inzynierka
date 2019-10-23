@@ -22,7 +22,7 @@ namespace Hexado.Web.Controllers
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterUserModel model)
         {
             try
