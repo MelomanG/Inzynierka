@@ -240,7 +240,6 @@ namespace Hexado.Web.Controllers
         }
 
         [HttpPost("{id}/BoardGame")]
-        [Authorize]
         public async Task<IActionResult> AddBoardGames(string id, [FromBody] string[] boardGameIds)
         {
             try
