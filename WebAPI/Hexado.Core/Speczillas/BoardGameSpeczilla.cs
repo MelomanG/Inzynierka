@@ -74,6 +74,9 @@ namespace Hexado.Core.Speczillas
                 case "name":
                     specification.SetOrderBy(bg => bg.Name, isDescending);
                     break;
+                default:
+                    specification.SetOrderBy(bg => bg.Name);
+                    break;
             }
         }
     }

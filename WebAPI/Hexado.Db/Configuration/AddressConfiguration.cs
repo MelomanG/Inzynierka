@@ -12,12 +12,6 @@ namespace Hexado.Db.Configuration
             builder
                 .HasIndex(address => new { address.Street, address.BuildingNumber, address.LocalNumber, address.PostalCode, address.City })
                 .IsUnique();
-
-            builder
-                .HasOne(address => address.Pub)
-                .WithOne(pub => pub.Address)
-                .HasForeignKey<Address>(address => address.PubId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

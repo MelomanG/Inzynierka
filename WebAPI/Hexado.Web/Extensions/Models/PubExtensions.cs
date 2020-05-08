@@ -17,7 +17,22 @@ namespace Hexado.Web.Extensions.Models
                 Id = pubId,
                 AccountId = accountId,
                 Name = model.Name,
-                Description = model.Description
+                Description = model.Description,
+                Address = model.Address.ToEntity()
+            };
+        }
+    }
+    public static class AddressExtensions
+    {
+        public static Address ToEntity(this AddressModel model)
+        {
+            return new Address
+            {
+                Street = model.Street,
+                BuildingNumber = model.BuildingNumber,
+                LocalNumber = model.LocalNumber,
+                PostalCode = model.PostalCode,
+                City = model.City
             };
         }
     }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hexado.Db.Migrations
 {
-    public partial class Reset : Migration
+    public partial class PubAddress : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

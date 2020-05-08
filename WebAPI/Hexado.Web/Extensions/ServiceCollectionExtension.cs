@@ -30,7 +30,9 @@ namespace Hexado.Web.Extensions
                 .GetRequiredService<IOptions<SqlServerDbOptions>>().Value;
 
             services.AddDbContext<HexadoDbContext>(opt =>
-                opt.UseSqlServer(sqlServerDbOptions.ConnectionString));
+                opt.UseSqlServer(
+                    sqlServerDbOptions.ConnectionString, 
+                    o => o.MigrationsAssembly("Hexado.Db")));
 
             return services;
         }

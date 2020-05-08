@@ -29,7 +29,6 @@ namespace Hexado.Db.Repositories
             if (!entity.HasValue)
                 return entity;
 
-            HexadoDbContext.Entry(entity.Value).State = EntityState.Detached;
             return entity;
         }
 
@@ -44,7 +43,6 @@ namespace Hexado.Db.Repositories
         public virtual async Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> include)
         {
             return (await HexadoDbContext.Set<T>()
-                    .AsNoTracking()
                     .Include(include)
                     .SingleOrDefaultAsync(predicate))
                 .ToMaybe();

@@ -13,6 +13,12 @@ namespace Hexado.Db.Configuration
                 .WithMany(user => user.OwnedPubs)
                 .HasForeignKey(pub => pub.AccountId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder
+                .HasOne(pub => pub.Address)
+                .WithOne(a => a.Pub)
+                .HasForeignKey<Address>(address => address.PubId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
