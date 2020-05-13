@@ -1,0 +1,12 @@
+<p *ngIf="!boardGame"><b>Loading...</b></p>
+<mat-card class="boardgame" *ngIf="boardGame">
+    <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba1.jpg">
+    <mat-card-content>
+        <h3>Nazwa: {{ boardGame.name }}</h3>
+        <p>Kategoria: {{ boardGame?.category?.name }}</p>
+        <p>Minimum graczy: {{ boardGame.minPlayers }}</p>
+        <p>Maximum graczy: {{ boardGame.maxPlayers }}</p>
+        <p>Od lat: {{ boardGame.fromAge }}</p>
+        <p>Opis: {{ boardGame.description }}</p>
+    </mat-card-content>
+</mat-card>

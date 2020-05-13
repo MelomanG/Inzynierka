@@ -36,7 +36,7 @@ namespace Hexado.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
+        //[Authorize(Policy = HexadoPolicy.AdministratorOnly)]
         public async Task<IActionResult> Create(BoardGameModel model)
         {
             try

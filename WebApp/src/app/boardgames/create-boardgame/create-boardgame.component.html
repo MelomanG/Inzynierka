@@ -1,0 +1,44 @@
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+      <mat-form-field>
+        <mat-label>Nazwa</mat-label>
+        <input matInput placeholder="Nazwa" formControlName="name">
+      </mat-form-field>
+      
+      <mat-form-field>
+        <mat-label>Opis</mat-label>
+        <textarea  matInput placeholder="Opisz gre..." formControlName="description"></textarea>
+      </mat-form-field>
+      
+      <mat-form-field>
+        <mat-label>Min graczy</mat-label>
+        <input matInput placeholder="Min graczy" formControlName="minPlayers">
+      </mat-form-field>
+      
+      <mat-form-field>
+        <mat-label>Max graczy</mat-label>
+        <input matInput placeholder="Max graczy" formControlName="maxPlayers">
+      </mat-form-field>
+      
+      <mat-form-field>
+        <mat-label>Min wiek gracza</mat-label>
+        <input matInput placeholder="Min wiek gracza" formControlName="fromAge">
+      </mat-form-field>
+      
+      <mat-form-field>
+        <mat-label>Kategoria</mat-label>
+        <mat-select 
+          formControlName="categoryId">
+          <mat-option 
+          *ngFor="let category of boardGamesCategories" 
+          value="{{ category.id }}">
+            {{category.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit">Zapisz</button>
+    </form>
+  </mat-card-content>
+</mat-card>
