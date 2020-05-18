@@ -10,10 +10,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BoardGameService } from './boardgames/boardgame.service';
 import { BoardGameCategoryService } from './boardgames/boardgamecategory.service';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +24,8 @@ import { BoardGameCategoryService } from './boardgames/boardgamecategory.service
     BoardgamesModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule
   ],
   providers: [
     BoardGameService, 

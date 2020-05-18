@@ -38,7 +38,10 @@
         </mat-select>
       </mat-form-field>
 
-      <button mat-raised-button color="primary" type="submit">Zapisz</button>
+      <img [src]="imageUrl"  style="width: 250px;height: 200px;">
+      <input type="file" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+
+      <button [disabled]="!fileToUpload" mat-raised-button color="primary" type="submit">Zapisz</button>
     </form>
   </mat-card-content>
 </mat-card>

@@ -18,4 +18,5 @@ export interface BoardGameModel {
     fromAge: number;
     categoryId: string;
     category: BoardGameCategoryModel;
+    imagePath: string;
 }

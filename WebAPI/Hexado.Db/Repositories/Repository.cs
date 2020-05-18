@@ -21,7 +21,7 @@ namespace Hexado.Db.Repositories
 
         public virtual async Task<Maybe<T>> UpdateAsync(T entity)
         {
-            HexadoDbContext.Entry(entity).State = EntityState.Modified;
+            HexadoDbContext.Set<T>().Update(entity);
             await HexadoDbContext.SaveChangesAsync();
 
             await HexadoDbContext.Entry(entity).ReloadAsync();
@@ -46,5 +46,12 @@ namespace Hexado.Db.Repositories
             await HexadoDbContext.SaveChangesAsync();
             return entity.ToMaybe();
         }
+
+        public async Task ClearAsync()
+        {
+            HexadoDbContext.Set<T>().RemoveRange(HexadoDbContext.Set<T>());
+            await HexadoDbContext.SaveChangesAsync();
+        }
+
     }
 }

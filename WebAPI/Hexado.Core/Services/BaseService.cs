@@ -37,13 +37,13 @@ namespace Hexado.Core.Services
             return Repository.GetPaginationResultAsync(specification);
         }
 
-        public virtual async Task<Maybe<T>> UpdateAsync(T updatedPub)
+        public virtual async Task<Maybe<T>> UpdateAsync(T entity)
         {
-            var existingEntity = await Repository.GetAsync(updatedPub.Id);
+            var existingEntity = await Repository.GetAsync(entity.Id);
             if (!existingEntity.HasValue)
                 return Maybe<T>.Nothing;
 
-            return await Repository.UpdateAsync(updatedPub);
+            return await Repository.UpdateAsync(entity);
         }
 
         public virtual Task<Maybe<T>> DeleteByIdAsync(string id)

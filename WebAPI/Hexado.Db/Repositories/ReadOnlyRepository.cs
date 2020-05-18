@@ -29,6 +29,7 @@ namespace Hexado.Db.Repositories
             if (!entity.HasValue)
                 return entity;
 
+            HexadoDbContext.Entry(entity.Value).State = EntityState.Detached;
             return entity;
         }
 

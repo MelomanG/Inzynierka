@@ -21,7 +21,8 @@ namespace Hexado.Web.Extensions.Models
                 MinPlayers = model.MinPlayers ?? throw new ArgumentNullException($"{nameof(BoardGameModel)}.{nameof(BoardGameModel.MinPlayers)}"),
                 MaxPlayers = model.MaxPlayers ?? throw new ArgumentNullException($"{nameof(BoardGameModel)}.{nameof(BoardGameModel.MaxPlayers)}"),
                 FromAge = model.FromAge ?? throw new ArgumentNullException($"{nameof(BoardGameModel)}.{nameof(BoardGameModel.FromAge)}"),
-                CategoryId = model.CategoryId
+                CategoryId = model.CategoryId,
+                ImagePath = model.ImagePath ?? string.Empty
             };
         }
     }

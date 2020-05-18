@@ -25,6 +25,8 @@ namespace Hexado.Web.Models
 
         [Required]
         public string CategoryId { get; set; }
+
+        public string ImagePath { get; set; }
     }
 #nullable restore
 }

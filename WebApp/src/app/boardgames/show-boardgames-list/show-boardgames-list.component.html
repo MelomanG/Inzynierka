@@ -1,21 +1,10 @@
 <p *ngIf="!boardGameList"><b>Loading...</b></p>
 <div class="section grid-3" *ngIf="boardGameList">
     <mat-card class="boardgame clickLink" *ngFor="let item of boardGameList.results" (click)="showBoardGame(item)">
-        <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba1.jpg">
+        <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
         <mat-card-content>
             <h3>{{ item.name }}</h3>
             <p>{{ item.category.name }}</p>
         </mat-card-content>
     </mat-card>
 </div>
-
-
-<!-- <div class="section grid-3">
-    <mat-card class="product" *ngFor="let item of items | async" routerLink="{{ item.path }}">
-        <img mat-card-image src="{{ item.image }}">
-        <mat-card-content>
-            <h3>{{ item.name }}</h3>
-            <p>{{ item.price | currency:'USD':true }}</p>
-        </mat-card-content>
-    </mat-card>
-</div> -->

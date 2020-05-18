@@ -3,6 +3,7 @@ import { BoardGameService } from '../boardgame.service';
 import { BoardGameModel } from 'src/app/shared/models/boardgame';
 import { PaginationResult } from 'src/app/shared/models/paginationresult';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-show-boardgames-list',
@@ -12,12 +13,14 @@ import { Router } from '@angular/router';
 export class ShowBoardgamesListComponent implements OnInit {
 
   boardGameList: PaginationResult<BoardGameModel>;
+  serverUrl: string;
 
   constructor(
     private boardGameService: BoardGameService,
     private router: Router) { }
 
   ngOnInit() {
+    this.serverUrl = environment.serverUrl;
     this.loadBoardGames();
   }
 

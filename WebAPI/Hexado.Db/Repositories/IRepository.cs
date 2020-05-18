@@ -10,5 +10,6 @@ namespace Hexado.Db.Repositories
         Task<Maybe<T>> UpdateAsync(T entity);
         Task<Maybe<T>> DeleteAsync(T entity);
         Task<Maybe<T>> DeleteByIdAsync(string id);
+        Task ClearAsync();
     }
 }

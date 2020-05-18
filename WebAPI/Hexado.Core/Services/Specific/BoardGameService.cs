@@ -7,6 +7,8 @@ namespace Hexado.Core.Services.Specific
 {
     public interface IBoardGameService : IBaseService<BoardGame>
     {
+        Task<Maybe<BoardGame>> SetImagePath(string id, string imagePath);
+        Task ClearAsync();
     }
 
     public class BoardGameService : BaseService<BoardGame>, IBoardGameService
@@ -24,6 +26,21 @@ namespace Hexado.Core.Services.Specific
             return _boardGameRepository.GetSingleOrMaybeAsync(
                 bg => bg.Id == id,
                 bg => bg.Category);
+        }
+
+        public async Task<Maybe<BoardGame>> SetImagePath(string id, string imagePath)
+        {
+            var boardGame = await _boardGameRepository.GetAsync(id);
+            if (!boardGame.HasValue)
+                return boardGame;
+
+            boardGame.Value.ImagePath = imagePath;
+            return await _boardGameRepository.UpdateAsync(boardGame.Value);
+        }
+
+        public Task ClearAsync()
+        {
+            return _boardGameRepository.ClearAsync();
         }
     }
 }

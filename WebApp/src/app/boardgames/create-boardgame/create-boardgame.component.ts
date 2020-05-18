@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BoardGameCategoryModel } from 'src/app/shared/models/boardgamecategory';
-import { CreateBoardGameModel } from 'src/app/shared/models/boardgame';
+import { CreateBoardGameModel, BoardGameModel } from 'src/app/shared/models/boardgame';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BoardGameService } from '../boardgame.service';
@@ -14,12 +14,18 @@ import { BoardGameCategoryService } from '../boardgamecategory.service';
 
 export class CreateBoardgameComponent implements OnInit {
 
-    constructor(private fb: FormBuilder, private router: Router, 
-      private boardGameService: BoardGameService, private boardGameCategoryService: BoardGameCategoryService) { }
+    constructor(
+      private fb: FormBuilder,
+      private router: Router, 
+      private boardGameService: BoardGameService,
+      private boardGameCategoryService: BoardGameCategoryService) { }
 
     boardGamesCategories: BoardGameCategoryModel[]; 
     formGroup: FormGroup;
     showError: boolean = false;
+
+    imageUrl: string = "assets/images/default-image.png";
+    fileToUpload: File;
 
     ngOnInit() {
       this.createForm();
@@ -44,6 +50,19 @@ export class CreateBoardgameComponent implements OnInit {
     }
 
     onSubmit(boardGame: CreateBoardGameModel) {
-      this.boardGameService.createBoardGame(boardGame);
+      this.boardGameService.createBoardGame(boardGame, this.fileToUpload)
+        .subscribe(data => {
+          this.router.navigate([`show/boardgame/${(<BoardGameModel>data).id}`]);
+      })
+    }
+  
+    handleFileInput(file: FileList) {
+      this.fileToUpload = file.item(0);
+
+      var reader = new FileReader();
+      reader.onload = (event: any) => {
+        this.imageUrl = event.target.result;
+      }
+      reader.readAsDataURL(this.fileToUpload);
     }
 }

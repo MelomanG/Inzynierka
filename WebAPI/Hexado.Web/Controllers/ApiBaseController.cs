@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +10,7 @@ namespace Hexado.Web.Controllers
     [ApiController]
     public abstract class ApiBaseController : ControllerBase
     {
-        protected string UserEmail =>  HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? string.Empty;
+        protected string UserEmail =>  HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? String.Empty;
 
         protected static IActionResult CreatedJson(object obj)
         {
@@ -46,6 +47,19 @@ namespace Hexado.Web.Controllers
             {
                 StatusCode = statusCode
             };
+        }
+
+        protected static void ValidateIfStaticFileExists(string id, string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+            else
+            {
+                var filePaths = Directory.GetFiles(directoryPath);
+                var toDelete = filePaths.FirstOrDefault(fp => fp.Contains(id));
+                if(toDelete != null)
+                    System.IO.File.Delete(toDelete);
+            }
         }
     }
 }

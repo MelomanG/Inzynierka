@@ -1,12 +1,17 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
+using Functional.Maybe;
 using Hexado.Core.Queries;
 using Hexado.Core.Services.Specific;
 using Hexado.Core.Speczillas;
 using Hexado.Db.Constants;
+using Hexado.Db.Entities;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -93,7 +98,7 @@ namespace Hexado.Web.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
+        //[Authorize(Policy = HexadoPolicy.AdministratorOnly)]
         public async Task<IActionResult> Update(string id, BoardGameModel model)
         {
             try
@@ -206,5 +211,43 @@ namespace Hexado.Web.Controllers
                 return InternalServerErrorJson(ex);
             }
         }
+
+        [HttpPost("{id}/image")]
+        public async Task<IActionResult> UploadFile(string id, IFormFile image)
+        {
+            try
+            {
+                var notFullPath = Path.Combine("Images", "BoardGames");
+                var fromRootPath = Path.Combine(Directory.GetCurrentDirectory(), notFullPath);
+                ValidateIfStaticFileExists(id, fromRootPath);
+
+                var imageName = id + image.FileName;
+                var fullRootPath = Path.Combine(fromRootPath, imageName);
+                var staticFilePath = Path.Combine(notFullPath, imageName);
+                var result = Maybe<BoardGame>.Nothing;
+                await using (var stream = new FileStream(fullRootPath, FileMode.Create))
+                {
+                    image.CopyTo(stream);
+                    result = await _boardGameService.SetImagePath(id, staticFilePath);
+                }
+
+                if (!result.HasValue)
+                    return NotFound();
+                return Ok(result.Value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while uploading image for board game! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        //[HttpDelete("clear")]
+        //public async Task<IActionResult> GetImage()
+        //{
+        //    await _boardGameService.ClearAsync();
+        //    return Ok();
+        //}
     }
 }
