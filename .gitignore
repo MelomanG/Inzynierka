@@ -237,3 +237,6 @@ _Pvt_Extensions
 
 # Migrations
 ./WebAPI/Hexado.Db/Migrations/
+
+# Static files
+./WebAPI/Hexado.Web/Images
