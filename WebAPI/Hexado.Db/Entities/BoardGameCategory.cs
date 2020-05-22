@@ -6,6 +6,6 @@ namespace Hexado.Db.Entities
     {
         public string Name { get; set; }
 
-        public ICollection<BoardGame> BoardGames { get; set; } = new HashSet<BoardGame>();
+        public virtual ICollection<BoardGame> BoardGames { get; set; } = new HashSet<BoardGame>();
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BoardGameModel } from 'src/app/shared/models/boardgame';
 import { BoardGameService } from '../boardgame.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,6 +17,8 @@ export class EditBoardgameComponent implements OnInit {
   boardGame: BoardGameModel;
   formGroup: FormGroup;
   boardGamesCategories: BoardGameCategoryModel[]; 
+  @ViewChild('Image')
+  Image;
   fileToUpload: File;
   imageUrl: any;
 
@@ -43,10 +45,10 @@ export class EditBoardgameComponent implements OnInit {
                 id:[this.boardGame.id],
                 name:[this.boardGame.name, Validators.required],
                 description:[this.boardGame.description, Validators.compose([Validators.required, Validators.minLength(30), Validators.maxLength(1000)])],
-                minPlayers:[this.boardGame.minPlayers],
-                maxPlayers:[this.boardGame.maxPlayers],
-                fromAge:[this.boardGame.fromAge],
-                categoryId:[this.boardGame.categoryId],
+                minPlayers:[this.boardGame.minPlayers, Validators.required],
+                maxPlayers:[this.boardGame.maxPlayers, Validators.required],
+                fromAge:[this.boardGame.fromAge, Validators.required],
+                categoryId:[this.boardGame.categoryId, Validators.required],
                 imagePath:[this.boardGame.imagePath]
               });
             });
@@ -58,6 +60,17 @@ export class EditBoardgameComponent implements OnInit {
       .subscribe(data => {
         this.router.navigate([`show/boardgame/${this.formGroup.value.id}`]);
     })
+  }
+
+  deleteBoardGame() {
+    this.boardGameService.deleteBoardGame(this.boardGame.id)
+      .subscribe(res => {
+        this.router.navigate([`show/boardgames`]);
+      })
+  }
+
+  onClickFileInputButton(): void {
+    this.Image.nativeElement.click();
   }
   
   handleFileInput(file: FileList) {

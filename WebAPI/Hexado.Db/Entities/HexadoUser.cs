@@ -10,12 +10,13 @@ namespace Hexado.Db.Entities
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
-        public UserAccount Account { get; set; }
+        public virtual UserAccount Account { get; set; }
 
-        public ICollection<RefreshToken> RefreshTokens { get; set; } = new HashSet<RefreshToken>();
-        public ICollection<BoardGameRate> BoardGameRates { get; set; } = new HashSet<BoardGameRate>();
-        public ICollection<PubRate> PubRates { get; set; } = new HashSet<PubRate>();
-
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new HashSet<RefreshToken>();
+        public virtual ICollection<BoardGameRate> BoardGameRates { get; set; } = new HashSet<BoardGameRate>();
+        public virtual ICollection<PubRate> PubRates { get; set; } = new HashSet<PubRate>();
+        public virtual ICollection<LikedBoardGame> LikedBoardGames { get; set; } = new HashSet<LikedBoardGame>();
+        public virtual ICollection<LikedPub> LikedPubs { get; set; } = new HashSet<LikedPub>();
 
         public void RemoveRefreshToken(string refreshToken)
         {

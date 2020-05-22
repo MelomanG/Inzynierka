@@ -19,4 +19,6 @@ export interface BoardGameModel {
     categoryId: string;
     category: BoardGameCategoryModel;
     imagePath: string;
+    isLikedByUser: boolean,
+    amountOfLikes: number
 }

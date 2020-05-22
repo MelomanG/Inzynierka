@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Core.Queries;
@@ -9,8 +11,8 @@ using Hexado.Db.Constants;
 using Hexado.Db.Entities;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
+using Hexado.Web.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -41,7 +43,7 @@ namespace Hexado.Web.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Policy = HexadoPolicy.AdministratorOnly)]
+        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
         public async Task<IActionResult> Create(BoardGameModel model)
         {
             try
@@ -49,7 +51,7 @@ namespace Hexado.Web.Controllers
                 var result = await _boardGameService.CreateAsync(model.ToEntity());
 
                 return result.HasValue 
-                    ? CreatedJson(result.Value)
+                    ? CreatedJson(result.Value.ToResponse())
                     : BadRequest();
             }
             catch (Exception ex)
@@ -66,10 +68,27 @@ namespace Hexado.Web.Controllers
             {
                 var specification = _boardGameSpeczilla.GetSpecification(query);
                 var result = await _boardGameService.GetPaginationResultAsync(specification);
+                if (!result.HasValue)
+                    return NotFound();
 
-                return result.HasValue
-                    ? OkJson(result.Value)
-                    : NotFound();
+                var responseResult = result.Value.ToResponse();
+
+                if (!string.IsNullOrWhiteSpace(UserEmail))
+                {
+                    var likedBoardGames = _hexadoUserService.GetLikedBoardGames(UserEmail);
+                    if (likedBoardGames.HasValue)
+                    {
+                        foreach (var likedBoardGame in likedBoardGames.Value)
+                        {
+                            var boardGame = responseResult.Results
+                                .SingleMaybe(rr => rr.Id == likedBoardGame.Id);
+                            if (boardGame.HasValue)
+                                boardGame.Value.IsLikedByUser = true;
+                        }
+                    }
+                }
+
+                return OkJson(responseResult);
             }
             catch (Exception ex)
             {
@@ -84,10 +103,19 @@ namespace Hexado.Web.Controllers
             try
             {
                 var result = await _boardGameService.GetByIdAsync(id);
+                if (!result.HasValue)
+                    return NotFound();
 
-                return result.HasValue
-                    ? OkJson(result.Value)
-                    : NotFound();
+                var responseResult = result.Value.ToResponse();
+                if (!string.IsNullOrWhiteSpace(UserEmail))
+                {
+                    var likedBoardGames = _hexadoUserService.GetLikedBoardGames(UserEmail);
+                    if (likedBoardGames.HasValue)
+                        if(likedBoardGames.Value.Any(lbg => lbg.Id == responseResult.Id))
+                                responseResult.IsLikedByUser = true;
+                }
+
+                return OkJson(responseResult);
             }
             catch (Exception ex)
             {
@@ -98,7 +126,7 @@ namespace Hexado.Web.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Policy = HexadoPolicy.AdministratorOnly)]
+        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
         public async Task<IActionResult> Update(string id, BoardGameModel model)
         {
             try
@@ -125,6 +153,9 @@ namespace Hexado.Web.Controllers
             {
                 var result = await _boardGameService.DeleteByIdAsync(id);
 
+                var notFullPath = Path.Combine("Images", "BoardGames");
+                var fromRootPath = Path.Combine(Directory.GetCurrentDirectory(), notFullPath);
+                ValidateIfStaticFileExists(id, fromRootPath);
                 return result.HasValue
                     ? OkJson(result.Value)
                     : NotFound();
@@ -212,6 +243,67 @@ namespace Hexado.Web.Controllers
             }
         }
 
+        [HttpPost("{id}/like")]
+        [Authorize]
+        public async Task<IActionResult> LikeBoardGame(string id)
+        {
+            try
+            {
+                var user = await _hexadoUserService.GetSingleOrMaybeAsync(u => u.Email == UserEmail);
+                if (!user.HasValue)
+                    return Unauthorized();
+
+                var result = await _boardGameService.LikeBoardGame(id, user.Value);
+
+                if (result.HasValue)
+                    return Ok();
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while liking board game! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpGet("like")]
+        [Authorize]
+        public  IActionResult GetLikedBoardGames()
+        {
+            try
+            {
+                var likedBoardGames = _hexadoUserService.GetLikedBoardGames(UserEmail);
+
+                return likedBoardGames.HasValue
+                    ? OkJson(likedBoardGames.Value.ToResponse(true))
+                    : Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while fetching liked board game! ");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpDelete("{id}/unlike")]
+        [Authorize]
+        public async Task<IActionResult> UnLikeBoardGame(string id)
+        {
+            try
+            {
+                await _hexadoUserService.UnLikeBoardGameAsync(UserEmail, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while liking board game! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+
         [HttpPost("{id}/image")]
         public async Task<IActionResult> UploadFile(string id, IFormFile image)
         {
@@ -244,7 +336,7 @@ namespace Hexado.Web.Controllers
         }
 
         //[HttpDelete("clear")]
-        //public async Task<IActionResult> GetImage()
+        //public async Task<IActionResult> Clear()
         //{
         //    await _boardGameService.ClearAsync();
         //    return Ok();

@@ -13,6 +13,7 @@ namespace Hexado.Core.Speczillas.Specifications
             : base(bg => bg.Name, false)
         {
             AddInclude(bg => bg.Category);
+            AddInclude(bg => bg.LikedBoardGames);
         }
     }
 }

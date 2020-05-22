@@ -8,9 +8,9 @@ namespace Hexado.Db.Entities
         public string Comment { get; set; }
 
         public string PubId { get; set; }
-        public Pub Pub { get; set; }
+        public virtual Pub Pub { get; set; }
 
         public string HexadoUserId { get; set; }
-        public HexadoUser HexadoUser { get; set; }
+        public virtual HexadoUser HexadoUser { get; set; }
     }
 }

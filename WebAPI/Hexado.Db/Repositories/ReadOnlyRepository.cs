@@ -41,10 +41,16 @@ namespace Hexado.Db.Repositories
                 .ToMaybe();
         }
 
-        public virtual async Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> include)
+        public virtual async Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
-            return (await HexadoDbContext.Set<T>()
-                    .Include(include)
+            IQueryable<T> queryable = HexadoDbContext.Set<T>();
+            queryable = includes
+                .Aggregate(queryable,
+                    (current, include) =>
+                        current.Include(include));
+
+            return (await queryable
+                    .AsNoTracking()
                     .SingleOrDefaultAsync(predicate))
                 .ToMaybe();
         }
@@ -58,11 +64,26 @@ namespace Hexado.Db.Repositories
                 .ToMaybe();
         }
 
-        public virtual async Task<Maybe<IEnumerable<T>>> GetAllAsync(Expression<Func<T, object>> include)
+        public virtual async Task<Maybe<IEnumerable<T>>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> queryable = HexadoDbContext.Set<T>();
+            queryable = includes
+                .Aggregate(queryable,
+                    (current, include) =>
+                        current.Include(include));
+
+            return (await queryable
+                    .AsNoTracking()
+                    .ToListAsync())
+                .AsEnumerable()
+                .ToMaybe();
+        }
+
+        public virtual async Task<Maybe<IEnumerable<T>>> GetAllAsync(ISpecification<T> specification)
         {
             return (await HexadoDbContext.Set<T>()
                     .AsNoTracking()
-                    .Include(include)
+                    .ApplySpecification(specification)
                     .ToListAsync())
                 .AsEnumerable()
                 .ToMaybe();

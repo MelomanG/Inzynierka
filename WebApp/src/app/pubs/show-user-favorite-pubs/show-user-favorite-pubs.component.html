@@ -1,0 +1,21 @@
+<div *ngIf="!pubList">
+    <mat-spinner></mat-spinner>
+</div>
+<div class="section grid-3" *ngIf="pubList">
+    <mat-card class="pub clickLink" (click)="showPub(item)" *ngFor="let item of pubList"  (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+        <mat-card-content>
+        <div >
+            <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
+            <h2><b>{{ item.name }}</b></h2>
+            <p>Miasto: {{ item.address.city }}</p>
+        </div>
+        <mat-card-actions>
+            <button mat-icon-button color="primary" (click)="thumbClicked(item); $event.stopPropagation()">
+                <mat-icon *ngIf="item.isLikedByUser">thumb_up</mat-icon>
+                <mat-icon *ngIf="!item.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
+                {{ item.amountOfLikes }}
+            </button>
+            </mat-card-actions>
+        </mat-card-content>
+    </mat-card>
+</div>

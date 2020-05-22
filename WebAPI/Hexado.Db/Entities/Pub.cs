@@ -7,12 +7,14 @@ namespace Hexado.Db.Entities
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public Address Address { get; set; }
+        public virtual Address Address { get; set; }
+        public string ImagePath { get; set; }
 
         public string AccountId { get; set; }
-        public UserAccount Account { get; set; }
+        public virtual UserAccount Account { get; set; }
 
-        public ICollection<PubRate> PubRates { get; set; } = new HashSet<PubRate>();
-        public ICollection<PubBoardGame> PubBoardGames { get; set; } = new HashSet<PubBoardGame>();
+        public virtual ICollection<PubRate> PubRates { get; set; } = new HashSet<PubRate>();
+        public virtual ICollection<PubBoardGame> PubBoardGames { get; set; } = new HashSet<PubBoardGame>();
+        public virtual ICollection<LikedPub> LikedPubs { get; set; } = new HashSet<LikedPub>();
     }
 }

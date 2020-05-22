@@ -7,6 +7,9 @@ import { ShowBoardgameComponent } from './show-boardgame/show-boardgame.componen
 import { ShowBoardgamesListComponent } from './show-boardgames-list/show-boardgames-list.component';
 import { EditBoardgameComponent } from './edit-boardgame/edit-boardgame.component';
 import { SharedModule } from '../shared/shared.module';
+import { AppRoutingModule } from '../app-routing.module';
+import { ShowUserFavoriteBoardgamesComponent } from './show-user-favorite-boardgames/show-user-favorite-boardgames.component';
+import { CreateBoardgameCategoryComponent } from './create-boardgame-category/create-boardgame-category.component';
 
 
 @NgModule({
@@ -14,20 +17,25 @@ import { SharedModule } from '../shared/shared.module';
     CreateBoardgameComponent, 
     ShowBoardgameComponent, 
     ShowBoardgamesListComponent, 
-    EditBoardgameComponent
+    EditBoardgameComponent,
+    ShowUserFavoriteBoardgamesComponent,
+    CreateBoardgameCategoryComponent
   ],
   imports: [
     SharedModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule
   ],
   exports:[
     CreateBoardgameComponent,
     ShowBoardgameComponent,
     ShowBoardgamesListComponent,
-    EditBoardgameComponent
+    EditBoardgameComponent,
+    ShowUserFavoriteBoardgamesComponent,
+    CreateBoardgameCategoryComponent
   ]
 })
 export class BoardgamesModule { }

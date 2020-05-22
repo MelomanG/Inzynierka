@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BoardGameCategoryModel } from 'src/app/shared/models/boardgamecategory';
 import { CreateBoardGameModel, BoardGameModel } from 'src/app/shared/models/boardgame';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BoardGameService } from '../boardgame.service';
 import { BoardGameCategoryService } from '../boardgamecategory.service';
+import { AuthenticationService } from 'src/app/authentication/authentication.service';
 
 @Component({
   selector: 'app-create-boardgame',
@@ -13,21 +14,26 @@ import { BoardGameCategoryService } from '../boardgamecategory.service';
 })
 
 export class CreateBoardgameComponent implements OnInit {
-
-    constructor(
-      private fb: FormBuilder,
-      private router: Router, 
-      private boardGameService: BoardGameService,
-      private boardGameCategoryService: BoardGameCategoryService) { }
+    isAdmin: boolean = null;
 
     boardGamesCategories: BoardGameCategoryModel[]; 
     formGroup: FormGroup;
     showError: boolean = false;
 
     imageUrl: string = "assets/images/default-image.png";
+    @ViewChild('Image')
+    Image;
     fileToUpload: File;
 
+    constructor(
+      private fb: FormBuilder,
+      private router: Router, 
+      private boardGameService: BoardGameService,
+      private boardGameCategoryService: BoardGameCategoryService,
+      private authService: AuthenticationService) { }
+
     ngOnInit() {
+      this.authService.isAdmin().subscribe(res => this.isAdmin = true, err => this.isAdmin = false);
       this.createForm();
       this.loadBardGameCategories();
     }
@@ -42,10 +48,10 @@ export class CreateBoardgameComponent implements OnInit {
       this.formGroup = this.fb.group({
         name:[null, Validators.required],
         description:[null, Validators.compose([Validators.required, Validators.minLength(30), Validators.maxLength(1000)])],
-        minPlayers:[null],
-        maxPlayers:[null],
-        fromAge:[null],
-        categoryId:[null]
+        minPlayers:[null, Validators.required],
+        maxPlayers:[null, Validators.required],
+        fromAge:[null, Validators.required],
+        categoryId:[null, Validators.required]
       });
     }
 
@@ -54,6 +60,10 @@ export class CreateBoardgameComponent implements OnInit {
         .subscribe(data => {
           this.router.navigate([`show/boardgame/${(<BoardGameModel>data).id}`]);
       })
+    }
+
+    onClickFileInputButton(): void {
+      this.Image.nativeElement.click();
     }
   
     handleFileInput(file: FileList) {

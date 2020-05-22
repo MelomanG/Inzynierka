@@ -1,0 +1,21 @@
+<mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <mat-card-title>
+          <span>Logowanie</span>
+        </mat-card-title>
+        
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Email" formControlName="email" type="email">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Hasło</mat-label>
+          <input matInput placeholder="Hasło" formControlName="password" type="password">
+        </mat-form-field>
+  
+        <button [disabled]="!formGroup.valid" mat-raised-button type="submit" color="primary" routerLink="/login">Zaloguj</button>
+        <button mat-raised-button type="button" color="primary" routerLink="/show/boardgames">Cancel</button>
+      </form>
+    </mat-card-content>
+</mat-card>

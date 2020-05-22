@@ -24,7 +24,8 @@ namespace Hexado.Core.Speczillas
             specification
                 .AddInclude(bg => bg.PubBoardGames)
                 .AddInclude($"{nameof(Pub.PubBoardGames)}.{nameof(PubBoardGame.BoardGame)}")
-                .AddInclude(pub => pub.Address);
+                .AddInclude(pub => pub.Address)
+                .AddInclude(pub => pub.LikedPubs);
 
             if (!string.IsNullOrWhiteSpace(query.BoardGameId))
             {

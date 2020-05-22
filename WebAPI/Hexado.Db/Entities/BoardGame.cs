@@ -12,9 +12,10 @@ namespace Hexado.Db.Entities
         public string ImagePath { get; set; }
 
         public string CategoryId { get; set; }
-        public BoardGameCategory Category { get; set; }
+        public virtual BoardGameCategory Category { get; set; }
 
-        public ICollection<BoardGameRate> BoardGameRates { get; set; } = new HashSet<BoardGameRate>();
-        public ICollection<PubBoardGame> PubBoardGames { get; set; } = new HashSet<PubBoardGame>();
+        public virtual ICollection<BoardGameRate> BoardGameRates { get; set; } = new HashSet<BoardGameRate>();
+        public virtual ICollection<PubBoardGame> PubBoardGames { get; set; } = new HashSet<PubBoardGame>();
+        public virtual ICollection<LikedBoardGame> LikedBoardGames { get; set; } = new HashSet<LikedBoardGame>();
     }
 }

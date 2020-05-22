@@ -27,10 +27,12 @@ namespace Hexado.Db
             builder.ApplyConfiguration(new BoardGameConfiguration());
             builder.ApplyConfiguration(new BoardGameCategoryConfiguration());
             builder.ApplyConfiguration(new BoardGameRateConfiguration());
+            builder.ApplyConfiguration(new LikedBoardGameConfiguration());
 
             builder.ApplyConfiguration(new PubConfiguration());
             builder.ApplyConfiguration(new PubBoardGameConfiguration());
             builder.ApplyConfiguration(new PubRateConfiguration());
+            builder.ApplyConfiguration(new LikedPubConfiguration());
             
             builder.ApplyConfiguration(new AddressConfiguration());
         }
@@ -42,10 +44,12 @@ namespace Hexado.Db
         public DbSet<BoardGame> BoardGames { get; set; }
         public DbSet<BoardGameCategory> BoardGamesCategories { get; set; }
         public DbSet<BoardGameRate> BoardGameRates { get; set; }
+        public DbSet<LikedBoardGame> LikedBoardGames { get; set; }
 
         public DbSet<Pub> Pubs { get; set; }
         public DbSet<PubBoardGame> PubBoardGames { get; set; }
         public DbSet<PubRate> PubRates { get; set; }
+        public DbSet<LikedPub> LikedPubs { get; set; }
 
         public DbSet<Address> Addresses { get; set; }
 

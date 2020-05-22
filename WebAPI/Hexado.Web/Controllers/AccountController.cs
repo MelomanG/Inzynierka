@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Hexado.Core.Services.Specific;
+using Hexado.Db.Constants;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -41,6 +43,14 @@ namespace Hexado.Web.Controllers
                                      $"User: {model.Email}");
                 return InternalServerErrorJson(ex);
             }
+        }
+
+
+        [HttpGet("IsAdmin")]
+        [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
+        public IActionResult IsAdmin()
+        {
+            return Ok();
         }
     }
 }

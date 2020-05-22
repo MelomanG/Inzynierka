@@ -1,0 +1,50 @@
+<body>
+    <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav #sidenav class="sidenav">
+          <mat-toolbar color="primary">
+              Menu
+            </mat-toolbar>
+            <mat-nav-list class="mat-nav-list">
+              <a id="userBoardGames" mat-list-item routerLink="user/favorite/boardgames" (click)="sidenav.close()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                <mat-icon matListAvatar class="nav-menu-icon">casino</mat-icon>
+                <h3 matLine>Ulubione gry</h3>
+              </a>
+              <mat-divider></mat-divider>
+              <a id="userfollowedPubs" mat-list-item routerLink="user/favorite/pubs" (click)="sidenav.close()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                <mat-icon matListAvatar class="nav-menu-icon">favorite</mat-icon>
+                <h3 matLine>Ulubione puby</h3>
+              </a>
+              <mat-divider></mat-divider>
+              <a id="pubs" mat-list-item routerLink="user/pubs" (click)="sidenav.close()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                <mat-icon matListAvatar class="nav-menu-icon">local_drink</mat-icon>
+                <h3 matLine>Twoje puby</h3>
+              </a>
+              <mat-divider></mat-divider>
+              <a id="userEvents" mat-list-item routerLink="user/events" (click)="sidenav.close()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                <mat-icon matListAvatar class="nav-menu-icon">event</mat-icon>
+                <h3 matLine>Twoje wydarzenia</h3>
+              </a>
+                <mat-divider></mat-divider>
+                <div *ngIf="isAdmin">
+                  <a id="addBoardGame" mat-list-item routerLink="/create/boardgame" (click)="sidenav.close()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                    <mat-icon matListAvatar class="nav-menu-icon">add</mat-icon>
+                    <h3 matLine>Dodaj gre</h3>
+                  </a>
+                  <mat-divider></mat-divider>
+                  <a id="addBoardGameCategory" mat-list-item routerLink="/create/boardgamecategory" (click)="sidenav.close()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                    <mat-icon matListAvatar class="nav-menu-icon">add</mat-icon>
+                    <h3 matLine>Dodaj kategorie</h3>
+                  </a>
+                  <mat-divider></mat-divider>
+                </div>
+              </mat-nav-list>
+      </mat-sidenav>
+
+      <div class="sidenav-content">
+          <app-nav-bar (toggleSidenav)="onToggle(sidenav)"></app-nav-bar>
+          <div class="body-wrapper">
+            <router-outlet></router-outlet>
+          </div>
+      </div>
+    </mat-sidenav-container>
+  </body>

@@ -1,0 +1,29 @@
+<mat-card>
+    <mat-card-content>
+      <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <mat-card-title>
+          <span>Rejestracja</span>
+        </mat-card-title>
+        
+        <mat-form-field>
+          <mat-label>Nazwa użytkownika</mat-label>
+          <input matInput placeholder="Nazwa użytkownika" formControlName="username">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Email" formControlName="email" type="email">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Hasło</mat-label>
+          <input matInput placeholder="Hasło" formControlName="password" type="password">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Potwierdź hasło</mat-label>
+          <input matInput placeholder="Potwierdź hasło" formControlName="confirmationPassword" type="password">
+        </mat-form-field>
+  
+        <button [disabled]="!formGroup.valid" mat-raised-button type="submit" color="primary">Zarejestruj</button>
+        <button mat-raised-button type="button" color="primary" routerLink="/show/boardgames">Cancel</button>
+      </form>
+    </mat-card-content>
+</mat-card>

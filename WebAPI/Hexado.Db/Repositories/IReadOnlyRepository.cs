@@ -12,9 +12,10 @@ namespace Hexado.Db.Repositories
     {
         Task<Maybe<T>> GetAsync(string id);
         Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate);
-        Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> include);
+        Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
         Task<Maybe<IEnumerable<T>>> GetAllAsync();
-        Task<Maybe<IEnumerable<T>>> GetAllAsync(Expression<Func<T, object>> include);
+        Task<Maybe<IEnumerable<T>>> GetAllAsync(params Expression<Func<T, object>>[] includes);
+        Task<Maybe<IEnumerable<T>>> GetAllAsync(ISpecification<T> specification);
         Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification);
     }
 }

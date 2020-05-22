@@ -9,6 +9,6 @@
         public string City { get; set; }
 
         public string PubId { get; set; }
-        public Pub Pub { get; set; }
+        public virtual Pub Pub { get; set; }
     }
 }

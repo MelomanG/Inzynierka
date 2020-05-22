@@ -1,0 +1,49 @@
+<div *ngIf="!formGroup && isAdmin === null">
+  <mat-spinner></mat-spinner>
+</div>
+
+<p *ngIf="formGroup && isAdmin != null && !isAdmin"><b>Brak uprawnień</b></p>
+
+<mat-card *ngIf="isAdmin && formGroup">
+  <mat-card-content>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+      <mat-card-title>
+        <span *ngIf="!toEditBoardGameCategory">Dodaj kategorie</span>
+        <span *ngIf="toEditBoardGameCategory">{{ editTitle }}</span>
+      </mat-card-title>
+      <mat-form-field>
+        <mat-label>Nazwa</mat-label>
+        <input matInput placeholder="Nazwa" formControlName="name">
+      </mat-form-field>
+      <mat-toolbar>
+        <button mat-raised-button style="margin-left: -20px; margin-right: 10px; min-width: 80px;" [disabled]="!formGroup.value.name" *ngIf="!toEditBoardGameCategory" color="primary" type="submit">Zapisz</button>
+        <button mat-raised-button style="margin-left: -20px; margin-right: 10px; min-width: 80px;" *ngIf="toEditBoardGameCategory" color="primary" type="button" (click)="edit()">Edytuj</button>
+        <button mat-raised-button style="min-width: 80px;"color="primary" type="button" (click)="cancel()">Cancel</button>
+    </mat-toolbar>
+    </form>
+  </mat-card-content>
+</mat-card>
+<div class="mat-elevation-z8">
+    <table mat-table [dataSource]="boardGamesCategories" matSort>
+  
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Akcje </th>
+            <td mat-cell *matCellDef="let row">
+                <button [disabled]="row.id == formGroup.value.id" mat-raised-button color="primary" (click)="editMode(row)">Edytuj</button>
+                <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="delete(row)">Usuń</button>
+            </td>
+        </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+  </div>

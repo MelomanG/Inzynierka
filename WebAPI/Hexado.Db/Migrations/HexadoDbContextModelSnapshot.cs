@@ -165,6 +165,64 @@ namespace Hexado.Db.Migrations
                     b.ToTable("BoardGameRates");
                 });
 
+            modelBuilder.Entity("Hexado.Db.Entities.LikedBoardGame", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("BoardGameId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HexadoUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("BoardGameId", "HexadoUserId");
+
+                    b.HasIndex("HexadoUserId");
+
+                    b.ToTable("LikedBoardGames");
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.LikedPub", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HexadoUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PubId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("PubId", "HexadoUserId");
+
+                    b.HasIndex("HexadoUserId");
+
+                    b.ToTable("LikedPubs");
+                });
+
             modelBuilder.Entity("Hexado.Db.Entities.Pub", b =>
                 {
                     b.Property<string>("Id")
@@ -178,6 +236,9 @@ namespace Hexado.Db.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Modified")
@@ -556,6 +617,36 @@ namespace Hexado.Db.Migrations
                         .WithMany("BoardGameRates")
                         .HasForeignKey("HexadoUserId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.LikedBoardGame", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.BoardGame", "BoardGame")
+                        .WithMany("LikedBoardGames")
+                        .HasForeignKey("BoardGameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hexado.Db.Entities.HexadoUser", "HexadoUser")
+                        .WithMany("LikedBoardGames")
+                        .HasForeignKey("HexadoUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.LikedPub", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.HexadoUser", "HexadoUser")
+                        .WithMany("LikedPubs")
+                        .HasForeignKey("HexadoUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Hexado.Db.Entities.Pub", "Pub")
+                        .WithMany("LikedPubs")
+                        .HasForeignKey("PubId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

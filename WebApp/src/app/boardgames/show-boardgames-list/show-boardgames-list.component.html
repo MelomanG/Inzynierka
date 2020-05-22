@@ -1,10 +1,21 @@
-<p *ngIf="!boardGameList"><b>Loading...</b></p>
+<div *ngIf="!boardGameList">
+    <mat-spinner></mat-spinner>
+</div>
 <div class="section grid-3" *ngIf="boardGameList">
-    <mat-card class="boardgame clickLink" *ngFor="let item of boardGameList.results" (click)="showBoardGame(item)">
-        <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
+    <mat-card class="boardgame clickLink" (click)="showBoardGame(item)" *ngFor="let item of boardGameList.results" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
         <mat-card-content>
-            <h3>{{ item.name }}</h3>
-            <p>{{ item.category.name }}</p>
+        <div>
+            <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
+            <h2><b>{{ item.name }}</b></h2>
+            <p>Kategoria: {{ item.category.name }}</p>
+        </div>
+        <mat-card-actions *ngIf="isAuthenticated">
+            <button mat-icon-button color="primary" (click)="thumbClicked(item); $event.stopPropagation()">
+                <mat-icon *ngIf="item.isLikedByUser">thumb_up</mat-icon>
+                <mat-icon *ngIf="!item.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
+                {{ item.amountOfLikes }}
+            </button>
+        </mat-card-actions>
         </mat-card-content>
     </mat-card>
 </div>

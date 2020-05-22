@@ -1,13 +1,45 @@
-<p *ngIf="!boardGame"><b>Loading...</b></p>
-<mat-card class="boardgame" *ngIf="boardGame">
-    <img mat-card-image src="{{serverUrl}}/{{boardGame.imagePath}}">
-    <mat-card-content>
-        <h3>Nazwa: {{ boardGame.name }}</h3>
-        <p>Kategoria: {{ boardGame?.category?.name }}</p>
-        <p>Minimum graczy: {{ boardGame.minPlayers }}</p>
-        <p>Maximum graczy: {{ boardGame.maxPlayers }}</p>
-        <p>Od lat: {{ boardGame.fromAge }}</p>
-        <p>Opis: {{ boardGame.description }}</p>
-        <button mat-raised-button color="primary" (click)="editBoardGame(boardGame)">Edit</button>
+<div *ngIf="!boardGame">
+    <mat-spinner></mat-spinner>
+</div>
+<mat-card *ngIf="boardGame">
+
+    <mat-card-header>
+        <img mat-card-image src="{{serverUrl}}/{{boardGame.imagePath}}">
+        <div class="title">
+            <mat-card-title>
+                <h2>{{ boardGame.name  }}</h2>
+            </mat-card-title>
+            
+            <mat-card-subtitle>
+                {{ boardGame.description }}
+            </mat-card-subtitle>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content>      
+        <mat-tab-group>
+            <mat-tab label="Specyfikacja">
+                <section class="product-features">
+                    <dl class="data-sheet">
+                        <dt class="name">Kategoria: </dt>       <dd class="value">{{ boardGame?.category?.name }}</dd>
+                        <dt class="name">Ilość graczy: </dt>    <dd class="value">od {{ boardGame.minPlayers }} do {{ boardGame.maxPlayers }}</dd>
+                        <dt class="name">Od lat: </dt>          <dd class="value">{{ boardGame.fromAge }}</dd>
+                    </dl>
+                </section>
+            </mat-tab>
+            <mat-tab label="Puby">
+                TODO puby psiadające grę
+            </mat-tab>
+        </mat-tab-group>
+
+        <mat-toolbar *ngIf="isAuthenticated">
+            <button mat-icon-button color="primary" (click)="thumbClicked()">
+                <mat-icon *ngIf="boardGame.isLikedByUser">thumb_up</mat-icon>
+                <mat-icon *ngIf="!boardGame.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
+                {{ boardGame.amountOfLikes }}
+            </button>
+            <span style="flex:1 1 auto;"></span>
+            <button *ngIf="isAdmin" mat-raised-button color="primary" (click)="editBoardGame(boardGame)">Edytuj</button>
+        </mat-toolbar>
     </mat-card-content>
 </mat-card>

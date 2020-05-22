@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Db.Entities;
 using Hexado.Db.Repositories.Specific;
@@ -9,6 +10,7 @@ namespace Hexado.Core.Services.Specific
     {
         Task<Maybe<BoardGame>> SetImagePath(string id, string imagePath);
         Task ClearAsync();
+        Task<Maybe<BoardGame>> LikeBoardGame(string boardGameId, HexadoUser user);
     }
 
     public class BoardGameService : BaseService<BoardGame>, IBoardGameService
@@ -25,7 +27,8 @@ namespace Hexado.Core.Services.Specific
         {
             return _boardGameRepository.GetSingleOrMaybeAsync(
                 bg => bg.Id == id,
-                bg => bg.Category);
+                bg => bg.Category,
+                bg => bg.LikedBoardGames);
         }
 
         public async Task<Maybe<BoardGame>> SetImagePath(string id, string imagePath)
@@ -38,9 +41,18 @@ namespace Hexado.Core.Services.Specific
             return await _boardGameRepository.UpdateAsync(boardGame.Value);
         }
 
-        public Task ClearAsync()
+        public async Task<Maybe<BoardGame>> LikeBoardGame(string boardGameId, HexadoUser user)
         {
-            return _boardGameRepository.ClearAsync();
+            var boardGame = await _boardGameRepository.GetAsync(boardGameId);
+            if (!boardGame.HasValue)
+                return boardGame;
+            boardGame.Value.LikedBoardGames.Add(
+                new LikedBoardGame
+                {
+                    HexadoUserId = user.Id,
+                    HexadoUser = user
+                });
+            return await _boardGameRepository.UpdateAsync(boardGame.Value);
         }
     }
 }

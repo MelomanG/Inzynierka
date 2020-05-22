@@ -20,13 +20,16 @@ export class BoardGameService {
     getBoardGames() {
         return this.http.get(`${environment.apiUrl}/BoardGame`);
     }
+    
+    getLikedBoardGames() {
+        return this.http.get(`${environment.apiUrl}/BoardGame/like`)
+    }
 
     getBoardGame(id: string) {
         return this.http.get(`${environment.apiUrl}/BoardGame/${id}`);
     }
 
     updateBoardGame(boardGame: BoardGameModel, image: File) {
-        console.log(boardGame);
         return this.http.put(`${environment.apiUrl}/BoardGame/${boardGame.id}`, boardGame)
             .pipe(switchMap(resp => {
                 const data = <BoardGameModel>resp;
@@ -35,6 +38,18 @@ export class BoardGameService {
                 else 
                     return new Observable(observer => observer.next(data));
             }));
+    }
+
+    deleteBoardGame(id: string) {
+        return this.http.delete(`${environment.apiUrl}/BoardGame/${id}`);
+    }
+
+    likeBoardGame(id: string) {
+        return this.http.post(`${environment.apiUrl}/BoardGame/${id}/like`, {})
+    }
+
+    unLikeBoardGame(id: string) {
+        return this.http.delete(`${environment.apiUrl}/BoardGame/${id}/unlike`)
     }
 
     private uploadImage(id: string, image: File) {

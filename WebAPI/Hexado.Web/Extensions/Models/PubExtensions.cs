@@ -1,5 +1,11 @@
-﻿using Hexado.Db.Entities;
+﻿using System.Collections.Generic;
+using Hexado.Db.Entities;
+using Hexado.Speczilla;
 using Hexado.Web.Models;
+using Hexado.Web.Models.Responses;
+using System.Linq;
+using Hexado.Core.Models;
+using Hexado.Db.Dtos;
 
 namespace Hexado.Web.Extensions.Models
 {
@@ -18,22 +24,77 @@ namespace Hexado.Web.Extensions.Models
                 AccountId = accountId,
                 Name = model.Name,
                 Description = model.Description,
-                Address = model.Address.ToEntity()
+                Address = model.Address.ToEntity(pubId),
+                ImagePath = model.ImagePath ?? string.Empty
             };
         }
-    }
-    public static class AddressExtensions
-    {
-        public static Address ToEntity(this AddressModel model)
+
+        public static PaginationResult<PubResponse> ToResponse(this PaginationResult<Pub> entity)
         {
-            return new Address
+            return new PaginationResult<PubResponse>
             {
-                Street = model.Street,
-                BuildingNumber = model.BuildingNumber,
-                LocalNumber = model.LocalNumber,
-                PostalCode = model.PostalCode,
-                City = model.City
+                Page = entity.Page,
+                PageCount = entity.PageCount,
+                PageSize = entity.PageSize,
+                Results = entity.Results.Select(p => p.ToResponse()).ToList(),
+                TotalCount = entity.TotalCount
             };
+        }
+
+        public static PubResponse ToResponse(this Pub entity, bool isLikedByUser = false)
+        {
+            return new PubResponse
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description,
+                Address = entity.Address,
+                ImagePath = entity.ImagePath,
+                AccountId = entity.AccountId,
+                PubRates = entity.PubRates,
+                PubBoardGames = entity.PubBoardGames,
+                IsLikedByUser = isLikedByUser,
+                AmountOfLikes = entity.LikedPubs.Count
+            };
+        }
+
+        public static IEnumerable<PubResponse> ToResponse(this IEnumerable<Pub> entities, bool isLikedByUser = false)
+        {
+            return entities.Select(bg => bg.ToResponse(isLikedByUser));
+        }
+
+        public static PaginationResult<PubResponse> ToResponse(this PaginationResult<PubDto> dto)
+        {
+            return new PaginationResult<PubResponse>
+            {
+                Page = dto.Page,
+                PageCount = dto.PageCount,
+                PageSize = dto.PageSize,
+                Results = dto.Results.Select(p => p.ToResponse()).ToList(),
+                TotalCount = dto.TotalCount
+            };
+        }
+
+        public static PubResponse ToResponse(this PubDto dto, bool isLikedByUser = false)
+        {
+            return new PubResponse
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Description = dto.Description,
+                Address = dto.Address,
+                ImagePath = dto.ImagePath,
+                AccountId = dto.AccountId,
+                PubRates = dto.PubRates,
+                PubBoardGames = dto.PubBoardGames,
+                IsLikedByUser = isLikedByUser,
+                AmountOfLikes = dto.AmountOfLikes
+            };
+        }
+
+        public static IEnumerable<PubResponse> ToResponse(this IEnumerable<PubDto> dtos, bool isLikedByUser = false)
+        {
+            return dtos.Select(bg => bg.ToResponse(isLikedByUser));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Hexado.Web.Controllers
     [ApiController]
     public abstract class ApiBaseController : ControllerBase
     {
-        protected string UserEmail =>  HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? String.Empty;
+        protected string UserEmail =>  HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? string.Empty;
 
         protected static IActionResult CreatedJson(object obj)
         {

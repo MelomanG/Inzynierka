@@ -13,9 +13,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .grid-3 {
     display: grid;
     grid-gap: 8px;
+    max-width: 90%;
 }
-
-/* 30em = 480px */
 
 @media (min-width: 30em) {
     .grid,
@@ -26,16 +25,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     }
 }
 
-/* 48em = 768px */
-@media (min-width: 48em) {
-    .grid-3 {
+@media (min-width: 38em) {
+    .grid-3{
         grid-gap: 16px;
         padding-right: calc(16px * 2);
         grid-template-columns: repeat(3, 33.33%);
     }
 }
-
-/* 64em = 1024px */
 
 @media (min-width: 64em) {
      .grid {
@@ -46,4 +42,36 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .clickLink {
     cursor: pointer;
+}
+
+.body-wrapper {
+    padding: 0px 20px 0 20px;
+
+    mat-spinner {
+        position: fixed;
+        z-index: 999;
+        overflow: show;
+        margin: auto;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+    }
+
+    mat-icon {
+        padding-left: 10px;
+    }
+
+    mat-card-content {
+        div{
+            h2, p{
+                text-align: center;
+            }
+        }
+    }
+
+    .pub, .boardgame {
+        max-width: 270px;
+        max-height: 400px;
+    }
 }

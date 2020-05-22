@@ -1,13 +1,18 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Functional.Maybe;
 using Hexado.Core.Queries;
 using Hexado.Core.Services;
 using Hexado.Core.Services.Exceptions;
 using Hexado.Core.Services.Specific;
 using Hexado.Core.Speczillas;
+using Hexado.Db.Entities;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -55,7 +60,7 @@ namespace Hexado.Web.Controllers
                 var result = await _pubService.CreateAsync(model.ToEntity(user.Value.Account.Id));
 
                 return result.HasValue 
-                    ? CreatedJson(result.Value)
+                    ? CreatedJson(result.Value.ToResponse())
                     : BadRequest();
             }
             catch (Exception ex)
@@ -73,9 +78,27 @@ namespace Hexado.Web.Controllers
                 var specification = _pubSpeczilla.GetSpecification(query);
                 var result = await _pubService.GetPaginationResultAsync(specification);
 
-                return result.HasValue
-                    ? OkJson(result.Value)
-                    : NotFound();
+                if (!result.HasValue)
+                    return NotFound();
+
+                var responseResult = result.Value.ToResponse();
+
+                if (!string.IsNullOrWhiteSpace(UserEmail))
+                {
+                    var likedPubs = _hexadoUserService.GetLikedPubs(UserEmail);
+                    if (likedPubs.HasValue)
+                    {
+                        foreach(var likedPub in likedPubs.Value)
+                        {
+                            var pub = responseResult.Results
+                                .FirstOrDefault(rr => rr.Id == likedPub.Id);
+                            if (pub != null)
+                                pub.IsLikedByUser = true;
+                        }
+                    }
+                }
+
+                return OkJson(responseResult);
             }
             catch (Exception ex)
             {
@@ -90,10 +113,19 @@ namespace Hexado.Web.Controllers
             try
             {
                 var result = await _pubService.GetByIdAsync(id);
+                if (!result.HasValue)
+                    return NotFound();
 
-                return result.HasValue
-                    ? OkJson(result.Value)
-                    : NotFound();
+                var responseResult = result.Value.ToResponse();
+                if (!string.IsNullOrWhiteSpace(UserEmail))
+                {
+                    var likedPubs = _hexadoUserService.GetLikedPubs(UserEmail);
+                    if (likedPubs.HasValue)
+                        if (likedPubs.Value.Any(lbg => lbg.Id == responseResult.Id))
+                            responseResult.IsLikedByUser = true;
+                }
+
+                return OkJson(responseResult);
             }
             catch (Exception ex)
             {
@@ -119,7 +151,7 @@ namespace Hexado.Web.Controllers
                         id));
 
                 return result.HasValue
-                    ? OkJson(result.Value)
+                    ? OkJson(result.Value.ToResponse())
                     : NotFound();
             }
             catch (UserNotAllowedToUpdatePubException ex)
@@ -146,10 +178,14 @@ namespace Hexado.Web.Controllers
                     return Unauthorized();
 
                 var result = await _pubService.DeleteByIdAsync(id, user.Value.Account.Id);
+                if (!result.HasValue)
+                    return NotFound();
 
-                return result.HasValue
-                    ? OkJson(result.Value)
-                    : NotFound();
+                var notFullPath = Path.Combine("Images", "Pubs");
+                var fromRootPath = Path.Combine(Directory.GetCurrentDirectory(), notFullPath);
+                ValidateIfStaticFileExists(id, fromRootPath);
+                
+                return NoContent();
             }
             catch (UserNotAllowedToDeletePubException ex)
             {
@@ -254,7 +290,7 @@ namespace Hexado.Web.Controllers
                     boardGameIds);
 
                 return result.HasValue
-                    ? OkJson(result.Value)
+                    ? OkJson(result.Value.ToResponse())
                     : BadRequest();
             }
             catch (UserNotAllowedToUpdatePubException ex)
@@ -279,7 +315,7 @@ namespace Hexado.Web.Controllers
                 var result = await _boardGameService.GetPaginationResultAsync(specification);
 
                 return result.HasValue
-                    ? OkJson(result.Value)
+                    ? OkJson(result.Value.ToResponse())
                     : BadRequest();
             }
             catch (Exception ex)
@@ -321,5 +357,103 @@ namespace Hexado.Web.Controllers
                 return InternalServerErrorJson(ex);
             }
         }
+
+        [HttpPost("{id}/like")]
+        [Authorize]
+        public async Task<IActionResult> LikePub(string id)
+        {
+            try
+            {
+                var user = await _hexadoUserService.GetSingleOrMaybeAsync(u => u.Email == UserEmail);
+                if (!user.HasValue)
+                    return Unauthorized();
+
+                var result = await _pubService.LikePub(id, user.Value);
+
+                if (result.HasValue)
+                    return Ok();
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while liking pub! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpGet("like")]
+        [Authorize]
+        public IActionResult GetLikedPubs()
+        {
+            try
+            {
+                var likedPubs = _hexadoUserService.GetLikedPubs(UserEmail);
+
+                return likedPubs.HasValue
+                    ? OkJson(likedPubs.Value.ToResponse(true))
+                    : Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while fetching liked pubs! ");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpDelete("{id}/unlike")]
+        [Authorize]
+        public async Task<IActionResult> UnLikePub(string id)
+        {
+            try
+            {
+                await _hexadoUserService.UnLikePubAsync(UserEmail, id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while liking board game! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpPost("{id}/image")]
+        public async Task<IActionResult> UploadFile(string id, IFormFile image)
+        {
+            try
+            {
+                var notFullPath = Path.Combine("Images", "Pubs");
+                var fromRootPath = Path.Combine(Directory.GetCurrentDirectory(), notFullPath);
+                ValidateIfStaticFileExists(id, fromRootPath);
+
+                var imageName = id + image.FileName;
+                var fullRootPath = Path.Combine(fromRootPath, imageName);
+                var staticFilePath = Path.Combine(notFullPath, imageName);
+                var result = Maybe<Pub>.Nothing;
+                await using (var stream = new FileStream(fullRootPath, FileMode.Create))
+                {
+                    image.CopyTo(stream);
+                    result = await _pubService.SetImagePath(id, staticFilePath);
+                }
+
+                if (!result.HasValue)
+                    return NotFound();
+                return Ok(result.Value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while uploading image for board game! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        //[HttpDelete("clear")]
+        //public async Task<IActionResult> Clear()
+        //{
+        //    await _pubService.ClearAsync();
+        //    return Ok();
+        //}
     }
 }

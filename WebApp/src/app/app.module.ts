@@ -1,27 +1,33 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './shared/material/material.module';
 import { BoardgamesModule } from './boardgames/boardgames.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BoardGameService } from './boardgames/boardgame.service';
 import { BoardGameCategoryService } from './boardgames/boardgamecategory.service';
 import { SharedModule } from './shared/shared.module';
+import { RegisterComponent } from './authentication/register/register.component';
+import { AuthenticationService } from './authentication/authentication.service';
+import { LoginComponent } from './authentication/login/login.component';
+import { AuthenticationInterceptor } from './authentication/autnentication.interceptor';
+import { PubsModule } from './pubs/pubs.module';
+import { ShowUserEventsComponent } from './events/show-user-events/show-user-events.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    RegisterComponent,
+    LoginComponent,
+    ShowUserEventsComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
     BoardgamesModule,
+    PubsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -29,7 +35,13 @@ import { SharedModule } from './shared/shared.module';
   ],
   providers: [
     BoardGameService, 
-    BoardGameCategoryService
+    BoardGameCategoryService,
+    AuthenticationService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

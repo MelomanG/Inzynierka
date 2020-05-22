@@ -50,5 +50,10 @@ namespace Hexado.Core.Services
         {
             return Repository.DeleteByIdAsync(id);
         }
+
+        public Task ClearAsync()
+        {
+            return Repository.ClearAsync();
+        }
     }
 }
