@@ -1,6 +1,6 @@
-<mat-card>
+<mat-card class="container">
     <mat-card-content>
-      <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <form class="form" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
         <mat-card-title>
           <span>Rejestracja</span>
         </mat-card-title>
@@ -22,7 +22,7 @@
           <input matInput placeholder="Potwierdź hasło" formControlName="confirmationPassword" type="password">
         </mat-form-field>
   
-        <button [disabled]="!formGroup.valid" mat-raised-button type="submit" color="primary">Zarejestruj</button>
+        <button style="margin-right: 10px;" [disabled]="!formGroup.valid" mat-raised-button type="submit" color="primary">Zarejestruj</button>
         <button mat-raised-button type="button" color="primary" routerLink="/show/boardgames">Cancel</button>
       </form>
     </mat-card-content>

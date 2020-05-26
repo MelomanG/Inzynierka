@@ -4,6 +4,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { CreateRateModel, RateModel } from '../shared/models/rate';
 
 @Injectable()
 export class BoardGameService {
@@ -50,6 +51,18 @@ export class BoardGameService {
 
     unLikeBoardGame(id: string) {
         return this.http.delete(`${environment.apiUrl}/BoardGame/${id}/unlike`)
+    }
+
+    rateBoardGame(id: string, rate: CreateRateModel) {
+        return this.http.post(`${environment.apiUrl}/BoardGame/${id}/rate`, rate)
+    }
+
+    getUserBoardGameRate(id: string) {
+        return this.http.get(`${environment.apiUrl}/BoardGame/${id}/rate`)
+    }
+
+    updateBoardGameRate(id: string, rate: RateModel) {
+        return this.http.put(`${environment.apiUrl}/BoardGame/${id}/rate/${rate.id}`, rate)
     }
 
     private uploadImage(id: string, image: File) {

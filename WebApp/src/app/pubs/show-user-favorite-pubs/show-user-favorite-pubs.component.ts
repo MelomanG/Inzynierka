@@ -1,9 +1,11 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { PubModel } from 'src/app/shared/models/pub';
-import { PaginationResult } from 'src/app/shared/models/paginationresult';
 import { PubsService } from '../pubs.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { RateModel } from 'src/app/shared/models/rate';
+import { PubRateDialogComponent } from '../pub-rate-dialog/pub-rate-dialog.component';
 
 @Component({
   selector: 'app-show-user-favorite-pubs',
@@ -17,6 +19,7 @@ export class ShowUserFavoritePubsComponent implements OnInit {
 
   constructor(
     private pubService: PubsService,
+    private dialog: MatDialog,
     private router: Router,
     private renderer2: Renderer2) { }
 
@@ -48,6 +51,30 @@ export class ShowUserFavoritePubsComponent implements OnInit {
       this.pubService.unLikePub(pub.id).subscribe(() => this.loadPubs());
       pub.amountOfLikes -= 1;
     }
+  }
+
+  getPubRate(rates: RateModel[]) {
+    if(rates.length <=0 )
+      return 0;
+    var sum = 0;
+    for (var i = 0; i < rates.length; i++) {
+      sum += rates[i].userRate
+    }
+    return Math.round(sum/rates.length)
+  }
+
+  toggleCreateRate(pub: PubModel) {
+    var dialogRef = this.dialog.open(PubRateDialogComponent, {
+      width: "450px",
+      data: {
+        pub
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadPubs();
+    }
+    )
   }
 
   mouseenter (event) {

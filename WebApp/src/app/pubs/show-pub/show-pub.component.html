@@ -2,23 +2,47 @@
     <mat-spinner></mat-spinner>
 </div>
   
-<mat-card class="pub" *ngIf="pub">
-    <img mat-card-image src="{{serverUrl}}/{{pub.imagePath}}">
-    <mat-card-content>
-        <h3>Nazwa: {{ pub.name }}</h3>
-        <p>Opis: {{ pub.description }}</p>
-        <h3>Adres</h3>
-        <p>Ulica: {{ getFullStreet() }}</p>
-        <p>Kod pocztowy: {{ pub.address.postalCode }}</p>
-        <p>Miasto: {{ pub.address.city }}</p>
-        <mat-toolbar *ngIf="isAuthenticated">
+<mat-card *ngIf="pub">
+    <mat-card-header>
+        <img mat-card-image src="{{serverUrl}}/{{pub.imagePath}}">
+        <div class="title" style="position: relative;">
+            <mat-card-title>
+                <h2>{{ pub.name  }}</h2>
+            </mat-card-title>
+            
+            <mat-card-subtitle>
+                {{ pub.description }}
+            </mat-card-subtitle>
+            <app-star-rating style="position:absolute; bottom: 0px; float: right;" [amountOfRates]="pub.rates.length" [rating]="getPubRate(pub.rates)" [itemId]="pub.id" (click)="toggleCreateRate(pub); $event.stopPropagation()"></app-star-rating>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content style="margin-top: 25px;">
+        <mat-tab-group>
+            <mat-tab label="Gry">
+                TODO gry posiadane przez pub
+            </mat-tab>
+            <mat-tab label="Wydarzenia">
+                TODO wydarzenia w pubie
+            </mat-tab>
+            <mat-tab label="Adres">
+                <p style="text-align: left;">Ulica: {{ getFullStreet() }}</p>
+                <p style="text-align: left;">Kod pocztowy: {{ pub.address.postalCode }}</p>
+                <p style="text-align: left;">Miasto: {{ pub.address.city }}</p>
+            </mat-tab>
+            <mat-tab label="Opinie">
+                <app-show-opinions-tab [rates]="pub.rates"></app-show-opinions-tab>
+            </mat-tab>
+        </mat-tab-group>
+
+        <mat-toolbar>
             <button mat-icon-button color="primary" (click)="thumbClicked()">
                 <mat-icon *ngIf="pub.isLikedByUser">thumb_up</mat-icon>
                 <mat-icon *ngIf="!pub.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
                 {{ pub.amountOfLikes }}
             </button>
             <span style="flex:1 1 auto;"></span>
-            <button mat-raised-button color="primary" (click)="editPub(pub)">Edytuj</button>
+            <button *ngIf="pub.isUserPub" mat-raised-button color="primary" (click)="editPub(pub)">Edytuj</button>
         </mat-toolbar>
     </mat-card-content>
 </mat-card>

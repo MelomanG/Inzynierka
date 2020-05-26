@@ -4,6 +4,9 @@ import { PubsService } from '../pubs.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { RateModel } from 'src/app/shared/models/rate';
+import { PubRateDialogComponent } from '../pub-rate-dialog/pub-rate-dialog.component';
 
 @Component({
   selector: 'app-show-pub',
@@ -18,6 +21,7 @@ export class ShowPubComponent implements OnInit {
   constructor(
     private pubService: PubsService,
     private authService: AuthenticationService,
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router) { }
 
@@ -45,7 +49,34 @@ export class ShowPubComponent implements OnInit {
         return fullStreet;
     }
 
+    getPubRate(rates: RateModel[]) {
+      if(rates.length <=0 )
+        return 0;
+      var sum = 0;
+      for (var i = 0; i < rates.length; i++) {
+        sum += rates[i].userRate
+      }
+      return Math.round(sum/rates.length)
+    }
+  
+    toggleCreateRate(pub: PubModel) {
+      var dialogRef = this.dialog.open(PubRateDialogComponent, {
+        width: "450px",
+        data: {
+          pub
+        }
+      });
+  
+      dialogRef.afterClosed().subscribe(() => {
+        this.loadPub();
+      }
+      )
+    }
+  
     thumbClicked() {
+      if(!this.isAuthenticated)
+        return;
+        
       this.pub.isLikedByUser = !this.pub.isLikedByUser
       if(this.pub.isLikedByUser)
       {

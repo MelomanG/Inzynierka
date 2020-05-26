@@ -15,5 +15,6 @@ namespace Hexado.Db.Repositories.Specific
         Task<Maybe<HexadoUser>> GetUserIncludeTokensAsync(Expression<Func<HexadoUser, bool>> expression);
         Maybe<IEnumerable<BoardGameDto>> GetLikedBoardGames(string userEmail);
         Maybe<IEnumerable<PubDto>> GetLikedPubs(string userEmail);
+        Task<Maybe<IEnumerable<PubDto>>> GetUserPubsAsync(string userEmail);
     }
 }

@@ -5,6 +5,9 @@ import { environment } from 'src/environments/environment';
 import { PubModel } from 'src/app/shared/models/pub';
 import { PubsService } from '../pubs.service';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { RateModel } from 'src/app/shared/models/rate';
+import { PubRateDialogComponent } from '../pub-rate-dialog/pub-rate-dialog.component';
 
 @Component({
   selector: 'app-show-pubs-list',
@@ -20,6 +23,7 @@ export class ShowPubsListComponent implements OnInit {
   constructor(
     private pubService: PubsService,
     private authService: AuthenticationService,
+    private dialog: MatDialog,
     private router: Router,
     private renderer2: Renderer2) { }
 
@@ -41,6 +45,9 @@ export class ShowPubsListComponent implements OnInit {
   }
 
   thumbClicked(pub) {
+    if(!this.isAuthenticated)
+        return;
+
     pub.isLikedByUser = !pub.isLikedByUser
     if(pub.isLikedByUser)
     {
@@ -52,6 +59,30 @@ export class ShowPubsListComponent implements OnInit {
       this.pubService.unLikePub(pub.id).subscribe();
       pub.amountOfLikes -= 1;
     }
+  }
+
+  getPubRate(rates: RateModel[]) {
+    if(rates.length <=0 )
+      return 0;
+    var sum = 0;
+    for (var i = 0; i < rates.length; i++) {
+      sum += rates[i].userRate
+    }
+    return Math.round(sum/rates.length)
+  }
+
+  toggleCreateRate(pub: PubModel) {
+    var dialogRef = this.dialog.open(PubRateDialogComponent, {
+      width: "450px",
+      data: {
+        pub
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadPubs();
+    }
+    )
   }
 
   mouseenter (event) {

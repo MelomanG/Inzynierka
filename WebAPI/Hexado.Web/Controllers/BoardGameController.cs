@@ -11,7 +11,6 @@ using Hexado.Db.Constants;
 using Hexado.Db.Entities;
 using Hexado.Web.Extensions.Models;
 using Hexado.Web.Models;
-using Hexado.Web.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -185,6 +184,26 @@ namespace Hexado.Web.Controllers
 
                 return result.HasValue
                     ? OkJson(result.Value)
+                    : NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while applying rate to board game! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpGet("{id}/Rate")]
+        [Authorize]
+        public async Task<IActionResult> GetRateBoardGame(string id)
+        {
+            try
+            {
+                var rate = await _hexadoUserService.GetUserBoardGameRate(id, UserEmail);
+
+                return rate.HasValue
+                    ? OkJson(rate.Value.ToRateResponse())
                     : NotFound();
             }
             catch (Exception ex)

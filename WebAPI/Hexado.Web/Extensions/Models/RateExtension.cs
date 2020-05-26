@@ -1,5 +1,6 @@
 ﻿using Hexado.Db.Entities;
 using Hexado.Web.Models;
+using Hexado.Web.Models.Responses;
 
 namespace Hexado.Web.Extensions.Models
 {
@@ -35,6 +36,28 @@ namespace Hexado.Web.Extensions.Models
                 PubId = pubId,
                 UserRate = model.UserRate,
                 Comment = model.Comment
+            };
+        }
+
+        public static RateResponse ToRateResponse(this BoardGameRate entity)
+        {
+            return new RateResponse
+            {
+                Id = entity.Id,
+                UserRate = entity.UserRate,
+                Comment = entity.Comment,
+                UserName = entity?.HexadoUser?.UserName
+            };
+        }
+
+        public static RateResponse ToRateResponse(this PubRate entity)
+        {
+            return new RateResponse
+            {
+                Id = entity.Id,
+                UserRate = entity.UserRate,
+                Comment = entity.Comment,
+                UserName = entity?.HexadoUser?.UserName
             };
         }
     }

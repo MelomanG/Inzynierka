@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { CreateRateModel, RateModel } from '../shared/models/rate';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,10 @@ export class PubsService {
       return this.http.get(`${environment.apiUrl}/Pub`);
   }
 
+  getUsersPubs() {
+      return this.http.get(`${environment.apiUrl}/Pub/users`);
+  }
+
   getLikedPubs() {
       return this.http.get(`${environment.apiUrl}/Pub/like`)
   }
@@ -33,7 +38,6 @@ export class PubsService {
   }
 
   updatePub(pub: PubModel, image: File) {
-    console.log(pub)
       return this.http.put(`${environment.apiUrl}/Pub/${pub.id}`, pub)
           .pipe(switchMap(resp => {
               const data = <PubModel>resp;
@@ -54,6 +58,18 @@ export class PubsService {
 
   unLikePub(id: string) {
       return this.http.delete(`${environment.apiUrl}/Pub/${id}/unlike`)
+  }
+
+  ratePub(id: string, rate: CreateRateModel) {
+      return this.http.post(`${environment.apiUrl}/Pub/${id}/rate`, rate)
+  }
+
+  getUserPubRate(id: string) {
+      return this.http.get(`${environment.apiUrl}/Pub/${id}/rate`)
+  }
+
+  updatePubRate(id: string, rate: RateModel) {
+      return this.http.put(`${environment.apiUrl}/Pub/${id}/rate/${rate.id}`, rate)
   }
 
   private uploadImage(id: string, image: File) {

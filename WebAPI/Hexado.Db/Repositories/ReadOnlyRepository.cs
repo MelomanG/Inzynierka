@@ -55,6 +55,20 @@ namespace Hexado.Db.Repositories
                 .ToMaybe();
         }
 
+        public virtual async Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate, params string[] includes)
+        {
+            IQueryable<T> queryable = HexadoDbContext.Set<T>();
+            queryable = includes
+                .Aggregate(queryable,
+                    (current, include) =>
+                        current.Include(include));
+
+            return (await queryable
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(predicate))
+                .ToMaybe();
+        }
+
         public virtual async Task<Maybe<IEnumerable<T>>> GetAllAsync()
         {
             return (await HexadoDbContext.Set<T>()

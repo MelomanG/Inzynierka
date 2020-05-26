@@ -13,7 +13,6 @@ export class BoardGameCategoryService {
     }
 
     createCategory(category: CreateBoardGameCategoryModel) {
-        console.log(category);
         return this.http.post(`${environment.apiUrl}/BoardGameCategory`, category);
     }
 

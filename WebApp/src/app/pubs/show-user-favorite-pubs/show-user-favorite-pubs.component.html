@@ -4,7 +4,7 @@
 <div class="section grid-3" *ngIf="pubList">
     <mat-card class="pub clickLink" (click)="showPub(item)" *ngFor="let item of pubList"  (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
         <mat-card-content>
-        <div >
+        <div style="margin-bottom: 10px;">
             <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
             <h2><b>{{ item.name }}</b></h2>
             <p>Miasto: {{ item.address.city }}</p>
@@ -15,7 +15,8 @@
                 <mat-icon *ngIf="!item.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
                 {{ item.amountOfLikes }}
             </button>
-            </mat-card-actions>
+            <app-star-rating style="float: right;" [amountOfRates]="item.rates.length" [rating]="getPubRate(item.rates)" [itemId]="item.id" (click)="toggleCreateRate(item); $event.stopPropagation()"></app-star-rating>
+        </mat-card-actions>
         </mat-card-content>
     </mat-card>
 </div>

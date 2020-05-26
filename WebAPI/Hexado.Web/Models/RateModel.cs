@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using Hexado.Db.Constants;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Hexado.Web.Models
 {
@@ -8,7 +6,7 @@ namespace Hexado.Web.Models
     public class RateModel
     {
         [Required]
-        public UserRate UserRate { get; set; }
+        public int UserRate { get; set; }
 
         public string Comment { get; set; }
     }

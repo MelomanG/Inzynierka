@@ -12,6 +12,7 @@ namespace Hexado.Core.Speczillas.Specifications
         public PubSpecification()
             : base(bg => bg.Name, false)
         {
+            AddInclude($"{nameof(Pub.PubRates)}.{nameof(PubRate.HexadoUser)}");
         }
     }
 }

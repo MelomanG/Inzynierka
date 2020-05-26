@@ -1,12 +1,13 @@
 <div *ngIf="!formGroup">
   <mat-spinner></mat-spinner>
 </div>
-<mat-card *ngIf="1formGroup">
+<mat-card class="container" *ngIf="formGroup">
     <mat-card-content>
-      <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+      <form class="form" [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
         <mat-card-title>
           <span>Stwórz pub</span>
         </mat-card-title>
+
         <mat-form-field>
           <mat-label>Nazwa</mat-label>
           <input matInput placeholder="Nazwa" formControlName="name">
@@ -43,11 +44,26 @@
             <input matInput placeholder="Miasto" formControlName="city">
             </mat-form-field>
         </mat-input-container>
+
+        <div class="image-container">
+            <img [src]="imageUrl" style="width: 250px;height: 200px; cursor: pointer;" (click)="onClickFileInputButton()">
+            <input type="file" style="display: none" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+            <span></span>
   
-        <img [src]="imageUrl"  style="width: 250px;height: 200px;">
-        <input type="file" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+            <mat-toolbar>
+            <button mat-raised-button color="primary" class="file-select-button" type="button" (click)="onClickFileInputButton()">
+              <mat-icon>attach_file</mat-icon>
+              Dodaj zdjęcie
+            </button>
+        
+            <p class="file-name" *ngIf="!fileToUpload; else fileName"></p>
+            <ng-template #fileName>
+              <p class="file-name">{{ fileToUpload?.name }}</p>
+            </ng-template>
+          </mat-toolbar>
+        </div>
   
-        <button [disabled]="!fileToUpload" mat-raised-button color="primary" type="submit">Zapisz</button>
+        <button style="margin-right: 10px;" [disabled]="!fileToUpload" mat-raised-button color="primary" type="submit">Zapisz</button>
         <button mat-raised-button type="button" color="primary" routerLink="/show/boardgames">Cancel</button>
       </form>
     </mat-card-content>

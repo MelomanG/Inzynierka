@@ -20,6 +20,9 @@ namespace Hexado.Core.Services.Specific
         Maybe<IEnumerable<PubDto>> GetLikedPubs(string userEmail);
         Task UnLikeBoardGameAsync(string userEmail, string boardGameId);
         Task UnLikePubAsync(string userEmail, string pubId);
+        Task<Maybe<IEnumerable<PubDto>>> GetUserPubs(string userEmail);
+        Task<Maybe<BoardGameRate>> GetUserBoardGameRate(string id, string userEmail);
+        Task<Maybe<PubRate>> GetUserPubRate(string id, string userEmail);
     }
 
     public class HexadoUserService : IHexadoUserService
@@ -84,6 +87,43 @@ namespace Hexado.Core.Services.Specific
 
             var toUnlike = user.Value.LikedPubs.FirstOrDefault(lbg => lbg.PubId == pubId);
             await _likedPubRepository.DeleteAsync(toUnlike);
+        }
+
+        public Task<Maybe<IEnumerable<PubDto>>> GetUserPubs(string userEmail)
+        {
+            return _hexadoUserRepository.GetUserPubsAsync(userEmail);
+        }
+
+        public async Task<Maybe<BoardGameRate>> GetUserBoardGameRate(string id, string userEmail)
+        {
+            var user = await _hexadoUserRepository.GetSingleOrMaybeAsync(
+                u => u.Email == userEmail,
+                u => u.BoardGameRates);
+
+            if (!user.HasValue)
+                return Maybe<BoardGameRate>.Nothing;
+
+            var userRate = user.Value.BoardGameRates
+                .FirstOrDefault(bgr => bgr.BoardGameId == id)
+                .ToMaybe();
+
+            return userRate;
+        }
+
+        public async Task<Maybe<PubRate>> GetUserPubRate(string id, string userEmail)
+        {
+            var user = await _hexadoUserRepository.GetSingleOrMaybeAsync(
+                u => u.Email == userEmail,
+                u => u.PubRates);
+
+            if (!user.HasValue)
+                return Maybe<PubRate>.Nothing;
+
+            var userRate = user.Value.PubRates
+                .FirstOrDefault(pr => pr.PubId == id)
+                .ToMaybe();
+
+            return userRate;
         }
     }
 }

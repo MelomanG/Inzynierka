@@ -41,7 +41,7 @@ namespace Hexado.Web.Extensions.Models
             };
         }
 
-        public static PubResponse ToResponse(this Pub entity, bool isLikedByUser = false)
+        public static PubResponse ToResponse(this Pub entity, bool isLikedByUser = false, bool isUserPub = false)
         {
             return new PubResponse
             {
@@ -51,16 +51,16 @@ namespace Hexado.Web.Extensions.Models
                 Address = entity.Address,
                 ImagePath = entity.ImagePath,
                 AccountId = entity.AccountId,
-                PubRates = entity.PubRates,
+                Rates = entity.PubRates.Select(r => r.ToRateResponse()),
                 PubBoardGames = entity.PubBoardGames,
                 IsLikedByUser = isLikedByUser,
                 AmountOfLikes = entity.LikedPubs.Count
             };
         }
 
-        public static IEnumerable<PubResponse> ToResponse(this IEnumerable<Pub> entities, bool isLikedByUser = false)
+        public static IEnumerable<PubResponse> ToResponse(this IEnumerable<Pub> entities, bool isLikedByUser = false, bool isUserPub = false)
         {
-            return entities.Select(bg => bg.ToResponse(isLikedByUser));
+            return entities.Select(bg => bg.ToResponse(isLikedByUser, isUserPub));
         }
 
         public static PaginationResult<PubResponse> ToResponse(this PaginationResult<PubDto> dto)
@@ -75,7 +75,7 @@ namespace Hexado.Web.Extensions.Models
             };
         }
 
-        public static PubResponse ToResponse(this PubDto dto, bool isLikedByUser = false)
+        public static PubResponse ToResponse(this PubDto dto, bool isLikedByUser = false, bool isUserPub = false)
         {
             return new PubResponse
             {
@@ -85,9 +85,10 @@ namespace Hexado.Web.Extensions.Models
                 Address = dto.Address,
                 ImagePath = dto.ImagePath,
                 AccountId = dto.AccountId,
-                PubRates = dto.PubRates,
+                Rates = dto.PubRates.Select(r => r.ToRateResponse()),
                 PubBoardGames = dto.PubBoardGames,
                 IsLikedByUser = isLikedByUser,
+                IsUserPub = isUserPub,
                 AmountOfLikes = dto.AmountOfLikes
             };
         }

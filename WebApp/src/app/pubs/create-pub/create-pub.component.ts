@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PubsService } from '../pubs.service';
@@ -18,7 +18,8 @@ export class CreatePubComponent implements OnInit {
 
   formGroup: FormGroup;
   showError: boolean = false;
-
+  @ViewChild('Image')
+  Image;
   imageUrl: string = "assets/images/default-image.png";
   fileToUpload: File;
 
@@ -41,11 +42,14 @@ export class CreatePubComponent implements OnInit {
   }
 
   onSubmit(pub: CreatePubModel) {
-    console.log(pub);
     this.pubService.createPub(pub, this.fileToUpload)
       .subscribe(data => {
         this.router.navigate([`show/pub/${(<PubModel>data).id}`]);
     })
+  }
+
+  onClickFileInputButton(): void {
+    this.Image.nativeElement.click();
   }
 
   handleFileInput(file: FileList) {

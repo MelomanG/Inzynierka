@@ -57,6 +57,10 @@ namespace Hexado.Db.Repositories.Specific
                 .Include(user => user.LikedBoardGames)
                     .ThenInclude(lbg => lbg.BoardGame)
                         .ThenInclude(bg => bg.Category)
+                .Include(user => user.LikedBoardGames)
+                    .ThenInclude(lbg => lbg.BoardGame)
+                        .ThenInclude(bg => bg.BoardGameRates)
+                            .ThenInclude(bgr => bgr.HexadoUser)
                 .SelectMany(u => u.LikedBoardGames)
                 .Select(lbg => new
                 {
@@ -81,6 +85,10 @@ namespace Hexado.Db.Repositories.Specific
                 .Include(user => user.LikedPubs)
                     .ThenInclude(lp => lp.Pub)
                         .ThenInclude(p => p.Address)
+                .Include(user => user.LikedPubs)
+                    .ThenInclude(lbg => lbg.Pub)
+                        .ThenInclude(bg => bg.PubRates)
+                            .ThenInclude(bgr => bgr.HexadoUser)
                 .SelectMany(u => u.LikedPubs)
                 .Select(lp => new
                 {
@@ -94,6 +102,31 @@ namespace Hexado.Db.Repositories.Specific
 
             return likedPubs.HasValue
                 ? likedPubs.Value.AsEnumerable().ToMaybe()
+                : Maybe<IEnumerable<PubDto>>.Nothing;
+        }
+
+        public async Task<Maybe<IEnumerable<PubDto>>> GetUserPubsAsync(string userEmail)
+        {
+            var userPubs = (await HexadoDbContext.HexadoUsers
+                .Where(hu => hu.Email == userEmail)
+                .SelectMany(u => u.Account.OwnedPubs)
+                .Include(op => op.Address)
+                .Include(user => user.LikedPubs)
+                    .ThenInclude(lbg => lbg.Pub)
+                        .ThenInclude(bg => bg.PubRates)
+                            .ThenInclude(bgr => bgr.HexadoUser)
+                .Select(op => new
+                {
+                    OwnedPub = op,
+                    AmountOfLikes = op.LikedPubs.Count
+                })
+                .ToListAsync())
+                .Select(x => x.OwnedPub.ToDto(x.AmountOfLikes))
+                .ToList()
+                .ToMaybe();
+
+            return userPubs.HasValue
+                ? userPubs.Value.AsEnumerable().ToMaybe()
                 : Maybe<IEnumerable<PubDto>>.Nothing;
         }
     }

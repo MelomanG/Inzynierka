@@ -1,4 +1,5 @@
 import { BoardGameCategoryModel } from './boardgamecategory';
+import { RateModel } from './rate';
 
 export interface CreateBoardGameModel {
     name: string;
@@ -18,6 +19,7 @@ export interface BoardGameModel {
     fromAge: number;
     categoryId: string;
     category: BoardGameCategoryModel;
+    rates: RateModel[]
     imagePath: string;
     isLikedByUser: boolean,
     amountOfLikes: number

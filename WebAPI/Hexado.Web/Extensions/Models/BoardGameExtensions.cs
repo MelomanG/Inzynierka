@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hexado.Core.Models;
 using Hexado.Db.Dtos;
 using Hexado.Db.Entities;
 using Hexado.Speczilla;
@@ -57,7 +56,7 @@ namespace Hexado.Web.Extensions.Models
                 ImagePath = entity.ImagePath,
                 CategoryId = entity.CategoryId,
                 Category = entity.Category?.ToResponse(),
-                BoardGameRates = entity.BoardGameRates,
+                Rates = entity.BoardGameRates.Select(r => r.ToRateResponse()),
                 IsLikedByUser = isLikedByUser,
                 AmountOfLikes = entity.LikedBoardGames.Count
             };
@@ -93,7 +92,7 @@ namespace Hexado.Web.Extensions.Models
                 ImagePath = dto.ImagePath,
                 CategoryId = dto.CategoryId,
                 Category = dto.Category.ToResponse(),
-                BoardGameRates = dto.BoardGameRates,
+                Rates = dto.BoardGameRates.Select(r => r.ToRateResponse()),
                 IsLikedByUser = isLikedByUser,
                 AmountOfLikes = dto.AmountOfLikes
             };

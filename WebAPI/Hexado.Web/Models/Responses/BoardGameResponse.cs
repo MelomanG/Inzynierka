@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Hexado.Db.Entities;
 
 namespace Hexado.Web.Models.Responses
 {
@@ -15,7 +14,7 @@ namespace Hexado.Web.Models.Responses
 
         public string CategoryId { get; set; }
         public virtual BoardGameCategoryResponse Category { get; set; }
-        public IEnumerable<BoardGameRate> BoardGameRates { get; set; }
+        public IEnumerable<RateResponse> Rates { get; set; }
 
         public bool IsLikedByUser { get; set; }
         public int AmountOfLikes { get; set; }

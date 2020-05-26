@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PubsService } from '../pubs.service';
@@ -16,6 +16,9 @@ export class EditPubComponent implements OnInit {
   imageUrl: string;
   fileToUpload: File;
   formGroup: FormGroup;
+  
+  @ViewChild('Image')
+  Image;
   
   constructor(
     private fb: FormBuilder,
@@ -60,6 +63,10 @@ export class EditPubComponent implements OnInit {
       .subscribe(res => {
         this.router.navigate([`show/pubs`]);
       })
+  }
+
+  onClickFileInputButton(): void {
+    this.Image.nativeElement.click();
   }
   
   handleFileInput(file: FileList) {

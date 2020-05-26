@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Functional.Maybe;
 using Hexado.Core.Queries;
-using Hexado.Core.Services;
 using Hexado.Core.Services.Exceptions;
 using Hexado.Core.Services.Specific;
 using Hexado.Core.Speczillas;
@@ -107,6 +106,35 @@ namespace Hexado.Web.Controllers
             }
         }
 
+        [HttpGet("users")]
+        [Authorize]
+        public async Task<IActionResult> GetUserPubs()
+        {
+            try
+            {
+                var result = await _hexadoUserService.GetUserPubs(UserEmail);
+                var responseResult = result.Value.ToResponse().ToList();
+
+                var likedPubs = _hexadoUserService.GetLikedPubs(UserEmail);
+                if (likedPubs.HasValue)
+                {
+                    foreach (var likedPub in likedPubs.Value)
+                    {
+                        var pub = responseResult
+                            .FirstOrDefault(rr => rr.Id == likedPub.Id);
+                        if (pub != null)
+                            pub.IsLikedByUser = true;
+                    }
+                }
+                return OkJson(responseResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving pubs!");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
@@ -123,6 +151,11 @@ namespace Hexado.Web.Controllers
                     if (likedPubs.HasValue)
                         if (likedPubs.Value.Any(lbg => lbg.Id == responseResult.Id))
                             responseResult.IsLikedByUser = true;
+
+                    var userPubs = await _hexadoUserService.GetUserPubs(UserEmail);
+                    if (userPubs.HasValue)
+                        if (userPubs.Value.Any(lbg => lbg.Id == responseResult.Id))
+                            responseResult.IsUserPub = true;
                 }
 
                 return OkJson(responseResult);
@@ -222,6 +255,26 @@ namespace Hexado.Web.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while applying rate to pub! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpGet("{id}/Rate")]
+        [Authorize]
+        public async Task<IActionResult> GetRatePub(string id)
+        {
+            try
+            {
+                var rate = await _hexadoUserService.GetUserPubRate(id, UserEmail);
+
+                return rate.HasValue
+                    ? OkJson(rate.Value.ToRateResponse())
+                    : NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while applying rate to board game! " +
                                      $"Id: {id}");
                 return InternalServerErrorJson(ex);
             }

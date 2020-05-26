@@ -21,7 +21,7 @@ import { ShowUserEventsComponent } from './events/show-user-events/show-user-eve
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    ShowUserEventsComponent,
+    ShowUserEventsComponent
   ],
   imports: [
     BrowserModule,

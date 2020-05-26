@@ -10,6 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 import { AppRoutingModule } from '../app-routing.module';
 import { ShowUserFavoriteBoardgamesComponent } from './show-user-favorite-boardgames/show-user-favorite-boardgames.component';
 import { CreateBoardgameCategoryComponent } from './create-boardgame-category/create-boardgame-category.component';
+import { BoardGameRateDialogComponent } from './board-game-rate-dialog/board-game-rate-dialog.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { CreateBoardgameCategoryComponent } from './create-boardgame-category/cr
     ShowBoardgamesListComponent, 
     EditBoardgameComponent,
     ShowUserFavoriteBoardgamesComponent,
-    CreateBoardgameCategoryComponent
+    CreateBoardgameCategoryComponent,
+    BoardGameRateDialogComponent
   ],
   imports: [
     SharedModule,
@@ -35,7 +37,8 @@ import { CreateBoardgameCategoryComponent } from './create-boardgame-category/cr
     ShowBoardgamesListComponent,
     EditBoardgameComponent,
     ShowUserFavoriteBoardgamesComponent,
-    CreateBoardgameCategoryComponent
+    CreateBoardgameCategoryComponent,
+    BoardGameRateDialogComponent
   ]
 })
 export class BoardgamesModule { }

@@ -1,0 +1,22 @@
+mat-card-header {
+    img {
+        left: 0;
+        max-width: 300px;
+        max-height: 300px;
+    }
+
+    .title {
+        width: auto;
+        mat-card-title {
+            max-height: 50%;
+            max-width: 100%;
+            h2 {
+                font-size: xx-large;
+            }
+        }
+        mat-card-subtitle {
+            max-width: 100%;
+            font-size: 20px;
+        }
+    }
+}

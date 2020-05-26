@@ -14,6 +14,8 @@ namespace Hexado.Core.Speczillas.Specifications
         {
             AddInclude(bg => bg.Category);
             AddInclude(bg => bg.LikedBoardGames);
+            AddInclude(bg => bg.BoardGameRates);
+            AddInclude($"{nameof(BoardGame.BoardGameRates)}.{nameof(BoardGameRate.HexadoUser)}");
         }
     }
 }

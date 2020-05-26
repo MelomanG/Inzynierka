@@ -5,6 +5,9 @@ import { PaginationResult } from 'src/app/shared/models/paginationresult';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from 'src/app/authentication/authentication.service';
+import { RateModel } from 'src/app/shared/models/rate';
+import { MatDialog } from '@angular/material/dialog';
+import { BoardGameRateDialogComponent } from '../board-game-rate-dialog/board-game-rate-dialog.component';
 
 @Component({
   selector: 'app-show-boardgames-list',
@@ -20,6 +23,7 @@ export class ShowBoardgamesListComponent implements OnInit {
   constructor(
     private boardGameService: BoardGameService,
     private authService: AuthenticationService,
+    private dialog: MatDialog,
     private router: Router,
     private renderer2: Renderer2) { }
 
@@ -41,6 +45,8 @@ export class ShowBoardgamesListComponent implements OnInit {
   }
 
   thumbClicked(boardGame) {
+    if(!this.isAuthenticated)
+      return;
     boardGame.isLikedByUser = !boardGame.isLikedByUser
     if(boardGame.isLikedByUser)
     {
@@ -52,6 +58,30 @@ export class ShowBoardgamesListComponent implements OnInit {
       this.boardGameService.unLikeBoardGame(boardGame.id).subscribe();
       boardGame.amountOfLikes -= 1;
     }
+  }
+
+  getBoardGameRate(rates: RateModel[]) {
+    if(rates.length <=0 )
+      return 0;
+    var sum = 0;
+    for (var i = 0; i < rates.length; i++) {
+      sum += rates[i].userRate
+    }
+    return Math.round(sum/rates.length)
+  }
+
+  toggleCreateRate(boardGame: BoardGameModel) {
+    var dialogRef = this.dialog.open(BoardGameRateDialogComponent, {
+      width: "450px",
+      data: {
+        boardGame
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadBoardGames();
+    }
+    )
   }
 
   mouseenter (event) {

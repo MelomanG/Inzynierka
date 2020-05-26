@@ -5,7 +5,7 @@
 
     <mat-card-header>
         <img mat-card-image src="{{serverUrl}}/{{boardGame.imagePath}}">
-        <div class="title">
+        <div class="title" style="position: relative;">
             <mat-card-title>
                 <h2>{{ boardGame.name  }}</h2>
             </mat-card-title>
@@ -13,10 +13,11 @@
             <mat-card-subtitle>
                 {{ boardGame.description }}
             </mat-card-subtitle>
+            <app-star-rating style="position:absolute; bottom: 0px; float: right;" [amountOfRates]="boardGame.rates.length" [rating]="getBoardGameRate(boardGame.rates)" [itemId]="boardGame.id" (click)="toggleCreateRate(boardGame); $event.stopPropagation()"></app-star-rating>
         </div>
     </mat-card-header>
 
-    <mat-card-content>      
+    <mat-card-content style="margin-top: 25px;">      
         <mat-tab-group>
             <mat-tab label="Specyfikacja">
                 <section class="product-features">
@@ -30,9 +31,12 @@
             <mat-tab label="Puby">
                 TODO puby psiadające grę
             </mat-tab>
+            <mat-tab label="Opinie">
+                <app-show-opinions-tab [rates]="boardGame.rates"></app-show-opinions-tab>
+            </mat-tab>
         </mat-tab-group>
 
-        <mat-toolbar *ngIf="isAuthenticated">
+        <mat-toolbar>
             <button mat-icon-button color="primary" (click)="thumbClicked()">
                 <mat-icon *ngIf="boardGame.isLikedByUser">thumb_up</mat-icon>
                 <mat-icon *ngIf="!boardGame.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>

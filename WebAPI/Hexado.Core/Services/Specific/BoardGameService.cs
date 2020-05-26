@@ -27,8 +27,9 @@ namespace Hexado.Core.Services.Specific
         {
             return _boardGameRepository.GetSingleOrMaybeAsync(
                 bg => bg.Id == id,
-                bg => bg.Category,
-                bg => bg.LikedBoardGames);
+                $"{nameof(BoardGame.Category)}",
+                $"{nameof(BoardGame.LikedBoardGames)}",
+                $"{nameof(BoardGame.BoardGameRates)}.{nameof(BoardGameRate.HexadoUser)}");
         }
 
         public async Task<Maybe<BoardGame>> SetImagePath(string id, string imagePath)

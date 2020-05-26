@@ -32,8 +32,9 @@ namespace Hexado.Core.Services.Specific
         {
             return await _pubRepository.GetSingleOrMaybeAsync(
                 p => p.Id == id,
-                p => p.Address,
-                p => p.LikedPubs);
+                $"{nameof(Pub.Address)}",
+                $"{nameof(Pub.LikedPubs)}",
+                $"{nameof(Pub.PubRates)}.{nameof(PubRate.HexadoUser)}");
         }
 
         public override async Task<Maybe<Pub>> UpdateAsync(Pub updatedPub)

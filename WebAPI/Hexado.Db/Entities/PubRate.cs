@@ -4,7 +4,7 @@ namespace Hexado.Db.Entities
 {
     public class PubRate : BaseEntity
     {
-        public UserRate UserRate { get; set; }
+        public int UserRate { get; set; }
         public string Comment { get; set; }
 
         public string PubId { get; set; }

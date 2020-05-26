@@ -4,7 +4,7 @@
 <div class="section grid-3" *ngIf="boardGameList">
     <mat-card class="boardgame clickLink" (click)="showBoardGame(item)" *ngFor="let item of boardGameList" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
         <mat-card-content>
-        <div>
+        <div style="margin-bottom: 10px;">
             <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
             <h2><b>{{ item.name }}</b></h2>
             <p>Kategoria: {{ item.category.name }}</p>
@@ -15,6 +15,7 @@
                 <mat-icon *ngIf="!item.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
                 {{ item.amountOfLikes }}
             </button>
+            <app-star-rating style="float: right;" [amountOfRates]="item.rates.length" [rating]="getBoardGameRate(item.rates)" [itemId]="item.id" (click)="toggleCreateRate(item); $event.stopPropagation()"></app-star-rating>
         </mat-card-actions>
         </mat-card-content>
     </mat-card>
