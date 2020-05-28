@@ -11,6 +11,8 @@ import { ShowPubsListComponent } from './show-pubs-list/show-pubs-list.component
 import { ShowUserPubsComponent } from './show-user-pubs/show-user-pubs.component';
 import { ShowUserFavoritePubsComponent } from './show-user-favorite-pubs/show-user-favorite-pubs.component';
 import { PubRateDialogComponent } from './pub-rate-dialog/pub-rate-dialog.component';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { MatSortModule } from '@angular/material/sort';
 
 
 
@@ -25,12 +27,14 @@ import { PubRateDialogComponent } from './pub-rate-dialog/pub-rate-dialog.compon
     PubRateDialogComponent
   ],
   imports: [
+    PaginationModule.forRoot(),
     SharedModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MatSortModule
   ],
   exports: [
     CreatePubComponent,

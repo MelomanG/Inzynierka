@@ -12,5 +12,8 @@ namespace Hexado.Core.Queries
 
         [FromQuery(Name = "sort")]
         public string OrderBy { get; set; }
+
+        [FromQuery(Name = "search")]
+        public string Search { get; set; }
     }
 }

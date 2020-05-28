@@ -17,6 +17,7 @@ namespace Hexado.Db.Entities
         public virtual ICollection<PubRate> PubRates { get; set; } = new HashSet<PubRate>();
         public virtual ICollection<LikedBoardGame> LikedBoardGames { get; set; } = new HashSet<LikedBoardGame>();
         public virtual ICollection<LikedPub> LikedPubs { get; set; } = new HashSet<LikedPub>();
+        public virtual ICollection<Contact> Contacts { get; set; } = new HashSet<Contact>();
 
         public void RemoveRefreshToken(string refreshToken)
         {

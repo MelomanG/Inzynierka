@@ -23,6 +23,7 @@ namespace Hexado.Db
             builder.ApplyConfiguration(new RefreshTokenConfiguration());
             builder.ApplyConfiguration(new UserAccountConfiguration());
             builder.ApplyConfiguration(new HexadoUserConfiguration());
+            builder.ApplyConfiguration(new ContactConfiguration());
             
             builder.ApplyConfiguration(new BoardGameConfiguration());
             builder.ApplyConfiguration(new BoardGameCategoryConfiguration());
@@ -39,6 +40,7 @@ namespace Hexado.Db
 
         public DbSet<HexadoUser> HexadoUsers { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public DbSet<BoardGame> BoardGames { get; set; }

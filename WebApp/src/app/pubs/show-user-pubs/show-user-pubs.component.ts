@@ -8,6 +8,9 @@ import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { RateModel } from 'src/app/shared/models/rate';
 import { PubRateDialogComponent } from '../pub-rate-dialog/pub-rate-dialog.component';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-show-user-pubs',
@@ -15,8 +18,10 @@ import { PubRateDialogComponent } from '../pub-rate-dialog/pub-rate-dialog.compo
   styleUrls: ['./show-user-pubs.component.scss']
 })
 export class ShowUserPubsComponent implements OnInit {
+  searchControl = new FormControl();
 
-  pubList: PubModel;
+  pubList: PubModel[];
+  filteredPubList: Observable<PubModel[]>;
   serverUrl: string;
   isAuthenticated: any;
 
@@ -31,13 +36,34 @@ export class ShowUserPubsComponent implements OnInit {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.serverUrl = environment.serverUrl;
     this.loadPubs();
+    this.filterPubs();
   }
 
   loadPubs() {
     this.pubService.getUsersPubs().
       subscribe(res => {
-        this.pubList = <PubModel> res;
+        this.pubList = <PubModel[]> res;
     });
+  }
+
+  filterPubs() {
+    this.filteredPubList = this.searchControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      )
+  }
+
+  private _filter(value: string) {
+    if(value.length < 2)
+    {
+      this.loadPubs();
+      return this.pubList;
+    }
+    return this.pubList
+      .filter(bg =>
+        bg.name.toLowerCase().includes(value.toLowerCase())
+        || bg.address.city.toLowerCase().includes(value.toLowerCase()) );
   }
 
   showPub(pub: PubModel) {

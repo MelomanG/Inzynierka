@@ -11,7 +11,7 @@ import { AppRoutingModule } from '../app-routing.module';
 import { ShowUserFavoriteBoardgamesComponent } from './show-user-favorite-boardgames/show-user-favorite-boardgames.component';
 import { CreateBoardgameCategoryComponent } from './create-boardgame-category/create-boardgame-category.component';
 import { BoardGameRateDialogComponent } from './board-game-rate-dialog/board-game-rate-dialog.component';
-
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @NgModule({
   declarations: [
@@ -24,12 +24,13 @@ import { BoardGameRateDialogComponent } from './board-game-rate-dialog/board-gam
     BoardGameRateDialogComponent
   ],
   imports: [
+    PaginationModule.forRoot(),
     SharedModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
   ],
   exports:[
     CreateBoardgameComponent,

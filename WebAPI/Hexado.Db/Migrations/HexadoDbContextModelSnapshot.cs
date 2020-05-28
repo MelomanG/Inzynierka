@@ -165,6 +165,35 @@ namespace Hexado.Db.Migrations
                     b.ToTable("BoardGameRates");
                 });
 
+            modelBuilder.Entity("Hexado.Db.Entities.Contact", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ContactHexadoUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HexadoUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("HexadoUserId", "ContactHexadoUserId");
+
+                    b.HasIndex("ContactHexadoUserId");
+
+                    b.ToTable("Contacts");
+                });
+
             modelBuilder.Entity("Hexado.Db.Entities.LikedBoardGame", b =>
                 {
                     b.Property<string>("Id")
@@ -617,6 +646,21 @@ namespace Hexado.Db.Migrations
                         .WithMany("BoardGameRates")
                         .HasForeignKey("HexadoUserId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hexado.Db.Entities.Contact", b =>
+                {
+                    b.HasOne("Hexado.Db.Entities.HexadoUser", "ContactHexadoUser")
+                        .WithMany()
+                        .HasForeignKey("ContactHexadoUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Hexado.Db.Entities.HexadoUser", "HexadoUser")
+                        .WithMany("Contacts")
+                        .HasForeignKey("HexadoUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

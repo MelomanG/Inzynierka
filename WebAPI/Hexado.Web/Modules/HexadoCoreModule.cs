@@ -68,6 +68,10 @@ namespace Hexado.Web.Modules
                 .As<IPubService>()
                 .InstancePerLifetimeScope();
             builder
+                .RegisterType<ContactService>()
+                .As<IContactService>()
+                .InstancePerLifetimeScope();
+            builder
                 .RegisterType<AuthorizationHeaderValidation>()
                 .AsSelf()
                 .InstancePerLifetimeScope();

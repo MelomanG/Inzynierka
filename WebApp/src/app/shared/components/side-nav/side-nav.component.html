@@ -41,10 +41,7 @@
       </mat-sidenav>
 
       <div class="sidenav-content">
-          <app-nav-bar (toggleSidenav)="onToggle(sidenav)"></app-nav-bar>
-          <div class="body-wrapper">
-            <router-outlet></router-outlet>
-          </div>
+        <app-contacts-sidenav class="contacts-sidenav-container" (sideNavToggle)="onToggle(sidenav)"></app-contacts-sidenav>
       </div>
     </mat-sidenav-container>
   </body>

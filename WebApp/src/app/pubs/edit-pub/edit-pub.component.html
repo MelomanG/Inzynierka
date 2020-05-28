@@ -4,71 +4,139 @@
 
 <mat-card class="container" *ngIf="formGroup">
     <mat-card-content>
-      <form class="form" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-        <mat-card-title>
-          <span>Edytuj pub</span>
-        </mat-card-title>
-        <mat-form-field>
-          <mat-label>Nazwa</mat-label>
-          <input matInput placeholder="Nazwa" formControlName="name">
-        </mat-form-field>
-        
-        <mat-form-field>
-          <mat-label>Opis</mat-label>
-          <textarea  matInput placeholder="Kilka słów o pubie" formControlName="description"></textarea>
-        </mat-form-field>
-
-        <mat-input-container formGroupName="address">
+      <mat-tab-group>
+        <mat-tab label="Dane">
+          <form class="form" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
             <mat-form-field>
-            <mat-label>Ulica</mat-label>
-            <input matInput placeholder="Ulica" formControlName="street">
+              <mat-label>Nazwa</mat-label>
+              <input matInput placeholder="Nazwa" formControlName="name">
             </mat-form-field>
             
             <mat-form-field>
-            <mat-label>Number budynku</mat-label>
-            <input matInput placeholder="Number budynku" formControlName="buildingNumber">
+              <mat-label>Opis</mat-label>
+              <textarea  matInput placeholder="Kilka słów o pubie" formControlName="description"></textarea>
             </mat-form-field>
+
+            <mat-input-container formGroupName="address">
+                <mat-form-field>
+                <mat-label>Ulica</mat-label>
+                <input matInput placeholder="Ulica" formControlName="street">
+                </mat-form-field>
+                
+                <mat-form-field>
+                <mat-label>Number budynku</mat-label>
+                <input matInput placeholder="Number budynku" formControlName="buildingNumber">
+                </mat-form-field>
+                
+                <mat-form-field>
+                <mat-label>Numer lokalu</mat-label>
+                <input matInput placeholder="Numer lokalu" formControlName="localNumber">
+                </mat-form-field>
+                
+                <mat-form-field>
+                <mat-label>Kod pocztowy</mat-label>
+                <input matInput placeholder="Kod pocztowy" formControlName="postalCode">
+                </mat-form-field>
+                
+                <mat-form-field>
+                <mat-label>Miasto</mat-label>
+                <input matInput placeholder="Miasto" formControlName="city">
+                </mat-form-field>
+            </mat-input-container>
+
+            <div class="image-container">
+              <img [src]="imageUrl" style="width: 250px;height: 200px; cursor: pointer;" (click)="onClickFileInputButton()">
+              <input type="file" style="display: none" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+
+              <mat-toolbar>
+              <button mat-raised-button color="primary" class="file-select-button" type="button" (click)="onClickFileInputButton()">
+                <mat-icon>attach_file</mat-icon>
+                Dodaj zdjęcie
+              </button>
             
-            <mat-form-field>
-            <mat-label>Numer lokalu</mat-label>
-            <input matInput placeholder="Numer lokalu" formControlName="localNumber">
-            </mat-form-field>
-            
-            <mat-form-field>
-            <mat-label>Kod pocztowy</mat-label>
-            <input matInput placeholder="Kod pocztowy" formControlName="postalCode">
-            </mat-form-field>
-            
-            <mat-form-field>
-            <mat-label>Miasto</mat-label>
-            <input matInput placeholder="Miasto" formControlName="city">
-            </mat-form-field>
-        </mat-input-container>
+              <p class="file-name" *ngIf="!fileToUpload; else fileName"></p>
+              <ng-template #fileName>
+                <p class="file-name">{{ fileToUpload?.name }}</p>
+              </ng-template>
+              </mat-toolbar>
+            </div>
 
-        <div class="image-container">
-          <img [src]="imageUrl" style="width: 250px;height: 200px; cursor: pointer;" (click)="onClickFileInputButton()">
-          <input type="file" style="display: none" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+            <mat-toolbar style="width: 100%;">
+              <button mat-raised-button color="primary" type="submit">Zapisz</button>
+              <button style="margin-left: 20px;" mat-raised-button type="button" color="primary" (click)="onCancel()">Cancel</button>
 
-          <mat-toolbar>
-          <button mat-raised-button color="primary" class="file-select-button" type="button" (click)="onClickFileInputButton()">
-            <mat-icon>attach_file</mat-icon>
-            Dodaj zdjęcie
-          </button>
-        
-          <p class="file-name" *ngIf="!fileToUpload; else fileName"></p>
-          <ng-template #fileName>
-            <p class="file-name">{{ fileToUpload?.name }}</p>
-          </ng-template>
-          </mat-toolbar>
-        </div>
+              <span style="flex:1 1 auto;"></span>
+              <button mat-raised-button type="button" color="warn" (click)="deletePub()">Usuń</button>
+            </mat-toolbar>
+          </form>
+        </mat-tab>
+        <mat-tab label="Gry planszowe">
 
-        <mat-toolbar style="width: 100%;">
-          <button mat-raised-button color="primary" type="submit">Zapisz</button>
-          <button style="margin-left: 20px;" mat-raised-button type="button" color="primary" routerLink="/show/pubs">Cancel</button>
+          <mat-card>
+            <mat-card-content>
 
-          <span style="flex:1 1 auto;"></span>
-          <button mat-raised-button type="button" color="warn" (click)="deletePub()">Usuń</button>
-        </mat-toolbar>
-      </form>
+              <mat-card-title>
+                <span>Dodaj gre</span>
+              </mat-card-title>
+              
+              <ng-container>
+                <mat-form-field style="max-width: 400px;">
+                  <input type="text"
+                        placeholder="Nazwa"
+                        matInput
+                        [formControl]="boardGameControl"
+                        [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onBoardGameSelected($event.option.value)">
+                    <mat-option *ngFor="let boardGame of filteredBoardGames | async" [value]="boardGame.name">
+                      {{boardGame.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </ng-container>
+
+              <mat-toolbar>
+                <button mat-raised-button [disabled]="!boardGameToAdd" color="primary" type="button" (click)="addBoardGame()">Dodaj</button>
+            </mat-toolbar>
+            </mat-card-content>
+          </mat-card>
+
+          <div class="mat-elevation-z8" *ngIf="boardGames">
+            <mat-form-field style="margin-top: 20px;">
+              <mat-label>Szukaj</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Nazwa, kategoria">
+          </mat-form-field>
+            <table mat-table [dataSource]="boardGames" matSort>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+                  <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+              </ng-container>
+
+              <!-- Category Column -->
+              <ng-container matColumnDef="category">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Kategoria </th>
+                  <td mat-cell *matCellDef="let row"> {{row.category?.name}} </td>
+              </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Akcje </th>
+                    <td mat-cell *matCellDef="let row">
+                        <button style="margin-left: 20px;" mat-raised-button color="warn" (click)="deleteBoardGame(row)">Usuń</button>
+                    </td>
+                </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+            <mat-toolbar style="width: 100%;">
+              <button mat-raised-button type="button" color="primary" (click)="onCancel()">Cancel</button>
+            </mat-toolbar>
+          </div>
+
+        </mat-tab>
+      </mat-tab-group>
     </mat-card-content>
   </mat-card>

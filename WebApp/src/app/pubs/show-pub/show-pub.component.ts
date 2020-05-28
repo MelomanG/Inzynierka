@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2 } from '@angular/core';
 import { PubModel } from 'src/app/shared/models/pub';
 import { PubsService } from '../pubs.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,6 +7,11 @@ import { AuthenticationService } from 'src/app/authentication/authentication.ser
 import { MatDialog } from '@angular/material/dialog';
 import { RateModel } from 'src/app/shared/models/rate';
 import { PubRateDialogComponent } from '../pub-rate-dialog/pub-rate-dialog.component';
+import { BoardGameModel } from 'src/app/shared/models/boardgame';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { BoardGameRateDialogComponent } from 'src/app/boardgames/board-game-rate-dialog/board-game-rate-dialog.component';
 
 @Component({
   selector: 'app-show-pub',
@@ -14,6 +19,10 @@ import { PubRateDialogComponent } from '../pub-rate-dialog/pub-rate-dialog.compo
   styleUrls: ['./show-pub.component.scss']
 })
 export class ShowPubComponent implements OnInit {
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  displayedColumns: string[] = ['name', 'category', 'raiting'];
+  boardGames: MatTableDataSource<BoardGameModel>; 
   pub: PubModel;
   serverUrl: string;
   isAuthenticated: boolean;
@@ -23,7 +32,8 @@ export class ShowPubComponent implements OnInit {
     private authService: AuthenticationService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private renderer2: Renderer2) { }
 
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
@@ -35,6 +45,9 @@ export class ShowPubComponent implements OnInit {
     this.pubService.getPub(this.route.snapshot.params.id)
       .subscribe(res => {
         this.pub = <PubModel> res;
+        this.boardGames = new MatTableDataSource<BoardGameModel>(this.pub.pubBoardGames);
+        this.boardGames.paginator = this.paginator;
+        this.boardGames.sort = this.sort;
       });
   }
 
@@ -49,7 +62,7 @@ export class ShowPubComponent implements OnInit {
         return fullStreet;
     }
 
-    getPubRate(rates: RateModel[]) {
+    getRate(rates: RateModel[]) {
       if(rates.length <=0 )
         return 0;
       var sum = 0;
@@ -58,12 +71,50 @@ export class ShowPubComponent implements OnInit {
       }
       return Math.round(sum/rates.length)
     }
-  
-    toggleCreateRate(pub: PubModel) {
+
+    loadBoardGamesTable()
+    {
+      this.pubService.getPub(this.route.snapshot.params.id)
+        .subscribe(res => {
+            this.boardGames = new MatTableDataSource<BoardGameModel>((<PubModel> res).pubBoardGames);
+            this.boardGames.paginator = this.paginator;
+            this.boardGames.sort = this.sort;
+      })
+    }
+
+    applyFilter(event: Event) {
+      this.boardGames.filterPredicate = 
+        (data: BoardGameModel, filter: string) => {
+          return data.name.toLowerCase().includes(filter.toLowerCase()) 
+          || data.category.name.toLowerCase().includes(filter.toLowerCase())
+        };
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.boardGames.filter = filterValue;
+    }
+
+    onBoardGameClick(boardGame: BoardGameModel) {
+      this.router.navigate([`show/boardgame/${boardGame.id}`]);
+    }
+
+    toggleCreatePubRate(pub: PubModel) {
       var dialogRef = this.dialog.open(PubRateDialogComponent, {
         width: "450px",
         data: {
           pub
+        }
+      });
+  
+      dialogRef.afterClosed().subscribe(() => {
+        this.loadPub();
+      }
+      )
+    }
+
+    toggleCreateBoardGameRate(boardGame: BoardGameModel) {
+      var dialogRef = this.dialog.open(BoardGameRateDialogComponent, {
+        width: "450px",
+        data: {
+          boardGame
         }
       });
   

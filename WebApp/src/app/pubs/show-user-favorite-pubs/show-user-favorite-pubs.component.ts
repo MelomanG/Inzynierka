@@ -6,6 +6,9 @@ import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { RateModel } from 'src/app/shared/models/rate';
 import { PubRateDialogComponent } from '../pub-rate-dialog/pub-rate-dialog.component';
+import { FormControl } from '@angular/forms';
+import { startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-show-user-favorite-pubs',
@@ -13,8 +16,10 @@ import { PubRateDialogComponent } from '../pub-rate-dialog/pub-rate-dialog.compo
   styleUrls: ['./show-user-favorite-pubs.component.scss']
 })
 export class ShowUserFavoritePubsComponent implements OnInit {
+  searchControl = new FormControl();
 
   pubList: PubModel[];
+  filteredPubList: Observable<PubModel[]>;
   serverUrl: string;
 
   constructor(
@@ -26,6 +31,7 @@ export class ShowUserFavoritePubsComponent implements OnInit {
   ngOnInit() {
     this.serverUrl = environment.serverUrl;
     this.loadPubs();
+    this.filterPubs();
   }
 
   loadPubs() {
@@ -33,6 +39,26 @@ export class ShowUserFavoritePubsComponent implements OnInit {
       subscribe(res => {
         this.pubList = <PubModel[]> res;
     });
+  }
+
+  filterPubs() {
+    this.filteredPubList = this.searchControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      )
+  }
+
+  private _filter(value: string) {
+    if(value.length < 2)
+    {
+      this.loadPubs();
+      return this.pubList;
+    }
+    return this.pubList
+      .filter(bg =>
+        bg.name.toLowerCase().includes(value.toLowerCase())
+        || bg.address.city.toLowerCase().includes(value.toLowerCase()) );
   }
 
   showPub(pub: PubModel) {

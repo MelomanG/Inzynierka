@@ -16,6 +16,9 @@ namespace Hexado.Db.Repositories
         Task<Maybe<T>> GetSingleOrMaybeAsync(Expression<Func<T, bool>> predicate, params string[] includes);
         Task<Maybe<IEnumerable<T>>> GetAllAsync();
         Task<Maybe<IEnumerable<T>>> GetAllAsync(params Expression<Func<T, object>>[] includes);
+
+        Task<Maybe<IEnumerable<T>>> GetAllAsync(Expression<Func<T, bool>> predicate,
+            params Expression<Func<T, object>>[] includes);
         Task<Maybe<IEnumerable<T>>> GetAllAsync(ISpecification<T> specification);
         Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification);
     }

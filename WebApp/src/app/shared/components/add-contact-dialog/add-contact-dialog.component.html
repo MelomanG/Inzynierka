@@ -1,0 +1,34 @@
+<div *ngIf="false">
+    <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="true">
+    <h2 mat-dialog-title>Dodaj nowy kontakt</h2>
+    <mat-dialog-content>
+      <div class="container">
+
+        <mat-form-field>
+            <input type="text"
+                    placeholder="Nazwa użytkownika"
+                    matInput
+                    [formControl]="userNameControl"
+                    [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onUserNameSelected($event.option.value)">
+                <mat-option *ngFor="let user of filteredUsers | async" [value]="user.userName">
+                {{user.userName}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-button color="primary" (click)="save()">
+        <mat-icon>add</mat-icon> Dodaj
+      </button>
+      <button mat-button color="primary" (click)="dismiss()">
+        <mat-icon>cancel</mat-icon> Cancel
+      </button>
+    </mat-dialog-actions>
+</div>

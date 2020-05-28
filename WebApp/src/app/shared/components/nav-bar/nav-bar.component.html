@@ -7,7 +7,13 @@
     <button mat-button (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Wydarzenia</button>
     <span style="flex:1 1 auto;"></span>
     <button *ngIf="!isAuthenticated()" mat-button routerLink="/login" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Login</button>
-    <button *ngIf="isAuthenticated()" mat-button (click)="logout()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Logout</button>
     <button *ngIf="!isAuthenticated()" mat-button routerLink="/register" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Rejestracja</button>
+    
+    <button mat-button [matMenuTriggerFor]="menu" *ngIf="isAuthenticated()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onContactsClick()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Kontakty</button>
+        <button mat-menu-item (click)="logout()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Logout</button>
+    </mat-menu>
 </mat-toolbar>
-

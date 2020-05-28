@@ -13,7 +13,7 @@
             <mat-card-subtitle>
                 {{ boardGame.description }}
             </mat-card-subtitle>
-            <app-star-rating style="position:absolute; bottom: 0px; float: right;" [amountOfRates]="boardGame.rates.length" [rating]="getBoardGameRate(boardGame.rates)" [itemId]="boardGame.id" (click)="toggleCreateRate(boardGame); $event.stopPropagation()"></app-star-rating>
+            <app-star-rating style="position:absolute; bottom: 0px; float: right;" [amountOfRates]="boardGame.rates.length" [rating]="getRate(boardGame.rates)" [itemId]="boardGame.id" (click)="toggleCreateBoardGameRate(boardGame); $event.stopPropagation()"></app-star-rating>
         </div>
     </mat-card-header>
 
@@ -29,7 +29,38 @@
                 </section>
             </mat-tab>
             <mat-tab label="Puby">
-                TODO puby psiadające grę
+                <div class="mat-elevation-z8" *ngIf="pubs">
+                    <mat-form-field style="margin-top: 20px;">
+                      <mat-label>Szukaj</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Nazwa, miasto">
+                  </mat-form-field>
+                    <table mat-table [dataSource]="pubs" matSort>
+        
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+                          <td mat-cell *matCellDef="let row" > {{row.name}} </td>
+                      </ng-container>
+        
+                      <!-- City Column -->
+                      <ng-container matColumnDef="city">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Miasto </th>
+                          <td mat-cell *matCellDef="let row"> {{row.address.city}} </td>
+                      </ng-container>
+        
+                        <!-- Actions Column -->
+                        <ng-container matColumnDef="raiting">
+                            <th mat-header-cell *matHeaderCellDef> Ocena </th>
+                            <td mat-cell *matCellDef="let row">
+                                <app-star-rating [amountOfRates]="row.rates.length" [rating]="getRate(row.rates)" [itemId]="row.id" (click)="toggleCreatePubRate(row); $event.stopPropagation()"></app-star-rating>
+                            </td>
+                        </ng-container>
+        
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row class="clickLink" (click)="onPubClick(row)" *matRowDef="let row; columns: displayedColumns;" style="height: 80px !important"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+                  </div>
             </mat-tab>
             <mat-tab label="Opinie">
                 <app-show-opinions-tab [rates]="boardGame.rates"></app-show-opinions-tab>
@@ -37,10 +68,10 @@
         </mat-tab-group>
 
         <mat-toolbar>
-            <button mat-icon-button color="primary" (click)="thumbClicked()">
+            <button style="font-size: 20px;" mat-icon-button color="primary" (click)="thumbClicked()">
                 <mat-icon *ngIf="boardGame.isLikedByUser">thumb_up</mat-icon>
-                <mat-icon *ngIf="!boardGame.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
-                {{ boardGame.amountOfLikes }}
+                <mat-icon style="width: 34px; height: 34px; margin-left: 7px;" *ngIf="!boardGame.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
+                <div style="margin-top: -15px; margin-left: 20px;">{{ boardGame.amountOfLikes }}</div>
             </button>
             <span style="flex:1 1 auto;"></span>
             <button *ngIf="isAdmin" mat-raised-button color="primary" (click)="editBoardGame(boardGame)">Edytuj</button>

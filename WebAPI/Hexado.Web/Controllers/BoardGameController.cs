@@ -110,11 +110,29 @@ namespace Hexado.Web.Controllers
                 {
                     var likedBoardGames = _hexadoUserService.GetLikedBoardGames(UserEmail);
                     if (likedBoardGames.HasValue)
-                        if(likedBoardGames.Value.Any(lbg => lbg.Id == responseResult.Id))
-                                responseResult.IsLikedByUser = true;
+                        if (likedBoardGames.Value.Any(lbg => lbg.Id == responseResult.Id))
+                            responseResult.IsLikedByUser = true;
                 }
 
                 return OkJson(responseResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving board game! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
+        [HttpGet("{id}/pubs")]
+        public async Task<IActionResult> GetPubsWithBoardGame(string id)
+        {
+            try
+            {
+                var result = await _boardGameService.GetPubsWithBoardGameAsync(id);
+                return result.HasValue 
+                    ? OkJson(result.Value.ToResponse()) 
+                    : NotFound();
             }
             catch (Exception ex)
             {

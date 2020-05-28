@@ -9,51 +9,51 @@ namespace Hexado.Core.Services
 {
     public abstract class BaseService<T> : IBaseService<T> where T: class, IBaseEntity
     {
-        protected readonly IRepository<T> Repository;
+        protected readonly IRepository<T> ContactRepository;
 
         protected BaseService(
-            IRepository<T> repository)
+            IRepository<T> contactRepository)
         {
-            Repository = repository;
+            ContactRepository = contactRepository;
         }
 
         public virtual Task<Maybe<T>> CreateAsync(T entity)
         {
-            return Repository.CreateAsync(entity);
+            return ContactRepository.CreateAsync(entity);
         }
 
         public virtual Task<Maybe<T>> GetByIdAsync(string id)
         {
-            return Repository.GetAsync(id);
+            return ContactRepository.GetAsync(id);
         }
 
         public virtual Task<Maybe<IEnumerable<T>>> GetAllAsync()
         {
-            return Repository.GetAllAsync();
+            return ContactRepository.GetAllAsync();
         }
 
         public virtual Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification)
         {
-            return Repository.GetPaginationResultAsync(specification);
+            return ContactRepository.GetPaginationResultAsync(specification);
         }
 
         public virtual async Task<Maybe<T>> UpdateAsync(T entity)
         {
-            var existingEntity = await Repository.GetAsync(entity.Id);
+            var existingEntity = await ContactRepository.GetAsync(entity.Id);
             if (!existingEntity.HasValue)
                 return Maybe<T>.Nothing;
 
-            return await Repository.UpdateAsync(entity);
+            return await ContactRepository.UpdateAsync(entity);
         }
 
         public virtual Task<Maybe<T>> DeleteByIdAsync(string id)
         {
-            return Repository.DeleteByIdAsync(id);
+            return ContactRepository.DeleteByIdAsync(id);
         }
 
         public Task ClearAsync()
         {
-            return Repository.ClearAsync();
+            return ContactRepository.ClearAsync();
         }
     }
 }

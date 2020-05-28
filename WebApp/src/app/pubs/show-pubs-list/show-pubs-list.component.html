@@ -1,22 +1,90 @@
 <div *ngIf="!pubList">
     <mat-spinner></mat-spinner>
 </div>
-<div class="section grid-3" *ngIf="pubList">
-    <mat-card class="pub clickLink" *ngFor="let item of pubList.results" (click)="showPub(item)"  (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
-        <mat-card-content>
-        <div style="margin-bottom: 10px;">
-            <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
-            <h2><b>{{ item.name }}</b></h2>
-            <p>Miasto: {{ item.address.city }}</p>
+<div class="container mt-3" *ngIf="pubList">
+    <div class="row">
+        <section class="col-3" style="max-width: 180px; position:absolute; left:20px; ">
+            <ng-container>
+                <mat-form-field>
+                    <mat-label>Sortuj wg:</mat-label>
+                    <mat-select (selectionChange)="onSortChange($event.value)">
+                        <mat-option *ngFor="let option of sortOptions" [value]="option.value">
+                        {{option.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input type="text"
+                        placeholder="Miasto"
+                        matInput
+                        [formControl]="citiesControl"
+                        [matAutocomplete]="autoCities">
+                    <mat-autocomplete #autoCities="matAutocomplete" (optionSelected)="onCitySelected($event.option.value)">
+                    <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+                        {{city}}
+                    </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field>
+                <input type="text"
+                        placeholder="Gra"
+                        matInput
+                        [formControl]="boardGameControl"
+                        [matAutocomplete]="autoBoardGames">
+                    <mat-autocomplete #autoBoardGames="matAutocomplete" (optionSelected)="onBoardGameSelected($event.option.value)">
+                    <mat-option *ngFor="let boardGame of filteredBoardGames | async" [value]="boardGame.name">
+                    {{boardGame.name}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            </ng-container>
+        </section>
+
+
+        <section class="col-9" style="margin-left: 100px;">
+            <div class="d-flex justify-content-between align-items-center pb-2" style="margin-left: 20px;">
+                <app-paging-header
+                    [totalCount]="pubList.totalCount"
+                    [pageSize]="pubQuery.pageSize"
+                    [pageNumber]="pubQuery.page">
+                </app-paging-header>
+    
+                       <div class="form-inline">
+                        <input (keyup.enter)="onSearch()" class="form-control mr-2" #search style="width:300px" placeholder="Wyszukaj po nazwie" type="text">
+                        <button (click)="onSearch()" class="btn btn-outline-primary my-2">Szukaj</button>
+                        <button (click)="onReset()" class="btn btn-outline-success ml-2 my-2">Reset</button>
+                    </div>
+                </div>
+
+        <div class="section grid-3">
+            <mat-card class="pub clickLink" *ngFor="let item of pubList.results" (click)="showPub(item)"  (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                <mat-card-content>
+                <div style="margin-bottom: 10px;">
+                    <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
+                    <h2><b>{{ item.name }}</b></h2>
+                    <p>Miasto: {{ item.address.city }}</p>
+                </div>
+                <mat-card-actions>
+                    <button style="font-size: 20px;" mat-icon-button color="primary" (click)="thumbClicked(item); $event.stopPropagation()">
+                        <mat-icon *ngIf="item.isLikedByUser">thumb_up</mat-icon>
+                        <mat-icon style="width: 34px; height: 34px; margin-left: 7px;" *ngIf="!item.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
+                        <div style="margin-top: -15px; margin-left: 20px;">{{ item.amountOfLikes }}</div>
+                    </button>
+                    <app-star-rating style="float: right;" [amountOfRates]="item.rates.length" [rating]="getPubRate(item.rates)" [itemId]="item.id" (click)="toggleCreateRate(item); $event.stopPropagation()"></app-star-rating>
+                </mat-card-actions>
+                </mat-card-content>
+            </mat-card>
         </div>
-        <mat-card-actions>
-            <button mat-icon-button color="primary" (click)="thumbClicked(item); $event.stopPropagation()">
-                <mat-icon *ngIf="item.isLikedByUser">thumb_up</mat-icon>
-                <mat-icon *ngIf="!item.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
-                {{ item.amountOfLikes }}
-            </button>
-            <app-star-rating style="float: right;" [amountOfRates]="item.rates.length" [rating]="getPubRate(item.rates)" [itemId]="item.id" (click)="toggleCreateRate(item); $event.stopPropagation()"></app-star-rating>
-        </mat-card-actions>
-        </mat-card-content>
-    </mat-card>
+        <div class="d-flex justify-content-center" *ngIf="pubList?.totalCount">
+        <app-pager
+            [pageSize]="pubQuery.pageSize"
+            [totalCount]="pubList.totalCount"
+            [pageNumber]="pubQuery.page"
+            (pageChanged)="onPageChanged($event)">
+        </app-pager>
+        </div>
+    </section>
+    </div>
 </div>

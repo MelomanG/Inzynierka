@@ -1,0 +1,49 @@
+<mat-drawer-container class="contacts-container">
+    <mat-drawer #contactsSidenav mode="over" position="end">
+        <div  *ngIf="contacts">
+            <mat-toolbar color="primary">
+                <mat-icon style="margin-right: 5px;">people</mat-icon>Kontakty
+                <span style="flex:1 1 auto;"></span>
+                <button mat-button style="margin-right: 20px;" (click)="onAddContact()" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                    <mat-icon style="margin-right: 5px;">person_add</mat-icon>Dodaj 
+                </button>
+            </mat-toolbar>
+
+            <ng-container>
+                <mat-form-field style="margin-left: 20px; margin-top: 10px; min-width: 80%;">
+                    <mat-label>Szukaj</mat-label>
+                    <input 
+                        matInput
+                        [formControl]="userNameControl" 
+                        placeholder="Nazwa użytkownika">
+                </mat-form-field>
+            </ng-container>
+
+            <mat-list role="list"  *ngIf="contacts">
+                <mat-list-item  class="clickLink" style="min-width: 100%;" role="listitem" *ngFor="let contact of filteredContacts | async" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                    <mat-icon style="margin-right: 10px; font-size: 30px;" >
+                        person
+                    </mat-icon>
+                    {{contact.contactUserName}}    
+                    <span style="flex:1 1 auto;"></span>
+                    <button mat-button [matMenuTriggerFor]="menu" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="deleteContact(contact)" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                            Usuń
+                        </button>
+                    </mat-menu>
+                    <mat-divider></mat-divider>
+                </mat-list-item>
+            </mat-list>
+        </div>
+
+    </mat-drawer> 
+    <mat-drawer-content>
+        <app-nav-bar (toggleSidenav)="onToggle()" (toggleContacts)="onToggleContacts(contactsSidenav)"></app-nav-bar>
+        <div class="body-wrapper">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

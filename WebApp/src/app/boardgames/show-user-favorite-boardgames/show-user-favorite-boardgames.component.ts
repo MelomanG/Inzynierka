@@ -1,5 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
-import { PaginationResult } from 'src/app/shared/models/paginationresult';
+import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import { BoardGameModel } from 'src/app/shared/models/boardgame';
 import { BoardGameService } from '../boardgame.service';
 import { Router } from '@angular/router';
@@ -7,6 +6,9 @@ import { environment } from 'src/environments/environment';
 import { RateModel } from 'src/app/shared/models/rate';
 import { BoardGameRateDialogComponent } from '../board-game-rate-dialog/board-game-rate-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-show-user-favorite-boardgames',
@@ -14,8 +16,10 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./show-user-favorite-boardgames.component.scss']
 })
 export class ShowUserFavoriteBoardgamesComponent implements OnInit {
+  searchControl = new FormControl();
 
   boardGameList: BoardGameModel[];
+  filteredBoardGameList: Observable<BoardGameModel[]>;
   serverUrl: string;
 
   constructor(
@@ -27,6 +31,7 @@ export class ShowUserFavoriteBoardgamesComponent implements OnInit {
   ngOnInit() {
     this.serverUrl = environment.serverUrl;
     this.loadBoardGames();
+    this.filterBoardGames();
   }
 
   loadBoardGames() {
@@ -34,6 +39,26 @@ export class ShowUserFavoriteBoardgamesComponent implements OnInit {
       subscribe(res => {
         this.boardGameList = <BoardGameModel[]> res;
     });
+  }
+
+  filterBoardGames() {
+    this.filteredBoardGameList = this.searchControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      )
+  }
+
+  private _filter(value: string) {
+    if(value.length < 2)
+    {
+      this.loadBoardGames();
+      return this.boardGameList;
+    }
+    return this.boardGameList
+      .filter(bg =>
+        bg.name.toLowerCase().includes(value.toLowerCase())
+        || bg.category.name.toLowerCase().includes(value.toLowerCase()) );
   }
 
   showBoardGame(boardgame: BoardGameModel) {
@@ -57,7 +82,6 @@ export class ShowUserFavoriteBoardgamesComponent implements OnInit {
       boardGame.amountOfLikes -= 1;
     }
   }
-  
 
   getBoardGameRate(rates: RateModel[]) {
     if(rates.length <=0 )

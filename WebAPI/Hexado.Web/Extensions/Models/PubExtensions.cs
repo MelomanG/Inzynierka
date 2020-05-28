@@ -48,11 +48,11 @@ namespace Hexado.Web.Extensions.Models
                 Id = entity.Id,
                 Name = entity.Name,
                 Description = entity.Description,
-                Address = entity.Address,
+                Address = entity.Address?.ToResponse(),
                 ImagePath = entity.ImagePath,
                 AccountId = entity.AccountId,
                 Rates = entity.PubRates.Select(r => r.ToRateResponse()),
-                PubBoardGames = entity.PubBoardGames,
+                PubBoardGames = entity.PubBoardGames?.Select(pbg => pbg?.BoardGame?.ToResponse()),
                 IsLikedByUser = isLikedByUser,
                 AmountOfLikes = entity.LikedPubs.Count
             };
@@ -82,11 +82,11 @@ namespace Hexado.Web.Extensions.Models
                 Id = dto.Id,
                 Name = dto.Name,
                 Description = dto.Description,
-                Address = dto.Address,
+                Address = dto.Address?.ToResponse(),
                 ImagePath = dto.ImagePath,
                 AccountId = dto.AccountId,
                 Rates = dto.PubRates.Select(r => r.ToRateResponse()),
-                PubBoardGames = dto.PubBoardGames,
+                PubBoardGames = dto.PubBoardGames.Select(pbg => pbg.BoardGame.ToResponse()),
                 IsLikedByUser = isLikedByUser,
                 IsUserPub = isUserPub,
                 AmountOfLikes = dto.AmountOfLikes

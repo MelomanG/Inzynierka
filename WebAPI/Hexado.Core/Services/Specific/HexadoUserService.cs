@@ -23,6 +23,7 @@ namespace Hexado.Core.Services.Specific
         Task<Maybe<IEnumerable<PubDto>>> GetUserPubs(string userEmail);
         Task<Maybe<BoardGameRate>> GetUserBoardGameRate(string id, string userEmail);
         Task<Maybe<PubRate>> GetUserPubRate(string id, string userEmail);
+        Task<Maybe<IEnumerable<HexadoUser>>> Search(string search);
     }
 
     public class HexadoUserService : IHexadoUserService
@@ -124,6 +125,12 @@ namespace Hexado.Core.Services.Specific
                 .ToMaybe();
 
             return userRate;
+        }
+
+        public async Task<Maybe<IEnumerable<HexadoUser>>> Search(string search)
+        {
+            return await _hexadoUserRepository.GetAllAsync(hu => 
+                hu.UserName.Contains(search));
         }
     }
 }

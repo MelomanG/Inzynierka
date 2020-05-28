@@ -45,7 +45,6 @@ namespace Hexado.Web.Controllers
             }
         }
 
-
         [HttpGet("IsAdmin")]
         [Authorize(Policy = HexadoPolicy.AdministratorOnly)]
         public IActionResult IsAdmin()

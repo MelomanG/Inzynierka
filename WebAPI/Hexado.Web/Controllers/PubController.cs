@@ -328,8 +328,8 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpPost("{id}/BoardGame")]
-        public async Task<IActionResult> AddBoardGames(string id, [FromBody] string[] boardGameIds)
+        [HttpPost("{id}/BoardGame/{boardGameId}")]
+        public async Task<IActionResult> AddBoardGames(string id, string boardGameId)
         {
             try
             {
@@ -340,7 +340,7 @@ namespace Hexado.Web.Controllers
                 var result = await _pubService.AddBoardGames(
                     id,
                     user.Value.Account.Id,
-                    boardGameIds);
+                    boardGameId);
 
                 return result.HasValue
                     ? OkJson(result.Value.ToResponse())
@@ -379,9 +379,9 @@ namespace Hexado.Web.Controllers
             }
         }
 
-        [HttpDelete("{id}/BoardGame")]
+        [HttpDelete("{id}/BoardGame/{boardGameId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteBoardGames(string id, [FromBody] string[] boardGameIds)
+        public async Task<IActionResult> DeleteBoardGames(string id, string boardGameId)
         {
             try
             {
@@ -392,7 +392,7 @@ namespace Hexado.Web.Controllers
                 var result = await _pubService.DeleteBoardGames(
                     id,
                     user.Value.Account.Id,
-                    boardGameIds);
+                    boardGameId);
 
                 return result.HasValue
                     ? OkJson(result.Value)
@@ -470,6 +470,27 @@ namespace Hexado.Web.Controllers
                 return InternalServerErrorJson(ex);
             }
         }
+
+
+        [HttpGet("cities")]
+        public IActionResult GetCities()
+        {
+            try
+            {
+                var result = _pubService.GetCities();
+                
+                if (!result.HasValue)
+                    return NotFound();
+
+                return Ok(result.Value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while fetching cities!");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
 
         [HttpPost("{id}/image")]
         public async Task<IActionResult> UploadFile(string id, IFormFile image)

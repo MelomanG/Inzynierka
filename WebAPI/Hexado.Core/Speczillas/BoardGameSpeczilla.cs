@@ -41,16 +41,20 @@ namespace Hexado.Core.Speczillas
             }
 
             if (query.MinPlayers.HasValue)
-                specification.AndAlso(bg => bg.MinPlayers >= query.MinPlayers);
+                specification.AndAlso(bg => bg.MinPlayers <= query.MinPlayers && bg.MaxPlayers >= query.MinPlayers);
 
             if (query.MaxPlayers.HasValue)
-                specification.AndAlso(bg => bg.MaxPlayers <= query.MaxPlayers);
+                specification.AndAlso(bg => bg.MinPlayers <= query.MaxPlayers && bg.MaxPlayers >= query.MaxPlayers);
 
             if (query.MinAge.HasValue)
-                specification.AndAlso(bg => bg.FromAge >= query.MinAge);
+                specification.AndAlso(bg => bg.FromAge <= query.MinAge);
 
-            if (query.MaxAge.HasValue)
-                specification.AndAlso(bg => bg.FromAge <= query.MaxAge);
+            //if (query.MaxAge.HasValue)
+            //    specification.AndAlso(bg => bg.FromAge >= query.MaxAge);
+
+            if (!string.IsNullOrWhiteSpace(query.Search))
+                specification
+                    .AndAlso(pub => pub.Name.Contains(query.Search));
 
             if (!string.IsNullOrWhiteSpace(query.OrderBy))
                 SetOrderBy(specification, query.OrderBy);
@@ -68,12 +72,17 @@ namespace Hexado.Core.Speczillas
             switch (sortParam[0])
             {
                 case "rate":
-                    //specification.SetOrderBy() //TODO :D 
+                    specification.SetOrderBy(bg => bg.BoardGameRates.Sum(bgr => bgr.UserRate) / bg.BoardGameRates.Count, isDescending);
                     break;
 
                 case "name":
                     specification.SetOrderBy(bg => bg.Name, isDescending);
                     break;
+
+                case "like":
+                    specification.SetOrderBy(bg => bg.LikedBoardGames.Count, isDescending);
+                    break;
+
                 default:
                     specification.SetOrderBy(bg => bg.Name);
                     break;

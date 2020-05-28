@@ -20,3 +20,55 @@ mat-card-header {
         }
     }
 }
+table {
+    width: 100%;
+}
+
+
+.product-features {
+    margin-top: 1.25rem;
+    margin-left: .3125rem;
+}
+
+section {
+    display: block;
+}
+
+.product-features>dl.data-sheet {
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-align: start;
+    align-items: flex-start;
+}
+
+dl {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+dt {
+    display: block;
+}
+
+.product-features>dl.data-sheet dd.value, .product-features>dl.data-sheet dt.name {
+    text-align: center;
+    -webkit-box-flex: 1;
+    flex: 1 0 40%;
+    font-weight: 400;
+    background: #ebebeb;
+    padding: .625rem;
+    margin-right: .625rem;
+    min-height: 2.5rem;
+    word-break: normal;
+}
+
+dd {
+    margin-bottom: .5rem;
+    margin-left: 0;
+    display: block;
+    margin-inline-start: 40px;
+}

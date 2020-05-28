@@ -29,6 +29,10 @@ namespace Hexado.Web.Modules
                 .RegisterType<PubRepository>()
                 .As<IPubRepository>()
                 .InstancePerLifetimeScope();
+            builder
+                .RegisterType<ContactRepository>()
+                .As<IContactRepository>()
+                .InstancePerLifetimeScope();
         }
     }
 }

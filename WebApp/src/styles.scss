@@ -1,7 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body { 
+    height: 100%; 
+}
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
 .section {
     padding: 16px;
 }
@@ -29,7 +34,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     .grid-3{
         grid-gap: 16px;
         padding-right: calc(16px * 2);
-        grid-template-columns: repeat(3, 33.33%);
+        grid-template-columns: repeat(3, 50%);
     }
 }
 
@@ -42,6 +47,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .clickLink {
     cursor: pointer;
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    mat-card {
+        margin-top: 20px;
+        margin-right: 30px;
+    }
 }
 
 .body-wrapper {

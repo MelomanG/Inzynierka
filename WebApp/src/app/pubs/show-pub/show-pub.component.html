@@ -13,22 +13,57 @@
             <mat-card-subtitle>
                 {{ pub.description }}
             </mat-card-subtitle>
-            <app-star-rating style="position:absolute; bottom: 0px; float: right;" [amountOfRates]="pub.rates.length" [rating]="getPubRate(pub.rates)" [itemId]="pub.id" (click)="toggleCreateRate(pub); $event.stopPropagation()"></app-star-rating>
+            <app-star-rating style="position:absolute; bottom: 0px; float: right;" [amountOfRates]="pub.rates.length" [rating]="getRate(pub.rates)" [itemId]="pub.id" (click)="toggleCreatePubRate(pub); $event.stopPropagation()"></app-star-rating>
         </div>
     </mat-card-header>
 
     <mat-card-content style="margin-top: 25px;">
         <mat-tab-group>
             <mat-tab label="Gry">
-                TODO gry posiadane przez pub
+                <div class="mat-elevation-z8" *ngIf="boardGames">
+                    <mat-form-field style="margin-top: 20px;">
+                      <mat-label>Szukaj</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Nazwa, kategoria">
+                  </mat-form-field>
+                    <table mat-table [dataSource]="boardGames" matSort>
+        
+                      <!-- Name Column -->
+                      <ng-container matColumnDef="name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+                          <td mat-cell *matCellDef="let row" > {{row.name}} </td>
+                      </ng-container>
+        
+                      <!-- Category Column -->
+                      <ng-container matColumnDef="category">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Kategoria </th>
+                          <td mat-cell *matCellDef="let row"> {{row.category?.name}} </td>
+                      </ng-container>
+        
+                        <!-- Actions Column -->
+                        <ng-container matColumnDef="raiting">
+                            <th mat-header-cell *matHeaderCellDef> Ocena </th>
+                            <td mat-cell *matCellDef="let row">
+                                <app-star-rating [amountOfRates]="row.rates.length" [rating]="getRate(row.rates)" [itemId]="row.id" (click)="toggleCreateBoardGameRate(row); $event.stopPropagation()"></app-star-rating>
+                            </td>
+                        </ng-container>
+        
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row class="clickLink" (click)="onBoardGameClick(row)" *matRowDef="let row; columns: displayedColumns;" style="height: 80px !important"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+                  </div>
             </mat-tab>
             <mat-tab label="Wydarzenia">
                 TODO wydarzenia w pubie
             </mat-tab>
             <mat-tab label="Adres">
-                <p style="text-align: left;">Ulica: {{ getFullStreet() }}</p>
-                <p style="text-align: left;">Kod pocztowy: {{ pub.address.postalCode }}</p>
-                <p style="text-align: left;">Miasto: {{ pub.address.city }}</p>
+                <section class="product-features">
+                    <dl class="data-sheet">
+                        <dt class="name">Ulica: </dt>       <dd class="value">{{ getFullStreet() }}</dd>
+                        <dt class="name">Kod pocztowy: </dt>    <dd class="value">{{pub.address.postalCode}}</dd>
+                        <dt class="name">Miasto: </dt>          <dd class="value">{{ pub.address.city }}</dd>
+                    </dl>
+                </section>
             </mat-tab>
             <mat-tab label="Opinie">
                 <app-show-opinions-tab [rates]="pub.rates"></app-show-opinions-tab>
@@ -36,10 +71,10 @@
         </mat-tab-group>
 
         <mat-toolbar>
-            <button mat-icon-button color="primary" (click)="thumbClicked()">
+            <button style="font-size: 20px;" mat-icon-button color="primary" (click)="thumbClicked()">
                 <mat-icon *ngIf="pub.isLikedByUser">thumb_up</mat-icon>
-                <mat-icon *ngIf="!pub.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
-                {{ pub.amountOfLikes }}
+                <mat-icon style="width: 34px; height: 34px; margin-left: 7px;" *ngIf="!pub.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
+                <div style="margin-top: -15px; margin-left: 20px;">{{ pub.amountOfLikes }}</div>
             </button>
             <span style="flex:1 1 auto;"></span>
             <button *ngIf="pub.isUserPub" mat-raised-button color="primary" (click)="editPub(pub)">Edytuj</button>

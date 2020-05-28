@@ -1,4 +1,5 @@
 import { RateModel } from './rate';
+import { BoardGameModel } from './boardgame';
 
 export interface CreatePubModel {
     name: string,
@@ -13,7 +14,7 @@ export interface PubModel {
     address: AddressModel,
     imagePath: string,
     rates: RateModel[],
-    //pubBoardGames: any[],
+    pubBoardGames: BoardGameModel[],
     isLikedByUser: boolean,
     isUserPub: boolean;
     amountOfLikes: number

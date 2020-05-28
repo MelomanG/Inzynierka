@@ -40,6 +40,12 @@ namespace Hexado.Core.Speczillas
                     .AndAlso(pub => pub.Address.City == query.City);
             }
 
+            if (!string.IsNullOrWhiteSpace(query.Search))
+            {
+                specification
+                    .AndAlso(pub => pub.Name.Contains(query.Search));
+            }
+
             if (!string.IsNullOrWhiteSpace(query.OrderBy))
                 SetOrderBy(specification, query.OrderBy);
 
@@ -56,12 +62,17 @@ namespace Hexado.Core.Speczillas
             switch (sortParam[0])
             {
                 case "rate":
-                    //specification.SetOrderBy() //TODO :D 
+                    specification.SetOrderBy(p => p.PubRates.Sum(pr => pr.UserRate) / p.PubRates.Count, isDescending);
                     break;
 
                 case "name":
                     specification.SetOrderBy(bg => bg.Name, isDescending);
                     break;
+
+                case "like":
+                    specification.SetOrderBy(bg => bg.LikedPubs.Count, isDescending);
+                    break;
+
                 default:
                     specification.SetOrderBy(bg => bg.Name);
                     break;

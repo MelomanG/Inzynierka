@@ -10,6 +10,7 @@ import { AuthenticationService } from 'src/app/authentication/authentication.ser
 export class NavBarComponent implements OnInit {
 
   @Output() toggleSidenav = new EventEmitter();
+  @Output() toggleContacts = new EventEmitter();
   
   constructor(
     private authService: AuthenticationService,
@@ -31,6 +32,9 @@ export class NavBarComponent implements OnInit {
 
   onMenuClicked() {
     this.toggleSidenav.emit();
+  }
+  onContactsClick() {
+    this.toggleContacts.emit();
   }
 
   mouseenter (event) {

@@ -9,12 +9,12 @@ namespace Hexado.Web.Models.Responses
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public Address Address { get; set; }
+        public AddressResponse Address { get; set; }
         public string ImagePath { get; set; }
 
         public string AccountId { get; set; }
         public IEnumerable<RateResponse> Rates { get; set; }
-        public IEnumerable<PubBoardGame> PubBoardGames { get; set; }
+        public IEnumerable<BoardGameResponse> PubBoardGames { get; set; }
 
         public bool IsLikedByUser { get; set; }
         public bool IsUserPub { get; set; }

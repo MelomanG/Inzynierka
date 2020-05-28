@@ -6,11 +6,16 @@
 </div>
 <div>
     <mat-toolbar>
-        <button mat-raised-button color="primary" routerLink="/create/pub" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Dodaj nowy pub</button>
+        <button style="margin-top: 20px;" mat-raised-button color="primary" routerLink="/create/pub" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+            Dodaj nowy pub
+        </button>
+        <div style="margin-left: 20px; margin-top: 20px;">
+            <input [formControl]="searchControl" class="form-control mr-2" #search style="width:300px" placeholder="Wyszukaj po nazwie, mieście" type="text">
+        </div>
     </mat-toolbar>
 </div>
-<div class="section grid-3" *ngIf="pubList">
-    <mat-card class="pub clickLink" *ngFor="let item of pubList" (click)="showPub(item)"  (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+<div class="section flex-container" *ngIf="pubList">
+    <mat-card class="pub clickLink" *ngFor="let item of filteredPubList | async" (click)="showPub(item)"  (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
         <mat-card-content>
         <div style="margin-bottom: 10px;">
             <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
@@ -18,10 +23,10 @@
             <p>Miasto: {{ item.address.city }}</p>
         </div>
         <mat-card-actions *ngIf="isAuthenticated">
-            <button mat-icon-button color="primary" (click)="thumbClicked(item); $event.stopPropagation()">
+            <button style="font-size: 20px;" mat-icon-button color="primary" (click)="thumbClicked(item); $event.stopPropagation()">
                 <mat-icon *ngIf="item.isLikedByUser">thumb_up</mat-icon>
-                <mat-icon *ngIf="!item.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
-                {{ item.amountOfLikes }}
+                <mat-icon style="width: 34px; height: 34px; margin-left: 7px;" *ngIf="!item.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
+                <div style="margin-top: -15px; margin-left: 20px;">{{ item.amountOfLikes }}</div>
             </button>
             <app-star-rating style="float: right;" [amountOfRates]="item.rates.length" [rating]="getPubRate(item.rates)" [itemId]="item.id" (click)="toggleCreateRate(item); $event.stopPropagation()"></app-star-rating>
         </mat-card-actions>

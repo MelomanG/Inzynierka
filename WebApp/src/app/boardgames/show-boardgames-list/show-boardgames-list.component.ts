@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import { BoardGameService } from '../boardgame.service';
 import { BoardGameModel } from 'src/app/shared/models/boardgame';
 import { PaginationResult } from 'src/app/shared/models/paginationresult';
@@ -8,6 +8,11 @@ import { AuthenticationService } from 'src/app/authentication/authentication.ser
 import { RateModel } from 'src/app/shared/models/rate';
 import { MatDialog } from '@angular/material/dialog';
 import { BoardGameRateDialogComponent } from '../board-game-rate-dialog/board-game-rate-dialog.component';
+import { BoardGameQuery } from 'src/app/shared/models/query';
+import { BoardGameCategoryService } from '../boardgamecategory.service';
+import { BoardGameCategoryModel } from 'src/app/shared/models/boardgamecategory';
+import { Observable } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-show-boardgames-list',
@@ -15,21 +20,43 @@ import { BoardGameRateDialogComponent } from '../board-game-rate-dialog/board-ga
   styleUrls: ['./show-boardgames-list.component.scss']
 })
 export class ShowBoardgamesListComponent implements OnInit {
-
-  boardGameList: PaginationResult<BoardGameModel>;
   serverUrl: string;
   isAuthenticated: boolean;
+  sortOptions = [
+    { name: 'Nazwa A-Z', value: 'name' },
+    { name: 'Nazwa Z-A', value: 'name desc'},
+    { name: 'Ocena rosnąco', value: 'rate' },
+    { name: 'Ocena malejaco', value: 'rate desc' },
+    { name: 'Popularne', value: 'like desc' },
+    { name: 'Mało popularne', value: 'like' }
+  ];
+  @ViewChild('search', {static: false}) searchTerm: ElementRef;
+  
+  minPlayers = new FormControl();
+  maxPlayers = new FormControl();
+  minAge = new FormControl();
+  maxAge = new FormControl();
+
+  boardGameList: PaginationResult<BoardGameModel>;
+  boardGameQuery: BoardGameQuery;
+
+  boardGameCategories: BoardGameCategoryModel[];
 
   constructor(
     private boardGameService: BoardGameService,
+    private boardGameCategoryService: BoardGameCategoryService,
     private authService: AuthenticationService,
     private dialog: MatDialog,
     private router: Router,
-    private renderer2: Renderer2) { }
+    private renderer2: Renderer2) {
+      this.boardGameQuery = new BoardGameQuery()
+      this.boardGameService.setBoardGameQuery(this.boardGameQuery);
+     }
 
   ngOnInit() {
     this.isAuthenticated = this.authService.isAuthenticated();
     this.serverUrl = environment.serverUrl;
+    this.loadBoardGameCategories();
     this.loadBoardGames();
   }
 
@@ -44,22 +71,6 @@ export class ShowBoardgamesListComponent implements OnInit {
     this.router.navigate([`show/boardgame/${boardgame.id}`]);
   }
 
-  thumbClicked(boardGame) {
-    if(!this.isAuthenticated)
-      return;
-    boardGame.isLikedByUser = !boardGame.isLikedByUser
-    if(boardGame.isLikedByUser)
-    {
-      boardGame.amountOfLikes += 1;
-      this.boardGameService.likeBoardGame(boardGame.id).subscribe();
-    }
-    else
-    {
-      this.boardGameService.unLikeBoardGame(boardGame.id).subscribe();
-      boardGame.amountOfLikes -= 1;
-    }
-  }
-
   getBoardGameRate(rates: RateModel[]) {
     if(rates.length <=0 )
       return 0;
@@ -69,6 +80,84 @@ export class ShowBoardgamesListComponent implements OnInit {
     }
     return Math.round(sum/rates.length)
   }
+
+  loadBoardGameCategories() {
+    this.boardGameCategoryService.getBoardGameCategories()
+      .subscribe(res => {
+        this.boardGameCategories = <BoardGameCategoryModel[]>res
+      });
+    }
+  
+  onPageChanged(event: any) {
+    const query = this.boardGameService.getBoardGameQuery();
+    if (query.page !== event)
+    {
+      query.page = event;
+       this.boardGameService.setBoardGameQuery(query);
+       this.loadBoardGames();
+    }
+   }
+
+   onApplyFilters(){
+      const query = this.boardGameService.getBoardGameQuery();
+      query.minPlayers = parseInt(this.minPlayers.value, 10);
+      query.maxPlayers = parseInt(this.maxPlayers.value, 10);
+      query.minAge = parseInt(this.minAge.value, 10);
+      query.maxAge = parseInt(this.maxAge.value, 10);
+      console.log(query);
+      this.boardGameService.setBoardGameQuery(query);
+      this.loadBoardGames();
+   }
+
+   onSearch() {
+     const query = this.boardGameService.getBoardGameQuery();
+     query.search = this.searchTerm.nativeElement.value;
+     query.page = 1;
+     this.boardGameService.setBoardGameQuery(query);
+     this.loadBoardGames();
+   }
+
+   onSortChange(value) {
+     const query = this.boardGameService.getBoardGameQuery();
+     query.sort = value;
+     this.boardGameService.setBoardGameQuery(query);
+     this.loadBoardGames();
+   }
+
+   onBoardGameCategorySelected(categoryId) {
+     console.log(categoryId)
+    const query = this.boardGameService.getBoardGameQuery();
+    query.category = categoryId;
+    this.boardGameService.setBoardGameQuery(query);
+    this.loadBoardGames();
+   }
+ 
+   onReset() {
+     this.searchTerm.nativeElement.value = '';      
+     this.minPlayers.setValue('');
+     this.maxPlayers.setValue('');
+     this.minAge.setValue('');
+     this.maxAge.setValue('');
+     this.boardGameQuery = new BoardGameQuery();
+     this.boardGameService.setBoardGameQuery(this.boardGameQuery);
+     this.loadBoardGames();
+   }
+
+   thumbClicked(boardGame) {
+     if(!this.isAuthenticated)
+       return;
+     boardGame.isLikedByUser = !boardGame.isLikedByUser
+     if(boardGame.isLikedByUser)
+     {
+       boardGame.amountOfLikes += 1;
+       this.boardGameService.likeBoardGame(boardGame.id).subscribe();
+     }
+     else
+     {
+       this.boardGameService.unLikeBoardGame(boardGame.id).subscribe();
+       boardGame.amountOfLikes -= 1;
+     }
+   }
 
   toggleCreateRate(boardGame: BoardGameModel) {
     var dialogRef = this.dialog.open(BoardGameRateDialogComponent, {
