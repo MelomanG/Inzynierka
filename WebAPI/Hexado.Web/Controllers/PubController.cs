@@ -168,6 +168,27 @@ namespace Hexado.Web.Controllers
             }
         }
 
+        [HttpGet("{id}/events")]
+        public async Task<IActionResult> GetPubEvents(string id)
+        {
+            try
+            {
+                var result = await _pubService.GetByIdAsync(id);
+                if (!result.HasValue)
+                    return NotFound();
+
+                var responseResult = result.Value.Events?.AsEnumerable()?.Select(e => e?.ToResponse());
+
+                return Ok(responseResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while retrieving pub! " +
+                                     $"Id: {id}");
+                return InternalServerErrorJson(ex);
+            }
+        }
+
         [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> Update(string id, PubModel model)

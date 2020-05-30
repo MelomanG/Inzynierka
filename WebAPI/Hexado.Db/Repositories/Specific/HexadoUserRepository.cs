@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Functional.Maybe;
+using Hexado.Db.Constants;
 using Hexado.Db.Dtos;
 using Hexado.Db.Entities;
 using Hexado.Db.Extensions;
@@ -128,6 +129,63 @@ namespace Hexado.Db.Repositories.Specific
             return userPubs.HasValue
                 ? userPubs.Value.AsEnumerable().ToMaybe()
                 : Maybe<IEnumerable<PubDto>>.Nothing;
+        }
+
+        public async Task<Maybe<IEnumerable<EventDto>>> GetUserParticipatedEvents(string userEmail)
+        {
+            var participatedEvents = (await HexadoDbContext.HexadoUsers
+                    .Where(hu => hu.Email == userEmail)
+                    .Include(u => u.ParticipantEvents)
+                    .ThenInclude(pe => pe.Event)
+                    .ThenInclude(e => e.Address)
+                    .Include(u => u.ParticipantEvents)
+                    .ThenInclude(pe => pe.Event)
+                    .ThenInclude(e => e.BoardGame)
+                    .Include(u => u.ParticipantEvents)
+                    .ThenInclude(pe => pe.Event)
+                    .ThenInclude(e => e.Pub)
+                    .Include(u => u.ParticipantEvents)
+                    .ThenInclude(pe => pe.Event)
+                    .ThenInclude(e => e.ParticipantEvents)
+                    .SelectMany(u => u.ParticipantEvents)
+                    .Select(pe => pe.Event)
+                    .ToListAsync())
+                .Select(ow => ow.ToDto(true))
+                .ToList();
+
+            return participatedEvents.AsEnumerable().ToMaybe();
+        }
+
+        public async Task<Maybe<IEnumerable<EventDto>>> GetUserOwnedEvents(string userEmail)
+        {
+            var ownedEvents = (await HexadoDbContext.HexadoUsers
+                    .Where(hu => hu.Email == userEmail)
+                    .SelectMany(u => u.OwnedEvents)
+                    .Include(e => e.Address)
+                    .Include(e => e.BoardGame)
+                    .Include(e => e.Pub)
+                    .Include(e => e.ParticipantEvents)
+                    .ToListAsync())
+                .Select(ow => ow.ToDto(true, true))
+                .ToList();
+
+            return ownedEvents.AsEnumerable().ToMaybe();
+        }
+
+        public async Task<Maybe<IEnumerable<EventDto>>> GetUserEventsAsync(string userEmail)
+        {
+            var userEvents = new List<EventDto>();
+
+            var participatedEvents = await GetUserParticipatedEvents(userEmail);
+            var ownedEvents = await GetUserOwnedEvents(userEmail);
+
+            if (ownedEvents.HasValue)
+                userEvents.AddRange(ownedEvents.Value);
+
+            if (participatedEvents.HasValue)
+                userEvents.AddRange(participatedEvents.Value.Where(oe => userEvents.All(pe => pe.Id != oe.Id)));
+
+            return userEvents.AsEnumerable().ToMaybe();
         }
     }
 }

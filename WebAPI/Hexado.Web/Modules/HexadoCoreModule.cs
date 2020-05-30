@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Autofac;
 using Hexado.Core.Auth;
-using Hexado.Core.Services;
 using Hexado.Core.Services.Specific;
 using Hexado.Core.Speczillas;
 using Hexado.Web.ActionFilters;
@@ -39,6 +38,10 @@ namespace Hexado.Web.Modules
                 .RegisterType<PubSpeczilla>()
                 .As<IPubSpeczilla>()
                 .SingleInstance();
+            builder
+                .RegisterType<EventSpeczilla>()
+                .As<IEventSpeczilla>()
+                .SingleInstance();
         }
 
         private static void InstancePerLifetimeScope(ContainerBuilder builder)
@@ -70,6 +73,10 @@ namespace Hexado.Web.Modules
             builder
                 .RegisterType<ContactService>()
                 .As<IContactService>()
+                .InstancePerLifetimeScope();
+            builder
+                .RegisterType<EventService>()
+                .As<IEventService>()
                 .InstancePerLifetimeScope();
             builder
                 .RegisterType<AuthorizationHeaderValidation>()

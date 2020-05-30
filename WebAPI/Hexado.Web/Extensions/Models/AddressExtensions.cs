@@ -26,7 +26,7 @@ namespace Hexado.Web.Extensions.Models
 
         public static AddressResponse ToResponse(this Address entity)
         {
-            return new AddressResponse
+            var addressResponse = new AddressResponse
             {
                 City = entity.City,
                 PostalCode = entity.PostalCode,
@@ -34,6 +34,43 @@ namespace Hexado.Web.Extensions.Models
                 BuildingNumber = entity.BuildingNumber,
                 LocalNumber = entity.LocalNumber,
                 PubId = entity.PubId
+            };
+            return addressResponse;
+        }
+
+        public static EventAddress ToEventAddressEntity(this Address entity)
+        {
+            return new EventAddress
+            {
+                City = entity.City,
+                PostalCode = entity.PostalCode,
+                Street = entity.Street,
+                BuildingNumber = entity.BuildingNumber,
+                LocalNumber = entity.LocalNumber
+            };
+        }
+
+        public static EventAddress ToEventAddressEntity(this AddressModel model)
+        {
+            return new EventAddress
+            {
+                Street = model.Street,
+                BuildingNumber = model.BuildingNumber,
+                LocalNumber = model.LocalNumber,
+                PostalCode = model.PostalCode,
+                City = model.City
+            };
+        }
+
+        public static AddressResponse ToResponse(this EventAddress entity)
+        {
+            return new AddressResponse
+            {
+                City = entity.City,
+                PostalCode = entity.PostalCode,
+                Street = entity.Street,
+                BuildingNumber = entity.BuildingNumber,
+                LocalNumber = entity.LocalNumber
             };
         }
     }

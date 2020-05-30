@@ -4,7 +4,7 @@
     </button>
     <button mat-button routerLink="/show/boardgames" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Gry planszowe</button>
     <button mat-button routerLink="/show/pubs" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Puby</button>
-    <button mat-button (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Wydarzenia</button>
+    <button mat-button routerLink="/show/events" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Wydarzenia</button>
     <span style="flex:1 1 auto;"></span>
     <button *ngIf="!isAuthenticated()" mat-button routerLink="/login" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Login</button>
     <button *ngIf="!isAuthenticated()" mat-button routerLink="/register" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">Rejestracja</button>

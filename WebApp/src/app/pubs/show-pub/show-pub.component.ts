@@ -12,6 +12,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BoardGameRateDialogComponent } from 'src/app/boardgames/board-game-rate-dialog/board-game-rate-dialog.component';
+import { EventModel } from 'src/app/shared/models/events';
 
 @Component({
   selector: 'app-show-pub',
@@ -22,7 +23,9 @@ export class ShowPubComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
   displayedColumns: string[] = ['name', 'category', 'raiting'];
+  displayedEventColumns: string[] = ['name', 'boardGameName', 'eventDate', 'participants'];
   boardGames: MatTableDataSource<BoardGameModel>; 
+  eventModels: MatTableDataSource<EventModel>; 
   pub: PubModel;
   serverUrl: string;
   isAuthenticated: boolean;
@@ -48,6 +51,7 @@ export class ShowPubComponent implements OnInit {
         this.boardGames = new MatTableDataSource<BoardGameModel>(this.pub.pubBoardGames);
         this.boardGames.paginator = this.paginator;
         this.boardGames.sort = this.sort;
+        this.loadEventModelsTable();
       });
   }
 
@@ -94,6 +98,31 @@ export class ShowPubComponent implements OnInit {
 
     onBoardGameClick(boardGame: BoardGameModel) {
       this.router.navigate([`show/boardgame/${boardGame.id}`]);
+    }
+
+    loadEventModelsTable()
+    {
+      this.pubService.getPubEvents(this.route.snapshot.params.id)
+        .subscribe(res => {
+            console.log(res);
+            this.eventModels = new MatTableDataSource<EventModel>(<EventModel[]> res);
+            this.eventModels.paginator = this.paginator;
+            this.eventModels.sort = this.sort;
+      })
+    }
+
+    applyEventFilter(event: Event) {
+      this.eventModels.filterPredicate = 
+        (data: EventModel, filter: string) => {
+          return data.name.toLowerCase().includes(filter.toLowerCase()) 
+          || data.boardGame.name.toLowerCase().includes(filter.toLowerCase())
+        };
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.eventModels.filter = filterValue;
+    }
+
+    onEventModelClick(eventModel: EventModel) {
+      this.router.navigate([`show/event/${eventModel.id}`]);
     }
 
     toggleCreatePubRate(pub: PubModel) {

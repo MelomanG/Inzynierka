@@ -1,0 +1,117 @@
+<div *ngIf="!eventModel">
+    <mat-spinner></mat-spinner>
+</div>
+  
+<mat-card *ngIf="eventModel">
+    <mat-card-header>
+        <img mat-card-image src="{{serverUrl}}/{{eventModel.imagePath}}">
+        <div class="title" style="position: relative; margin-left: 30px;">
+            <mat-card-title>
+                <h2>{{ eventModel.name  }}</h2>
+            </mat-card-title>
+            
+            <mat-card-subtitle>
+                {{ eventModel.description }}
+            </mat-card-subtitle>
+        </div>
+    </mat-card-header>
+
+    <mat-card-content style="margin-top: 25px;">
+        <mat-tab-group>
+            <mat-tab label="Informacje">
+                <section class="product-features">
+                    <dl class="data-sheet">
+                        <dt class="name">Data: </dt>       <dd class="value">{{eventModel.startDate | date :'short'}}</dd>
+                    </dl>
+                </section>
+                <div class="section grid-3" style="margin-left: 150px;">
+                    <mat-card *ngIf="eventModel.pub" class="card-content clickLink" (click)="showPub(eventModel.pub)" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                        <mat-card-content>
+                            <mat-card-title>
+                                Odbędzie się w:
+                            </mat-card-title>
+                        <div style="margin-bottom: 10px;">
+                            <img mat-card-image src="{{serverUrl}}/{{eventModel.pub.imagePath}}">
+                            <h2><b>{{ (eventModel.pub.name.length>19)? (eventModel.pub.name | slice:0:19)+'...':(eventModel.pub.name) }}</b></h2>
+                            <p style="margin-bottom: -10px;">Miasto: {{ eventModel.pub.address.city }}</p>
+                        </div>
+                        <mat-card-actions>
+                            <button style="font-size: 20px;" mat-icon-button color="primary" (click)="thumbPubClicked(); $event.stopPropagation()">
+                                <mat-icon *ngIf="eventModel.pub.isLikedByUser">thumb_up</mat-icon>
+                                <mat-icon style="width: 34px; height: 34px; margin-left: 7px;" *ngIf="!eventModel.pub.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
+                                <div style="margin-top: -15px; margin-left: 20px;">{{ eventModel.pub.amountOfLikes }}</div>
+                            </button>
+                            <app-star-rating style="float: right; margin-bottom: 20px;" [amountOfRates]="eventModel.pub.rates.length" [rating]="getRate(eventModel.pub.rates)" [itemId]="eventModel.pub.id" (click)="toggleCreatePubRate(); $event.stopPropagation()"></app-star-rating>
+                        </mat-card-actions>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card *ngIf="eventModel.boardGame" class="card-content clickLink" (click)="showBoardGame(eventModel.boardGame)" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                        <mat-card-content>
+                            <mat-card-title>
+                                Gra:
+                            </mat-card-title>
+                        <div style="margin-bottom: 10px;">
+                            <img mat-card-image src="{{serverUrl}}/{{eventModel.boardGame.imagePath}}">
+                            <h2><b>{{ (eventModel.boardGame.name.length>19)? (eventModel.boardGame.name | slice:0:19)+'...':(eventModel.boardGame.name) }}</b></h2>
+                            <p style="margin-bottom: -10px;">Miasto: {{ eventModel.boardGame.category }}</p>
+                        </div>
+                        <mat-card-actions>
+                            <button style="font-size: 20px;" mat-icon-button color="primary" (click)="thumbBoardGameClicked(); $event.stopPropagation()">
+                                <mat-icon *ngIf="eventModel.boardGame.isLikedByUser">thumb_up</mat-icon>
+                                <mat-icon style="width: 34px; height: 34px; margin-left: 7px;" *ngIf="!eventModel.boardGame.isLikedByUser" svgIcon="thumb_up_outline"></mat-icon>
+                                <div style="margin-top: -15px; margin-left: 20px;">{{ eventModel.boardGame.amountOfLikes }}</div>
+                            </button>
+                            <app-star-rating style="float: right; margin-bottom: 20px;" [amountOfRates]="eventModel.boardGame.rates.length" [rating]="getRate(eventModel.boardGame.rates)" [itemId]="eventModel.boardGame.id" (click)="toggleCreateBoardGameRate(); $event.stopPropagation()"></app-star-rating>
+                        </mat-card-actions>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+            </mat-tab>
+
+            <mat-tab label="Uczestnicy">
+                <div class="mat-elevation-z8" *ngIf="users">
+                    <mat-form-field style="margin-top: 20px;">
+                        <mat-label>Szukaj</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Nazwa użytkownika">
+                    </mat-form-field>
+                    <table mat-table [dataSource]="users" matSort>
+        
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa użytkownika </th>
+                            <td mat-cell *matCellDef="let row" > {{row.userName}} </td>
+                        </ng-container>
+        
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row class="clickLink" *matRowDef="let row; columns: displayedColumns;" style="height: 80px !important"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+                    </div>
+            </mat-tab>
+
+            <mat-tab label="Adres">
+                <section class="product-features">
+                    <dl class="data-sheet">
+                        <dt class="name">Ulica: </dt>       <dd class="value">{{ getFullStreet() }}</dd>
+                        <dt class="name">Kod pocztowy: </dt>    <dd class="value">{{eventModel.address.postalCode}}</dd>
+                        <dt class="name">Miasto: </dt>          <dd class="value">{{ eventModel.address.city }}</dd>
+                    </dl>
+                </section>
+            </mat-tab>
+        </mat-tab-group>
+
+        <mat-toolbar>
+            <button *ngIf="isAuthenticated" mat-raised-button color="primary" (click)="joinClicked()">
+                <div *ngIf="!eventModel.isUserParticipant">
+                    Dołącz
+                </div>
+                <div *ngIf="eventModel.isUserParticipant">
+                    Opuść
+                </div>
+            </button>
+            <span style="flex:1 1 auto;"></span>
+            <button *ngIf="eventModel.isUserEvent" mat-raised-button color="primary" (click)="editEvent()">Edytuj</button>
+        </mat-toolbar>
+    </mat-card-content>
+</mat-card>

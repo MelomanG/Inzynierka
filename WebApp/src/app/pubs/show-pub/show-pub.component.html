@@ -5,7 +5,7 @@
 <mat-card *ngIf="pub">
     <mat-card-header>
         <img mat-card-image src="{{serverUrl}}/{{pub.imagePath}}">
-        <div class="title" style="position: relative;">
+        <div class="title" style="position: relative; margin-left: 30px;">
             <mat-card-title>
                 <h2>{{ pub.name  }}</h2>
             </mat-card-title>
@@ -54,7 +54,38 @@
                   </div>
             </mat-tab>
             <mat-tab label="Wydarzenia">
-                TODO wydarzenia w pubie
+                <div class="mat-elevation-z8" *ngIf="eventModels">
+                    <mat-form-field style="margin-top: 20px;">
+                        <mat-label>Szukaj</mat-label>
+                    <input matInput (keyup)="applyEventFilter($event)" placeholder="Nazwa, gra">
+                    </mat-form-field>
+                    <table mat-table [dataSource]="eventModels" matSort>
+        
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+                            <td mat-cell *matCellDef="let row" > {{row.name}} </td>
+                        </ng-container>
+        
+                        <ng-container matColumnDef="boardGameName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gra </th>
+                            <td mat-cell *matCellDef="let row"> {{row.boardGame?.name}} </td>
+                        </ng-container>
+        
+                        <ng-container matColumnDef="eventDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Data </th>
+                            <td mat-cell *matCellDef="let row"> {{row.startDate | date :'short'}} </td>
+                        </ng-container>
+        
+                        <ng-container matColumnDef="participants">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ilość uczestników </th>
+                            <td mat-cell *matCellDef="let row"> {{row.participants?.length}} </td>
+                        </ng-container>
+        
+                        <tr mat-header-row *matHeaderRowDef="displayedEventColumns"></tr>
+                        <tr mat-row class="clickLink" (click)="onEventModelClick(row)" *matRowDef="let row; columns: displayedEventColumns;" style="height: 80px !important"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+                    </div>
             </mat-tab>
             <mat-tab label="Adres">
                 <section class="product-features">

@@ -1,5 +1,27 @@
-<div *ngIf="false">
+<div *ngIf="!eventList">
     <mat-spinner></mat-spinner>
 </div>
-
-<p>show-user-events works!</p>
+<div>
+    <mat-toolbar>
+        <button style="margin-top: 20px;" mat-raised-button color="primary" routerLink="/create/event" (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+            Dodaj nowe wydarzenie
+        </button>
+        <div style="margin-left: 20px; margin-top: 20px;">
+            <input [formControl]="searchControl" class="form-control mr-2" #search style="width:300px" placeholder="Wyszukaj po nazwie" type="text">
+        </div>
+    </mat-toolbar>
+</div>
+<div class="section flex-container" *ngIf="eventList">
+    <mat-card class="event-card clickLink" *ngFor="let item of filteredEventList | async" (click)="showEvent(item)"  (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+        <mat-card-content>
+        <div style="margin-bottom: 10px;">
+            <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
+            <h2><b>{{ (item.name.length>19)? (item.name | slice:0:19)+'...':(item.name) }}</b></h2>
+            <p>Gra: {{ item.boardGame.name }}</p>
+            <p>Liczba uczestników: {{ item.participants.length }}</p>
+            <p *ngIf="item.address.city">Miasto: {{ item.address.city }}</p>
+            <p *ngIf="item.pub">Pub: {{ item.pub.name }}</p>
+        </div>
+        </mat-card-content>
+    </mat-card>
+</div>

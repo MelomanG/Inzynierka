@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Hexado.Speczilla;
 
 namespace Hexado.Web.Modules
 {

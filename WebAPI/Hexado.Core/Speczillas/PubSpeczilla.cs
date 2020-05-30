@@ -12,7 +12,7 @@ namespace Hexado.Core.Speczillas
         ISpecification<Pub> GetSpecification(PubQuery query);
     }
 
-    public class PubSpeczilla : IPubSpeczilla
+    public partial class PubSpeczilla : IPubSpeczilla
     {
         public ISpecification<Pub> GetSpecification(PubQuery query)
         {

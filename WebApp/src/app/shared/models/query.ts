@@ -17,3 +17,9 @@ export class BoardGameQuery extends PaginationQuery {
     minAge?: number;
     maxAge?: number;
 }
+
+export class EventQuery extends PaginationQuery {
+    boardGameId?: string;
+    pubId: string;
+    city: string;
+}

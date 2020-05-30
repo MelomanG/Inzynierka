@@ -58,12 +58,12 @@
                     </div>
                 </div>
 
-        <div class="section grid-3">
+        <div class="section grid-3" style="margin-left: 15px;">
             <mat-card class="pub clickLink" *ngFor="let item of pubList.results" (click)="showPub(item)"  (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
                 <mat-card-content>
                 <div style="margin-bottom: 10px;">
                     <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
-                    <h2><b>{{ item.name }}</b></h2>
+                    <h2><b>{{ (item.name.length>19)? (item.name | slice:0:19)+'...':(item.name) }}</b></h2>
                     <p>Miasto: {{ item.address.city }}</p>
                 </div>
                 <mat-card-actions>

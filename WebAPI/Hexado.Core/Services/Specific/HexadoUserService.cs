@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Functional.Maybe;
+using Hexado.Core.Models;
 using Hexado.Db.Dtos;
 using Hexado.Db.Entities;
 using Hexado.Db.Repositories;
@@ -24,6 +25,9 @@ namespace Hexado.Core.Services.Specific
         Task<Maybe<BoardGameRate>> GetUserBoardGameRate(string id, string userEmail);
         Task<Maybe<PubRate>> GetUserPubRate(string id, string userEmail);
         Task<Maybe<IEnumerable<HexadoUser>>> Search(string search);
+        Task<Maybe<IEnumerable<EventDto>>> GetUserEvents(string userEmail);
+        public Task<Maybe<IEnumerable<EventDto>>> GetUserParticipatedEvents(string userEmail);
+        public Task<Maybe<IEnumerable<EventDto>>> GetUserOwnedEvents(string userEmail);
     }
 
     public class HexadoUserService : IHexadoUserService
@@ -131,6 +135,21 @@ namespace Hexado.Core.Services.Specific
         {
             return await _hexadoUserRepository.GetAllAsync(hu => 
                 hu.UserName.Contains(search));
+        }
+
+        public Task<Maybe<IEnumerable<EventDto>>> GetUserEvents(string userEmail)
+        {
+            return _hexadoUserRepository.GetUserEventsAsync(userEmail);
+        }
+
+        public Task<Maybe<IEnumerable<EventDto>>> GetUserParticipatedEvents(string userEmail)
+        {
+            return _hexadoUserRepository.GetUserParticipatedEvents(userEmail);
+        }
+
+        public Task<Maybe<IEnumerable<EventDto>>> GetUserOwnedEvents(string userEmail)
+        {
+            return _hexadoUserRepository.GetUserOwnedEvents(userEmail);
         }
     }
 }

@@ -14,14 +14,14 @@ import { AuthenticationService } from './authentication/authentication.service';
 import { LoginComponent } from './authentication/login/login.component';
 import { AuthenticationInterceptor } from './authentication/autnentication.interceptor';
 import { PubsModule } from './pubs/pubs.module';
-import { ShowUserEventsComponent } from './events/show-user-events/show-user-events.component';
+import { EventsModule } from './events/events.module';
+import { EventsService } from './events/events.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    ShowUserEventsComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +29,7 @@ import { ShowUserEventsComponent } from './events/show-user-events/show-user-eve
     BoardgamesModule,
     PubsModule,
     FormsModule,
+    EventsModule,
     ReactiveFormsModule,
     HttpClientModule,
     SharedModule
@@ -37,6 +38,7 @@ import { ShowUserEventsComponent } from './events/show-user-events/show-user-eve
     BoardGameService, 
     BoardGameCategoryService,
     AuthenticationService,
+    EventsService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthenticationInterceptor,

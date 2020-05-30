@@ -14,5 +14,6 @@ namespace Hexado.Core.Services
         Task<Maybe<PaginationResult<T>>> GetPaginationResultAsync(ISpecification<T> specification);
         Task<Maybe<T>> UpdateAsync(T updatedPub);
         Task<Maybe<T>> DeleteByIdAsync(string id);
+        Task ClearAsync();
     }
 }

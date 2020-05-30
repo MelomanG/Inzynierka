@@ -33,6 +33,10 @@ namespace Hexado.Web.Modules
                 .RegisterType<ContactRepository>()
                 .As<IContactRepository>()
                 .InstancePerLifetimeScope();
+            builder
+                .RegisterType<EventRepository>()
+                .As<IEventRepository>()
+                .InstancePerLifetimeScope();
         }
     }
 }

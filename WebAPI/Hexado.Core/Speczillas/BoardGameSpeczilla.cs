@@ -47,10 +47,7 @@ namespace Hexado.Core.Speczillas
                 specification.AndAlso(bg => bg.MinPlayers <= query.MaxPlayers && bg.MaxPlayers >= query.MaxPlayers);
 
             if (query.MinAge.HasValue)
-                specification.AndAlso(bg => bg.FromAge <= query.MinAge);
-
-            //if (query.MaxAge.HasValue)
-            //    specification.AndAlso(bg => bg.FromAge >= query.MaxAge);
+                specification.AndAlso(bg => bg.FromAge >= query.MinAge);
 
             if (!string.IsNullOrWhiteSpace(query.Search))
                 specification

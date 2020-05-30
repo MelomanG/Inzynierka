@@ -96,10 +96,10 @@ export class EditPubComponent implements OnInit {
   }
 
   private _filter(value: string): BoardGameModel[] {
-    console.log("_filter");
     if(value.length < 2)
     {
       this.boardGameToAdd = null;
+      this.loadedBoardGames = null;
       return;
     }
     

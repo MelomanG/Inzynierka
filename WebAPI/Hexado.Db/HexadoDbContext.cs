@@ -36,6 +36,10 @@ namespace Hexado.Db
             builder.ApplyConfiguration(new LikedPubConfiguration());
             
             builder.ApplyConfiguration(new AddressConfiguration());
+            builder.ApplyConfiguration(new EventAddressConfiguration());
+
+            builder.ApplyConfiguration(new EventConfiguration());
+            builder.ApplyConfiguration(new ParticipantEventConfiguration());
         }
 
         public DbSet<HexadoUser> HexadoUsers { get; set; }

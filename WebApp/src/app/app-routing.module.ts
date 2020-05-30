@@ -15,6 +15,10 @@ import { ShowUserFavoritePubsComponent } from './pubs/show-user-favorite-pubs/sh
 import { ShowUserFavoriteBoardgamesComponent } from './boardgames/show-user-favorite-boardgames/show-user-favorite-boardgames.component';
 import { CreateBoardgameCategoryComponent } from './boardgames/create-boardgame-category/create-boardgame-category.component';
 import { ShowUserEventsComponent } from './events/show-user-events/show-user-events.component';
+import { CreateEventComponent } from './events/create-event/create-event.component';
+import { ShowEventsComponent } from './events/show-events/show-events.component';
+import { EditEventComponent } from './events/edit-event/edit-event.component';
+import { ShowEventComponent } from './events/show-event/show-event.component';
 
 
 const routes: Routes = [
@@ -22,19 +26,26 @@ const routes: Routes = [
   {path: "home", component: ShowBoardgamesListComponent},
   {path: "login", component: LoginComponent},
   {path: "register", component: RegisterComponent},
+
   {path: "create/boardgame", component: CreateBoardgameComponent},
   {path: "show/boardgames", component: ShowBoardgamesListComponent},
   {path: "user/favorite/boardgames", component: ShowUserFavoriteBoardgamesComponent},
   {path: "show/boardgame/:id", component: ShowBoardgameComponent},
   {path: "edit/boardgame/:id", component: EditBoardgameComponent},
   {path: "create/boardgamecategory", component: CreateBoardgameCategoryComponent},
+
   {path: "create/pub", component: CreatePubComponent},
   {path: "show/pubs", component: ShowPubsListComponent},
   {path: "user/pubs", component: ShowUserPubsComponent},
   {path: "user/favorite/pubs", component: ShowUserFavoritePubsComponent},
-  {path: "user/events", component: ShowUserEventsComponent},
   {path: "show/pub/:id", component: ShowPubComponent},
   {path: "edit/pub/:id", component: EditPubComponent},
+
+  {path: "create/event", component: CreateEventComponent},
+  {path: "edit/event/:id", component: EditEventComponent},
+  {path: "show/event/:id", component: ShowEventComponent},
+  {path: "show/events", component: ShowEventsComponent},
+  {path: "user/events", component: ShowUserEventsComponent},
 ];
 
 @NgModule({

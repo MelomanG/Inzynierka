@@ -59,6 +59,10 @@ export class PubsService {
       return this.http.get(`${environment.apiUrl}/Pub/${id}`);
   }
 
+  getPubEvents(id: string) {
+      return this.http.get(`${environment.apiUrl}/Pub/${id}/events`);
+  }
+
   getCities() {
     return this.http.get(`${environment.apiUrl}/Pub/cities`)
   }

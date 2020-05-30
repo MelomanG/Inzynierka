@@ -4,7 +4,6 @@ using Hexado.Speczilla;
 using Hexado.Web.Models;
 using Hexado.Web.Models.Responses;
 using System.Linq;
-using Hexado.Core.Models;
 using Hexado.Db.Dtos;
 
 namespace Hexado.Web.Extensions.Models

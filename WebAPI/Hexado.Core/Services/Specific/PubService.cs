@@ -22,57 +22,59 @@ namespace Hexado.Core.Services.Specific
 
     public class PubService : BaseService<Pub>, IPubService
     {
-        private readonly IPubRepository _pubContactRepository;
+        private readonly IPubRepository _pubRepository;
         private readonly IRepository<PubBoardGame> _pubBoardGameRepository;
 
         public PubService(
-            IPubRepository pubContactRepository,
+            IPubRepository pubRepository,
             IRepository<PubBoardGame> pubBoardGameRepository)
-            : base(pubContactRepository)
+            : base(pubRepository)
         {
-            _pubContactRepository = pubContactRepository;
+            _pubRepository = pubRepository;
             _pubBoardGameRepository = pubBoardGameRepository;
         }
 
         public override async Task<Maybe<Pub>> GetByIdAsync(string id)
         {
-            return await _pubContactRepository.GetSingleOrMaybeAsync(
+            return await _pubRepository.GetSingleOrMaybeAsync(
                 p => p.Id == id,
                 $"{nameof(Pub.Address)}",
                 $"{nameof(Pub.LikedPubs)}",
                 $"{nameof(Pub.PubRates)}.{nameof(PubRate.HexadoUser)}",
                 $"{nameof(Pub.PubBoardGames)}.{nameof(PubBoardGame.BoardGame)}",
                 $"{nameof(Pub.PubBoardGames)}.{nameof(PubBoardGame.BoardGame)}.{nameof(BoardGame.Category)}",
-                $"{nameof(Pub.PubBoardGames)}.{nameof(PubBoardGame.BoardGame)}.{nameof(BoardGame.BoardGameRates)}");
+                $"{nameof(Pub.PubBoardGames)}.{nameof(PubBoardGame.BoardGame)}.{nameof(BoardGame.BoardGameRates)}",
+                $"{nameof(Pub.Events)}.{nameof(Event.BoardGame)}",
+                $"{nameof(Pub.Events)}.{nameof(Event.ParticipantEvents)}");
         }
 
         public override async Task<Maybe<Pub>> UpdateAsync(Pub updatedPub)
         {
-            var existingPub = await _pubContactRepository.GetSingleOrMaybeAsync(
+            var existingPub = await _pubRepository.GetSingleOrMaybeAsync(
                 p => p.Id == updatedPub.Id,
                 p => p.Address);
             if (!existingPub.HasValue)
                 return Maybe<Pub>.Nothing;
             updatedPub.Address.Id = existingPub.Value.Address.Id;
             return existingPub.Value.AccountId == updatedPub.AccountId
-                ? await _pubContactRepository.UpdateAsync(updatedPub)
+                ? await _pubRepository.UpdateAsync(updatedPub)
                 : throw new UserNotAllowedToUpdatePubException(updatedPub.Id, updatedPub.AccountId);
         }
 
         public async Task<Maybe<Pub>> DeleteByIdAsync(string pubId, string userAccountId)
         {
-            var pub = await _pubContactRepository.GetAsync(pubId);
+            var pub = await _pubRepository.GetAsync(pubId);
             if (!pub.HasValue)
                 return Maybe<Pub>.Nothing;
 
             return pub.Value.AccountId == userAccountId
-                ? await _pubContactRepository.DeleteAsync(pub.Value)
+                ? await _pubRepository.DeleteAsync(pub.Value)
                 : throw new UserNotAllowedToDeletePubException(pubId, userAccountId);
         }
 
         public async Task<Maybe<Pub>> AddBoardGames(string pubId, string accountId, string boardGameId)
         {
-            var existingPub = await _pubContactRepository.GetAsync(pubId);
+            var existingPub = await _pubRepository.GetAsync(pubId);
             if (!existingPub.HasValue)
                 return Maybe<Pub>.Nothing;
 
@@ -85,12 +87,12 @@ namespace Hexado.Core.Services.Specific
                 PubId = pubId
             });
 
-            return await _pubContactRepository.UpdateAsync(existingPub.Value);
+            return await _pubRepository.UpdateAsync(existingPub.Value);
         }
 
         public async Task<Maybe<Pub>> DeleteBoardGames(string pubId, string accountId, string boardGameId)
         {
-            var existingPub = await _pubContactRepository.GetSingleOrMaybeAsync(
+            var existingPub = await _pubRepository.GetSingleOrMaybeAsync(
                 pub => pub.Id == pubId,
                 pub => pub.PubBoardGames);
             if (!existingPub.HasValue)
@@ -108,7 +110,7 @@ namespace Hexado.Core.Services.Specific
 
         public async Task<Maybe<Pub>> LikePub(string boardGameId, HexadoUser user)
         {
-            var pub = await _pubContactRepository.GetAsync(boardGameId);
+            var pub = await _pubRepository.GetAsync(boardGameId);
             if (!pub.HasValue)
                 return pub;
             pub.Value.LikedPubs.Add(
@@ -117,24 +119,24 @@ namespace Hexado.Core.Services.Specific
                     HexadoUserId = user.Id,
                     HexadoUser = user
                 });
-            return await _pubContactRepository.UpdateAsync(pub.Value);
+            return await _pubRepository.UpdateAsync(pub.Value);
         }
 
         public Maybe<IEnumerable<string>> GetCities()
         {
-            return _pubContactRepository.GetCities();
+            return _pubRepository.GetCities();
         }
 
         public async Task<Maybe<Pub>> SetImagePath(string id, string imagePath)
         {
-            var pub = await _pubContactRepository.GetSingleOrMaybeAsync(
+            var pub = await _pubRepository.GetSingleOrMaybeAsync(
                 p => p.Id == id,
                 p => p.Address);
             if (!pub.HasValue)
                 return pub;
 
             pub.Value.ImagePath = imagePath;
-            return await _pubContactRepository.UpdateAsync(pub.Value);
+            return await _pubRepository.UpdateAsync(pub.Value);
         }
     }
 }

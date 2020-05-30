@@ -10,8 +10,8 @@ namespace Hexado.Core.Services.Specific
     public class BoardGameCategoryService : BaseService<BoardGameCategory>, IBoardGameCategoryService
     {
         public BoardGameCategoryService(
-            IRepository<BoardGameCategory> contactRepository)
-            : base(contactRepository)
+            IRepository<BoardGameCategory> repository)
+            : base(repository)
         {
         }
     }

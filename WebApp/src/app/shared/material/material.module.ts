@@ -34,6 +34,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatNativeDateModule } from '@angular/material/core';
+import {MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+
 
 const Modules: any[] = [
   CommonModule,
@@ -68,7 +71,9 @@ const Modules: any[] = [
   MatSnackBarModule,
   MatTableModule,
   MatSortModule,
-  MatPaginatorModule]
+  MatPaginatorModule,
+  MatNativeDateModule
+]
 
 @NgModule({
   declarations: [],
@@ -77,6 +82,10 @@ const Modules: any[] = [
   ],
   exports: [
     Modules
+  ],
+  providers: [
+    
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } } 
   ]
 })
 export class MaterialModule { }

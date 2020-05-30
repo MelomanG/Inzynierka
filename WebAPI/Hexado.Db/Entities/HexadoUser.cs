@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hexado.Db.Configuration;
 using Microsoft.AspNetCore.Identity;
 
 namespace Hexado.Db.Entities
@@ -18,6 +19,8 @@ namespace Hexado.Db.Entities
         public virtual ICollection<LikedBoardGame> LikedBoardGames { get; set; } = new HashSet<LikedBoardGame>();
         public virtual ICollection<LikedPub> LikedPubs { get; set; } = new HashSet<LikedPub>();
         public virtual ICollection<Contact> Contacts { get; set; } = new HashSet<Contact>();
+        public virtual ICollection<Event> OwnedEvents { get; set; } = new HashSet<Event>();
+        public virtual ICollection<ParticipantEvent> ParticipantEvents { get; set; } = new HashSet<ParticipantEvent>();
 
         public void RemoveRefreshToken(string refreshToken)
         {

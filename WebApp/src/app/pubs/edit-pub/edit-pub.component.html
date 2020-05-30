@@ -23,25 +23,29 @@
                 <input matInput placeholder="Ulica" formControlName="street">
                 </mat-form-field>
                 
-                <mat-form-field>
-                <mat-label>Number budynku</mat-label>
-                <input matInput placeholder="Number budynku" formControlName="buildingNumber">
-                </mat-form-field>
-                
-                <mat-form-field>
-                <mat-label>Numer lokalu</mat-label>
-                <input matInput placeholder="Numer lokalu" formControlName="localNumber">
-                </mat-form-field>
-                
-                <mat-form-field>
-                <mat-label>Kod pocztowy</mat-label>
-                <input matInput placeholder="Kod pocztowy" formControlName="postalCode">
-                </mat-form-field>
-                
-                <mat-form-field>
-                <mat-label>Miasto</mat-label>
-                <input matInput placeholder="Miasto" formControlName="city">
-                </mat-form-field>
+                <div style="display: inline-flex;">
+                  <mat-form-field>
+                  <mat-label>Number budynku</mat-label>
+                  <input matInput placeholder="Number budynku" formControlName="buildingNumber">
+                  </mat-form-field>
+                  
+                  <mat-form-field style="margin-left: 10px;">
+                  <mat-label>Numer lokalu</mat-label>
+                  <input matInput placeholder="Numer lokalu" formControlName="localNumber">
+                  </mat-form-field>
+              </div>
+                      
+              <div style="display: inline-flex;">
+                  <mat-form-field>
+                  <mat-label>Kod pocztowy</mat-label>
+                  <input matInput placeholder="Kod pocztowy" formControlName="postalCode">
+                  </mat-form-field>
+                  
+                  <mat-form-field style="margin-left: 10px;">
+                  <mat-label>Miasto</mat-label>
+                  <input matInput placeholder="Miasto" formControlName="city">
+                  </mat-form-field>
+              </div>
             </mat-input-container>
 
             <div class="image-container">

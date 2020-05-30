@@ -17,5 +17,6 @@ namespace Hexado.Db.Entities
         public virtual ICollection<BoardGameRate> BoardGameRates { get; set; } = new HashSet<BoardGameRate>();
         public virtual ICollection<PubBoardGame> PubBoardGames { get; set; } = new HashSet<PubBoardGame>();
         public virtual ICollection<LikedBoardGame> LikedBoardGames { get; set; } = new HashSet<LikedBoardGame>();
+        public virtual ICollection<Event> Events { get; set; } = new HashSet<Event>();
     }
 }

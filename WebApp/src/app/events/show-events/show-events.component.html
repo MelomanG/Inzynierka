@@ -1,0 +1,101 @@
+<div *ngIf="!eventList">
+    <mat-spinner></mat-spinner>
+</div>
+<div class="container mt-3" *ngIf="eventList">
+    <div class="row">
+        <section class="col-3" style="max-width: 180px; position:absolute; left:20px; ">
+            <ng-container>
+                <mat-form-field>
+                    <mat-label>Sortuj wg:</mat-label>
+                    <mat-select (selectionChange)="onSortChange($event.value)" [(ngModel)]="selectedSort">
+                        <mat-option
+                            *ngFor="let option of sortOptions" 
+                            [value]="option.value">
+                        {{option.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input type="text"
+                        placeholder="Miasto"
+                        matInput
+                        [formControl]="citiesControl"
+                        [matAutocomplete]="autoCities">
+                    <mat-autocomplete #autoCities="matAutocomplete" (optionSelected)="onCitySelected($event.option.value)">
+                        <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+                            {{city}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field>
+                <input type="text"
+                        placeholder="Gra"
+                        matInput
+                        [formControl]="boardGameControl"
+                        [matAutocomplete]="autoBoardGames">
+                    <mat-autocomplete #autoBoardGames="matAutocomplete" (optionSelected)="onBoardGameSelected($event.option.value)">
+                        <mat-option *ngFor="let boardGame of filteredBoardGames | async" [value]="boardGame.name">
+                        {{boardGame.name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field>
+                <input type="text"
+                        placeholder="Pub"
+                        matInput
+                        [formControl]="pubControl"
+                        [matAutocomplete]="autoPub">
+                    <mat-autocomplete #autoPub="matAutocomplete" (optionSelected)="onPubSelected($event.option.value)">
+                        <mat-option *ngFor="let pub of filteredPubs | async" [value]="pub.name">
+                        {{pub.name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            
+            </ng-container>
+        </section>
+
+
+        <section class="col-9" style="margin-left: 100px;">
+            <div class="d-flex justify-content-between align-items-center pb-2" style="margin-left: 20px;">
+                <app-paging-header
+                    [totalCount]="eventList.totalCount"
+                    [pageSize]="eventQuery.pageSize"
+                    [pageNumber]="eventQuery.page">
+                </app-paging-header>
+    
+                       <div class="form-inline">
+                        <input (keyup.enter)="onSearch()" class="form-control mr-2" #search style="width:300px" placeholder="Wyszukaj po nazwie" type="text">
+                        <button (click)="onSearch()" class="btn btn-outline-primary my-2">Szukaj</button>
+                        <button (click)="onReset()" class="btn btn-outline-success ml-2 my-2">Reset</button>
+                    </div>
+                </div>
+
+        <div class="section grid-3" style="margin-left: 15px;">
+            <mat-card class="event-card clickLink" *ngFor="let item of eventList.results" (click)="showEvent(item)"  (mouseenter)='mouseenter($event)' (mouseleave)="mouseleave($event)">
+                <mat-card-content>
+                <div style="margin-bottom: 10px;">
+                    <img mat-card-image src="{{serverUrl}}/{{item.imagePath}}">
+                    <h2><b>{{ (item.name.length>19)? (item.name | slice:0:19)+'...':(item.name) }}</b></h2>
+                    <p>Gra: {{ item.boardGame.name }}</p>
+                    <p>Liczba uczestników: {{ item.participants.length }}</p>
+                    <p *ngIf="item.address.city">Miasto: {{ item.address.city }}</p>
+                    <p *ngIf="item.pub">Pub: {{ item.pub.name }}</p>
+                </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="d-flex justify-content-center" *ngIf="eventList?.totalCount">
+        <app-pager
+            [pageSize]="eventQuery.pageSize"
+            [totalCount]="eventList.totalCount"
+            [pageNumber]="eventQuery.page"
+            (pageChanged)="onPageChanged($event)">
+        </app-pager>
+        </div>
+    </section>
+    </div>
+</div>

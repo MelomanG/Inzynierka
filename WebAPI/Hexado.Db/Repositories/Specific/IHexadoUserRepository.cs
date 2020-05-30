@@ -16,5 +16,8 @@ namespace Hexado.Db.Repositories.Specific
         Maybe<IEnumerable<BoardGameDto>> GetLikedBoardGames(string userEmail);
         Maybe<IEnumerable<PubDto>> GetLikedPubs(string userEmail);
         Task<Maybe<IEnumerable<PubDto>>> GetUserPubsAsync(string userEmail);
+        Task<Maybe<IEnumerable<EventDto>>> GetUserEventsAsync(string userEmail);
+        Task<Maybe<IEnumerable<EventDto>>> GetUserParticipatedEvents(string userEmail);
+        Task<Maybe<IEnumerable<EventDto>>> GetUserOwnedEvents(string userEmail);
     }
 }

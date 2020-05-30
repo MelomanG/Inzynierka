@@ -9,9 +9,6 @@ namespace Hexado.Db.Configuration
     {
         public void Configure(EntityTypeBuilder<Address> builder)
         {
-            builder
-                .HasIndex(address => new { address.Street, address.BuildingNumber, address.LocalNumber, address.PostalCode, address.City })
-                .IsUnique();
         }
     }
 }

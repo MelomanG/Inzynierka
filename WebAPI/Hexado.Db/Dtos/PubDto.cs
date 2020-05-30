@@ -15,6 +15,7 @@ namespace Hexado.Db.Dtos
         public string AccountId { get; set; }
         public IEnumerable<PubRate> PubRates { get; set; }
         public IEnumerable<PubBoardGame> PubBoardGames { get; set; }
+        public IEnumerable<Event> Events { get; set; }
 
         public int AmountOfLikes { get; set; }
     }

@@ -22,11 +22,11 @@ export class AddContactDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<AddContactDialogComponent>) { }
 
   ngOnInit(): void {
-    this.loaUsers();
+    this.loadUsers();
     this.filterContacts();
   }
 
-  loaUsers() {
+  loadUsers() {
     this.contactService.getUsers()
     .subscribe(res => {
       this.users = <UserModel[]>res;
@@ -44,7 +44,7 @@ export class AddContactDialogComponent implements OnInit {
   private _filterCities(value: string): UserModel[] {
     if(value.length < 2)
     {
-      this.loaUsers();
+      this.loadUsers();
       return;
     }
     if(!this.users)

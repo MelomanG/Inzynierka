@@ -1,0 +1,129 @@
+<div *ngIf="!formGroup">
+    <mat-spinner></mat-spinner>
+</div>
+<mat-card class="container" *ngIf="formGroup">
+    <mat-card-content>
+    <form class="form" [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)">
+        <mat-card-title>
+            <span>Stwórz Wydarzenie</span>
+        </mat-card-title>
+        
+        <div>
+            <mat-checkbox style="width: 100%;" [formControl]="checkBosFormControl">Publiczne</mat-checkbox>
+        </div>
+
+        <mat-form-field>
+        <mat-label>Nazwa</mat-label>
+            <input matInput placeholder="Nazwa" formControlName="name">
+        </mat-form-field>
+
+        <div style="display: inline-flex;">
+            <mat-form-field>
+                <mat-label>Data</mat-label>
+                <input matInput [formControl]="startDateFormControll" [matDatepicker]="picker" placeholder="Born">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field style="margin-left: 10px; max-width: 70px;">
+            <mat-label>Godzina</mat-label>
+                <input matInput 
+                [formControl]="hoursFormControl"
+                placeholder="Godzina">
+            </mat-form-field>
+            <mat-form-field style="margin-left: 10px;  max-width: 70px;">
+            <mat-label>Minuta</mat-label>
+                <input matInput 
+                [formControl]="minutesFormControl"
+                placeholder="Minuta" >
+            </mat-form-field>
+        </div>
+        
+        <mat-form-field>
+        <mat-label>Opis</mat-label>
+        <textarea  matInput placeholder="Kilka słów o wydarzeniu" formControlName="description"></textarea>
+        </mat-form-field>
+
+        <ng-container>
+            <div style="display: inline-flex;">
+                <mat-form-field>
+                <input type="text"
+                        placeholder="Gra"
+                        matInput
+                        [formControl]="boardGameControl"
+                        [matAutocomplete]="autoBoardGames">
+                    <mat-autocomplete #autoBoardGames="matAutocomplete" (optionSelected)="onBoardGameSelected($event.option.value)">
+                    <mat-option *ngFor="let boardGame of filteredBoardGames | async" [value]="boardGame.name">
+                    {{boardGame.name}}
+                    </mat-option>
+                </mat-autocomplete>
+                </mat-form-field>
+    
+                <mat-form-field style="margin-left: 10px;">
+                <input type="text"
+                        placeholder="Pub"
+                        matInput
+                        [formControl]="pubControl"
+                        [matAutocomplete]="autoPubs">
+                    <mat-autocomplete #autoPubs="matAutocomplete" (optionSelected)="onPubSelected($event.option.value)">
+                    <mat-option *ngFor="let pub of filteredPubs | async" [value]="pub.name">
+                    {{pub.name}}
+                    </mat-option>
+                </mat-autocomplete>
+                </mat-form-field>
+            </div>
+        </ng-container>
+
+        <mat-input-container formGroupName="address" *ngIf="!formGroup.value.pubId">
+            <mat-form-field>
+                <mat-label>Ulica</mat-label>
+                <input matInput placeholder="Ulica" formControlName="street">
+            </mat-form-field>
+            
+            <div style="display: inline-flex;">
+                <mat-form-field>
+                <mat-label>Number budynku</mat-label>
+                <input matInput placeholder="Number budynku" formControlName="buildingNumber">
+                </mat-form-field>
+                
+                <mat-form-field style="margin-left: 10px;">
+                <mat-label>Numer lokalu</mat-label>
+                <input matInput placeholder="Numer lokalu" formControlName="localNumber">
+                </mat-form-field>
+            </div>
+                    
+            <div style="display: inline-flex;">
+                <mat-form-field>
+                <mat-label>Kod pocztowy</mat-label>
+                <input matInput placeholder="Kod pocztowy" formControlName="postalCode">
+                </mat-form-field>
+                
+                <mat-form-field style="margin-left: 10px;">
+                <mat-label>Miasto</mat-label>
+                <input matInput placeholder="Miasto" formControlName="city">
+                </mat-form-field>
+            </div>
+        </mat-input-container>
+
+        <div class="image-container">
+            <img [src]="imageUrl" style="width: 250px;height: 200px; cursor: pointer;" (click)="onClickFileInputButton()">
+            <input type="file" style="display: none" #Image accept="image/*" (change)="handleFileInput($event.target.files)">
+            <span></span>
+
+            <mat-toolbar>
+            <button mat-raised-button color="primary" class="file-select-button" type="button" (click)="onClickFileInputButton()">
+            <mat-icon>attach_file</mat-icon>
+            Dodaj zdjęcie
+            </button>
+        
+            <p class="file-name" *ngIf="!fileToUpload; else fileName"></p>
+            <ng-template #fileName>
+            <p class="file-name">{{ fileToUpload?.name }}</p>
+            </ng-template>
+        </mat-toolbar>
+        </div>
+
+        <button style="margin-right: 10px;" [disabled]="!fileToUpload" mat-raised-button color="primary" type="submit">Zapisz</button>
+        <button mat-raised-button type="button" color="primary" routerLink="/show/boardgames">Cancel</button>
+    </form>
+    </mat-card-content>
+</mat-card>
