@@ -4,6 +4,8 @@ import { BoardGameModel } from './boardgame';
 export interface CreatePubModel {
     name: string,
     description: string,
+    contactNumber: string,
+    contactEmail: string,
     address: AddressModel
 }
 
@@ -11,6 +13,8 @@ export interface PubModel {
     id: string,
     name: string,
     description: string,
+    contactNumber: string,
+    contactEmail: string,
     address: AddressModel,
     imagePath: string,
     rates: RateModel[],

@@ -4,14 +4,16 @@ using Hexado.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Hexado.Db.Migrations
 {
     [DbContext(typeof(HexadoDbContext))]
-    partial class HexadoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200530195633_Pub-contact")]
+    partial class Pubcontact
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

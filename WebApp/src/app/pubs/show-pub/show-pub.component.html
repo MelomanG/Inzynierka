@@ -87,6 +87,9 @@
                     <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
                     </div>
             </mat-tab>
+            <mat-tab label="Opinie">
+                <app-show-opinions-tab [rates]="pub.rates"></app-show-opinions-tab>
+            </mat-tab>
             <mat-tab label="Adres">
                 <section class="product-features">
                     <dl class="data-sheet">
@@ -96,8 +99,13 @@
                     </dl>
                 </section>
             </mat-tab>
-            <mat-tab label="Opinie">
-                <app-show-opinions-tab [rates]="pub.rates"></app-show-opinions-tab>
+            <mat-tab label="Kontakt">
+                <section class="product-features">
+                    <dl class="data-sheet">
+                        <dt class="name">Telefon: </dt>       <dd class="value">{{ pub?.contactNumber }}</dd>
+                        <dt class="name">Adres email: </dt>    <dd class="value">{{pub?.contactEmail}}</dd>
+                    </dl>
+                </section>
             </mat-tab>
         </mat-tab-group>
 

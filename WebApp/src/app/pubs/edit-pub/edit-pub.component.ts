@@ -65,6 +65,8 @@ export class EditPubComponent implements OnInit {
             id:[this.pub.id],
             name:[this.pub.name, Validators.required],
             description:[this.pub.description, Validators.compose([Validators.required, Validators.minLength(30), Validators.maxLength(1000)])],
+            contactNumber:[this.pub.contactNumber, Validators.required],
+            contactEmail:[this.pub.contactEmail, Validators.required],
             address: this.fb.group({
               street:[this.pub.address.street, Validators.required],
               buildingNumber:[this.pub.address.buildingNumber, Validators.required],

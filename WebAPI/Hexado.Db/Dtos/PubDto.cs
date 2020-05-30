@@ -8,6 +8,8 @@ namespace Hexado.Db.Dtos
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string ContactNumber { get; set; }
+        public string ContactEmail { get; set; }
 
         public Address Address { get; set; }
         public string ImagePath { get; set; }
@@ -15,7 +17,6 @@ namespace Hexado.Db.Dtos
         public string AccountId { get; set; }
         public IEnumerable<PubRate> PubRates { get; set; }
         public IEnumerable<PubBoardGame> PubBoardGames { get; set; }
-        public IEnumerable<Event> Events { get; set; }
 
         public int AmountOfLikes { get; set; }
     }

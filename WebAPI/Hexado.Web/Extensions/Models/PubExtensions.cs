@@ -23,6 +23,8 @@ namespace Hexado.Web.Extensions.Models
                 AccountId = accountId,
                 Name = model.Name,
                 Description = model.Description,
+                ContactNumber = model.ContactNumber,
+                ContactEmail = model.ContactEmail,
                 Address = model.Address.ToEntity(pubId),
                 ImagePath = model.ImagePath ?? string.Empty
             };
@@ -47,6 +49,8 @@ namespace Hexado.Web.Extensions.Models
                 Id = entity.Id,
                 Name = entity.Name,
                 Description = entity.Description,
+                ContactNumber = entity.ContactNumber,
+                ContactEmail = entity.ContactEmail,
                 Address = entity.Address?.ToResponse(),
                 ImagePath = entity.ImagePath,
                 AccountId = entity.AccountId,
@@ -81,6 +85,8 @@ namespace Hexado.Web.Extensions.Models
                 Id = dto.Id,
                 Name = dto.Name,
                 Description = dto.Description,
+                ContactNumber = dto.ContactNumber,
+                ContactEmail = dto.ContactEmail,
                 Address = dto.Address?.ToResponse(),
                 ImagePath = dto.ImagePath,
                 AccountId = dto.AccountId,

@@ -27,6 +27,8 @@ namespace Hexado.Db.Extensions
                 Id = entity.Id,
                 Name = entity.Name,
                 Description = entity.Description,
+                ContactNumber = entity.ContactNumber,
+                ContactEmail = entity.ContactEmail,
                 Address = entity.Address,
                 ImagePath = entity.ImagePath,
                 AccountId = entity.AccountId,

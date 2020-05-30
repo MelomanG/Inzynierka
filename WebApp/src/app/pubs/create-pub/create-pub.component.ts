@@ -31,6 +31,8 @@ export class CreatePubComponent implements OnInit {
     this.formGroup = this.fb.group({
       name:[null, Validators.required],
       description:[null, Validators.compose([Validators.required, Validators.minLength(30), Validators.maxLength(1000)])],
+      contactNumber:[null, Validators.required],
+      contactEmail:[null, Validators.required],
       address: this.fb.group({
         street:[null, Validators.required],
         buildingNumber:[null, Validators.required],

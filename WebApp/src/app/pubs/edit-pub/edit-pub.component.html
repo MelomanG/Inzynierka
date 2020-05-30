@@ -16,6 +16,18 @@
               <mat-label>Opis</mat-label>
               <textarea  matInput placeholder="Kilka słów o pubie" formControlName="description"></textarea>
             </mat-form-field>
+            
+            <div style="display: inline-flex;">
+              <mat-form-field>
+              <mat-label>Number telefonu</mat-label>
+                <input matInput placeholder="Numer telefonu" formControlName="contactNumber">
+              </mat-form-field>
+              
+              <mat-form-field style="margin-left: 10px;">
+              <mat-label>Email kontaktowy</mat-label>
+                <input matInput type="email" placeholder="Email kontaktowy" formControlName="contactEmail">
+              </mat-form-field>
+            </div>
 
             <mat-input-container formGroupName="address">
                 <mat-form-field>

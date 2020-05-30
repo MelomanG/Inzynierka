@@ -8,6 +8,8 @@ namespace Hexado.Web.Models.Responses
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string ContactNumber { get; set; }
+        public string ContactEmail { get; set; }
 
         public AddressResponse Address { get; set; }
         public string ImagePath { get; set; }
